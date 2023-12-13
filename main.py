@@ -45,7 +45,9 @@ async def RunOnceAndReturnSessionMaker():
     print(f'starting engine for "{connectionString}"')
 
     import os
+    #makedrop musel byt na tvrdo
     makeDrop = os.environ.get("DEMO", "") == "true"
+    makeDrop = True
     result = await startEngine(
         connectionstring=connectionString, makeDrop=makeDrop, makeUp=True
     )

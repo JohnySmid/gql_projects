@@ -1,4 +1,5 @@
 import strawberry as strawberryA
+import uuid
 from typing import List, Annotated, Optional, Union
 from gql_projects.GraphResolvers import resolveFinancesForFinanceType, resolveFinanceTypeAll
 from contextlib import asynccontextmanager
@@ -21,7 +22,7 @@ FinanceGQLModel = Annotated ["FinanceGQLModel",strawberryA.lazy(".FinanceGQLMode
 )
 class FinanceTypeGQLModel:
     @classmethod
-    async def resolve_reference(cls, info: strawberryA.types.Info, id: strawberryA.ID):
+    async def resolve_reference(cls, info: strawberryA.types.Info, id: uuid.UUID):
         loader = getLoadersFromInfo(info).financetypes
         result = await loader.load(id)
         if result is not None:
@@ -29,7 +30,7 @@ class FinanceTypeGQLModel:
         return result
 
     @strawberryA.field(description="""Primary key""")
-    def id(self) -> strawberryA.ID:
+    def id(self) -> uuid.UUID:
         return self.id
 
     @strawberryA.field(description="""Name""")
@@ -71,22 +72,22 @@ async def finance_type_page(
 
 @strawberryA.input(description="Definition of a project used for creation")
 class FinanceTypeInsertGQLModel:
-    financetype_id: strawberryA.ID = strawberryA.field(description="")
+    financetype_id: uuid.UUID = strawberryA.field(description="")
     name: str = strawberryA.field(description="")
     name_en: Optional[str] = strawberryA.field(description="The name of the financial data (optional)")
     
-    id: Optional[strawberryA.ID] = strawberryA.field(description="Primary key (UUID), could be client-generated", default=None)
+    id: Optional[uuid.UUID] = strawberryA.field(description="Primary key (UUID), could be client-generated", default=None)
 
 @strawberryA.input(description="Definition of financial data used for update")
 class FinanceTypeUpdateGQLModel:
-    id: strawberryA.ID = strawberryA.field(description="The ID of the financial data")
+    id: uuid.UUID = strawberryA.field(description="The ID of the financial data")
     name: Optional[str] = strawberryA.field(description="The name of the financial data (optional)")
     name_en: Optional[str] = strawberryA.field(description="The name of the financial data (optional)")
 
 
 @strawberryA.type(description="Result of a mutation over Project")
 class FinanceTypeResultGQLModel:
-    id: strawberryA.ID = strawberryA.field(description="The ID of the project", default=None)
+    id: uuid.UUID = strawberryA.field(description="The ID of the project", default=None)
     msg: str = strawberryA.field(description="Result of the operation (OK/Fail)", default=None)
 
     @strawberryA.field(description="Returns the project")

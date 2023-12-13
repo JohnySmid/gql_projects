@@ -2,6 +2,7 @@ from typing import List, Union, Annotated, Optional
 import strawberry as strawberryA
 import datetime
 import typing
+import uuid
 from gql_projects.utils.DBFeeder import randomDataStructure
 from gql_projects.utils.Dataloaders import getLoadersFromInfo
 
@@ -30,7 +31,7 @@ def AsyncSessionFromInfo(info):
 )
 class ProjectGQLModel:
     @classmethod
-    async def resolve_reference(cls, info: strawberryA.types.Info, id: strawberryA.ID):
+    async def resolve_reference(cls, info: strawberryA.types.Info, id: uuid.UUID):
         loader = getLoadersFromInfo(info).projects
         result = await loader.load(id)
         if result is not None:
@@ -38,7 +39,7 @@ class ProjectGQLModel:
         return result
 
     @strawberryA.field(description="""Primary key""")
-    def id(self) -> strawberryA.ID:
+    def id(self) -> uuid.UUID:
         return self.id
 
     @strawberryA.field(description="""Name of the project""")
@@ -118,14 +119,15 @@ async def project_page(
     
 @strawberryA.field(description="""Returns project by its id""")
 async def project_by_id(
-    self, info: strawberryA.types.Info, id: strawberryA.ID
+    self, info: strawberryA.types.Info, id: uuid.UUID
 ) -> Union[ProjectGQLModel, None]:
+    print(id)
     async with withInfo(info) as session:
         result = await resolveProjectById(session, id)
         return result
 @strawberryA.field(description="""Returns a list of projects for group""")
 async def project_by_group(
-    self, info: strawberryA.types.Info, id: strawberryA.ID
+    self, info: strawberryA.types.Info, id: uuid.UUID
 ) -> List[ProjectGQLModel]:
     async with withInfo(info) as session:
         result = await resolveProjectsForGroup(session, id)
@@ -150,28 +152,28 @@ from typing import Optional
 
 @strawberryA.input(description="Definition of a project used for creation")
 class ProjectInsertGQLModel:
-    projecttype_id: strawberryA.ID = strawberryA.field(description="The ID of the project type")
+    projecttype_id: uuid.UUID = strawberryA.field(description="The ID of the project type")
     name: str = strawberryA.field(description="Name/label of the project")
 
-    id: Optional[strawberryA.ID] = strawberryA.field(description="Primary key (UUID), could be client-generated", default=None)
+    id: Optional[uuid.UUID] = strawberryA.field(description="Primary key (UUID), could be client-generated", default=None)
     name: Optional[str] = strawberryA.field(description="The name of the project (optional)", default="Project")
     startdate: Optional[datetime.datetime] = strawberryA.field(description="Moment when the project starts (optional)", default_factory=lambda: datetime.datetime.now())
     enddate: Optional[datetime.datetime] = strawberryA.field(description="Moment when the project ends (optional)", default_factory=lambda: datetime.datetime.now())
 
-    group_id: Optional[strawberryA.ID] = strawberryA.field(description="The ID of the group associated with the project (optional)", default=None)
+    group_id: Optional[uuid.UUID] = strawberryA.field(description="The ID of the group associated with the project (optional)", default=None)
 
 @strawberryA.input(description="Definition of a project used for update")
 class ProjectUpdateGQLModel:
-    id: strawberryA.ID = strawberryA.field(description="The ID of the project")
+    id: uuid.UUID = strawberryA.field(description="The ID of the project")
     name: Optional[str] = strawberryA.field(description="The name of the project (optional)", default=None)
-    projecttype_id: Optional[strawberryA.ID] = strawberryA.field(description="The ID of the project type (optional)",default=None)
+    projecttype_id: Optional[uuid.UUID] = strawberryA.field(description="The ID of the project type (optional)",default=None)
     startdate: Optional[datetime.datetime] = strawberryA.field(description="Moment when the project starts (optional)", default_factory=lambda: datetime.datetime.now())
     enddate: Optional[datetime.datetime] = strawberryA.field(description="Moment when the project ends (optional)", default_factory=lambda: datetime.datetime.now())
-    group_id: Optional[strawberryA.ID] = strawberryA.field(description="The ID of the group associated with the project (optional)", default=None)
+    group_id: Optional[uuid.UUID] = strawberryA.field(description="The ID of the group associated with the project (optional)", default=None)
 
 @strawberryA.type(description="Result of a mutation over Project")
 class ProjectResultGQLModel:
-    id: strawberryA.ID = strawberryA.field(description="The ID of the project", default=None)
+    id: uuid.UUID = strawberryA.field(description="The ID of the project", default=None)
     msg: str = strawberryA.field(description="Result of the operation (OK/Fail)", default=None)
 
     @strawberryA.field(description="Returns the project")

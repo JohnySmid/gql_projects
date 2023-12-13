@@ -2,6 +2,7 @@ import asyncio
 import strawberry as strawberryA
 from typing import List, Annotated, Optional, Union
 import datetime
+import uuid
 from gql_projects.GraphResolvers import (
     resolveProjectById,
     resolveMilestoneAll
@@ -27,7 +28,7 @@ ProjectGQLModel = Annotated["ProjectGQLModel",strawberryA.lazy(".ProjectGQLModel
 )
 class MilestoneGQLModel:
     @classmethod
-    async def resolve_reference(cls, info: strawberryA.types.Info, id: strawberryA.ID):
+    async def resolve_reference(cls, info: strawberryA.types.Info, id: uuid.UUID):
         loader = getLoadersFromInfo(info).milestones
         result = await loader.load(id)
         if result is not None:
@@ -35,11 +36,11 @@ class MilestoneGQLModel:
         return result
 
     @strawberryA.field(description="""Primary key""")
-    def id(self) -> strawberryA.ID:
+    def id(self) -> uuid.UUID:
         return self.id
 
     @strawberryA.field(description="""Time stamp""")
-    def lastchange(self) -> strawberryA.ID:
+    def lastchange(self) -> uuid.UUID:
         return self.lastchange
 
     @strawberryA.field(description="""Name""")
@@ -109,22 +110,22 @@ async def milestone_page(
 @strawberryA.input(description="Definition of a milestone used for insertion")
 class MilestoneInsertGQLModel:
     name: str = strawberryA.field(description="Name of the milestone")
-    project_id: strawberryA.ID = strawberryA.field(description="The ID of the associated project")
+    project_id: uuid.UUID = strawberryA.field(description="The ID of the associated project")
     startdate: Optional[datetime.datetime] = strawberryA.field(description="Start date of the milestone (optional)", default=datetime.datetime.now())
     enddate: Optional[datetime.datetime] = strawberryA.field(description="End date of the milestone (optional)", default=datetime.datetime.now() + datetime.timedelta(days=30))
-    id: Optional[strawberryA.ID] = strawberryA.field(description="The ID of the milestone (optional)",default=None)
+    id: Optional[uuid.UUID] = strawberryA.field(description="The ID of the milestone (optional)",default=None)
 
 @strawberryA.input(description="Definition of a milestone used for update")
 class MilestoneUpdateGQLModel:
     lastchange: datetime.datetime = strawberryA.field(description="Timestamp of the last change")
-    id: strawberryA.ID = strawberryA.field(description="The ID of the milestone")
+    id: uuid.UUID = strawberryA.field(description="The ID of the milestone")
     name: Optional[str] = strawberryA.field(description="The name of the milestone (optional)",default=None)
     startdate: Optional[datetime.datetime] = strawberryA.field(description="Start date of the milestone (optional)",default=None)
     enddate: Optional[datetime.datetime] = strawberryA.field(description="End date of the milestone (optional)",default=None)
     
 @strawberryA.type(description="Result of a user operation on a milestone")
 class MilestoneResultGQLModel:
-    id: strawberryA.ID = strawberryA.field(description="The ID of the milestone", default=None)
+    id: uuid.UUID = strawberryA.field(description="The ID of the milestone", default=None)
     msg: str = strawberryA.field(description="Result of the operation (OK/Fail)", default=None)
 
     @strawberryA.field(description="Returns the milestone")
@@ -134,8 +135,8 @@ class MilestoneResultGQLModel:
 
 @strawberryA.input(description="Definition of milestone link used for addition")
 class MilestoneLinkAddGQLModel:
-    previous_id: strawberryA.ID = strawberryA.field(description="The ID of the previous milestone")
-    next_id: strawberryA.ID = strawberryA.field(description="The ID of the next milestone")
+    previous_id: uuid.UUID = strawberryA.field(description="The ID of the previous milestone")
+    next_id: uuid.UUID = strawberryA.field(description="The ID of the next milestone")
 
 @strawberryA.mutation(description="Adds a new milestones link.")
 async def milestones_link_add(self, info: strawberryA.types.Info, link: MilestoneLinkAddGQLModel) -> MilestoneResultGQLModel:
@@ -186,7 +187,7 @@ async def milestone_update(self, info: strawberryA.types.Info, milestone: Milest
     return result
 
 @strawberryA.mutation(description="Delete the milestone.")
-async def milestone_delete(self, info: strawberryA.types.Info, id: strawberryA.ID) -> ProjectResultGQLModel:
+async def milestone_delete(self, info: strawberryA.types.Info, id: uuid.UUID) -> ProjectResultGQLModel:
     loader = getLoadersFromInfo(info).milestonelinks
     rows = await loader.filter_by(previous_id=id)
     linksids = [row.id for row in rows]

@@ -19,9 +19,6 @@ from gql_projects.DBDefinitions import BaseModel
 
 ## Nasleduji funkce, ktere lze pouzit jako asynchronni resolvery
 
-
-
-
 ###########################################################################################################################
 #
 # zde si naimportujte sve SQLAlchemy modely

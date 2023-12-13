@@ -1,5 +1,6 @@
 from gql_projects.GraphResolvers import resolveProjectsForGroup
 import strawberry as strawberryA
+import uuid
 from typing import Annotated, List
 from contextlib import asynccontextmanager
 
@@ -21,10 +22,10 @@ ProjectGQLModel = Annotated["ProjectGQLModel",strawberryA.lazy(".ProjectGQLModel
     )
 
 class GroupGQLModel:
-    id: strawberryA.ID = strawberryA.federation.field(external=True)
+    id: uuid.UUID = strawberryA.federation.field(external=True)
 
     @classmethod
-    async def resolve_reference(cls, id: strawberryA.ID):
+    async def resolve_reference(cls, id: uuid.UUID):
         return GroupGQLModel(id=id)
 
     @strawberryA.field(description="""List of projects, related to group""")
