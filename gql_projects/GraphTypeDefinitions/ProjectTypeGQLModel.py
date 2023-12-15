@@ -1,7 +1,6 @@
 import uuid
 import strawberry as strawberryA
 from typing import List, Annotated, Optional, Union
-from gql_projects.utils.Dataloaders import getLoadersFromInfo
 from contextlib import asynccontextmanager
 
 @asynccontextmanager
@@ -21,13 +20,18 @@ from gql_projects.GraphResolvers import (
 ProjectGQLModel = Annotated["ProjectGQLModel",strawberryA.lazy(".ProjectGQLModel")]
 
 
+def getLoaders(info):
+    return info.context['all']
+
+
+
 @strawberryA.federation.type(
     keys=["id"], description="""Entity representing a project types"""
 )
 class ProjectTypeGQLModel:
     @classmethod
     async def resolve_reference(cls, info: strawberryA.types.Info, id: uuid.UUID):
-        loader = getLoadersFromInfo(info).projecttypes
+        loader = getLoaders(info).projecttypes
         result = await loader.load(id)
         if result is not None:
             result._type_definition = cls._type_definition  # little hack :)
@@ -100,7 +104,7 @@ class ProjectTypeResultGQLModel:
 
 @strawberryA.mutation(description="Adds a new project.")
 async def projectType_insert(self, info: strawberryA.types.Info, project: ProjectTypeInsertGQLModel) -> ProjectTypeResultGQLModel:
-    loader = getLoadersFromInfo(info).projecttypes
+    loader = getLoaders(info).projecttypes
     row = await loader.insert(project)
     result = ProjectTypeResultGQLModel()
     result.msg = "ok"
@@ -109,7 +113,7 @@ async def projectType_insert(self, info: strawberryA.types.Info, project: Projec
 
 @strawberryA.mutation(description="Update the project.")
 async def projectType_update(self, info: strawberryA.types.Info, project: ProjectTypeUpdateGQLModel) -> ProjectTypeResultGQLModel:
-    loader = getLoadersFromInfo(info).projecttypes
+    loader = getLoaders(info).projecttypes
     row = await loader.update(project)
     result = ProjectTypeResultGQLModel()
     result.msg = "ok"

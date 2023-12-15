@@ -132,9 +132,6 @@ def createLoadersContext(asyncSessionMaker):
         "loaders": createLoaders(asyncSessionMaker)
     }
 
-def getLoadersFromInfo(info):
-    return info.context['all']
-
 
 # from uoishelpers.dataloaders import createIdLoader, createFkeyLoader
 

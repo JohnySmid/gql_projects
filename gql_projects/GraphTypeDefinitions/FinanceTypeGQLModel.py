@@ -3,7 +3,6 @@ import uuid
 from typing import List, Annotated, Optional, Union
 from gql_projects.GraphResolvers import resolveFinancesForFinanceType, resolveFinanceTypeAll
 from contextlib import asynccontextmanager
-from gql_projects.utils.Dataloaders import getLoadersFromInfo
 
 @asynccontextmanager
 async def withInfo(info):
@@ -17,13 +16,17 @@ async def withInfo(info):
 FinanceGQLModel = Annotated ["FinanceGQLModel",strawberryA.lazy(".FinanceGQLModel")]
 
 
+def getLoaders(info):
+    return info.context['all']
+
+
 @strawberryA.federation.type(
     keys=["id"], description="""Entity representing a finance type"""
 )
 class FinanceTypeGQLModel:
     @classmethod
     async def resolve_reference(cls, info: strawberryA.types.Info, id: uuid.UUID):
-        loader = getLoadersFromInfo(info).financetypes
+        loader = getLoaders(info).financetypes
         result = await loader.load(id)
         if result is not None:
             result._type_definition = cls._type_definition  # little hack :)
@@ -97,7 +100,7 @@ class FinanceTypeResultGQLModel:
 
 @strawberryA.mutation(description="Adds a new project.")
 async def financeType_insert(self, info: strawberryA.types.Info, finance: FinanceTypeInsertGQLModel) -> FinanceTypeResultGQLModel:
-    loader = getLoadersFromInfo(info).financetypes
+    loader = getLoaders(info).financetypes
     row = await loader.insert(finance)
     result = FinanceTypeResultGQLModel()
     result.msg = "ok"
@@ -106,7 +109,7 @@ async def financeType_insert(self, info: strawberryA.types.Info, finance: Financ
 
 @strawberryA.mutation(description="Update the finance record.")
 async def financeType_update(self, info: strawberryA.types.Info, finance: FinanceTypeUpdateGQLModel) -> FinanceTypeResultGQLModel:
-    loader = getLoadersFromInfo(info).financetypes
+    loader = getLoaders(info).financetypes
     row = await loader.update(finance)
     result = FinanceTypeResultGQLModel()
     result.msg = "ok"

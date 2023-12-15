@@ -3,7 +3,6 @@ import datetime
 import uuid
 from typing import List, Annotated, Optional, Union
 
-from gql_projects.utils.Dataloaders import getLoadersFromInfo
 
 from gql_projects.GraphResolvers import (
     resolveFinanceTypeById,
@@ -15,13 +14,17 @@ ProjectGQLModel = Annotated["ProjectGQLModel",strawberryA.lazy(".ProjectGQLModel
 FinanceTypeGQLModel = Annotated ["FinanceTypeGQLModel",strawberryA.lazy(".FinanceTypeGQLModel")]
 
 
+def getLoaders(info):
+    return info.context['all']
+
+
 @strawberryA.federation.type(
     keys=["id"], description="""Entity representing a finance"""
 )
 class FinanceGQLModel:
     @classmethod
     async def resolve_reference(cls, info: strawberryA.types.Info, id: uuid.UUID):
-        loader = getLoadersFromInfo(info).finances
+        loader = getLoaders(info).finances
         result = await loader.load(id)
         if result is not None:
             result._type_definition = cls._type_definition  # little hack :)
@@ -117,7 +120,7 @@ class FinanceResultGQLModel:
 
 @strawberryA.mutation(description="Adds a new finance record.")
 async def finance_insert(self, info: strawberryA.types.Info, finance: FinanceInsertGQLModel) -> FinanceResultGQLModel:
-    loader = getLoadersFromInfo(info).finances
+    loader = getLoaders(info).finances
     row = await loader.insert(finance)
     result = FinanceResultGQLModel()
     result.msg = "ok"
@@ -126,7 +129,7 @@ async def finance_insert(self, info: strawberryA.types.Info, finance: FinanceIns
 
 @strawberryA.mutation(description="Update the finance record.")
 async def finance_update(self, info: strawberryA.types.Info, finance: FinanceUpdateGQLModel) -> FinanceResultGQLModel:
-    loader = getLoadersFromInfo(info).finances
+    loader = getLoaders(info).finances
     row = await loader.update(finance)
     result = FinanceResultGQLModel()
     result.msg = "ok"

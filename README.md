@@ -36,3 +36,6 @@ docker-compose up
 <br/><br/>
 
 pytest --cov-report term-missing --cov=gql_projects tests
+# Py-PROJECTS
+pip install -r requirements-dev.txt --force
+uvicorn main:app --reload

@@ -4,7 +4,6 @@ import datetime
 import typing
 import uuid
 from gql_projects.utils.DBFeeder import randomDataStructure
-from gql_projects.utils.Dataloaders import getLoadersFromInfo
 
 from gql_projects.GraphResolvers import (
     resolveProjectAll,
@@ -24,6 +23,9 @@ def AsyncSessionFromInfo(info):
     return info.context["session"]
 
 
+def getLoaders(info):
+    return info.context['all']
+
 
 @strawberryA.federation.type(
     keys=["id"], 
@@ -32,7 +34,7 @@ def AsyncSessionFromInfo(info):
 class ProjectGQLModel:
     @classmethod
     async def resolve_reference(cls, info: strawberryA.types.Info, id: uuid.UUID):
-        loader = getLoadersFromInfo(info).projects
+        loader = getLoaders(info).projects
         result = await loader.load(id)
         if result is not None:
             result._type_definition = cls._type_definition  # little hack :)
@@ -73,7 +75,7 @@ class ProjectGQLModel:
     async def finances(
         self, info: strawberryA.types.Info
     ) -> Optional["FinanceGQLModel"]:
-        loader = getLoadersFromInfo(info).finances
+        loader = getLoaders(info).finances
         result = await loader.filter_by(id=self.id)
         return result
 
@@ -81,13 +83,13 @@ class ProjectGQLModel:
     async def milestones(
         self, info: strawberryA.types.Info
     ) -> List["MilestoneGQLModel"]:
-        loader = getLoadersFromInfo(info).milestones
+        loader = getLoaders(info).milestones
         result = await loader.filter_by(project_id=self.id)
         return result
 
     @strawberryA.field(description="""Group, related to a project""")
     async def group(self, info: strawberryA.types.Info) -> Optional ["GroupGQLModel"]:
-        loader = getLoadersFromInfo(info).projects
+        loader = getLoaders(info).projects
         result = await loader.filter_by(id=self.group_id)
         return result
     
@@ -185,7 +187,7 @@ class ProjectResultGQLModel:
 
 @strawberryA.mutation(description="Adds a new project.")
 async def project_insert(self, info: strawberryA.types.Info, project: ProjectInsertGQLModel) -> ProjectResultGQLModel:
-    loader = getLoadersFromInfo(info).projects
+    loader = getLoaders(info).projects
     row = await loader.insert(project)
     result = ProjectResultGQLModel()
     result.msg = "ok"
@@ -194,7 +196,7 @@ async def project_insert(self, info: strawberryA.types.Info, project: ProjectIns
 
 @strawberryA.mutation(description="Update the project.")
 async def project_update(self, info: strawberryA.types.Info, project: ProjectUpdateGQLModel) -> ProjectResultGQLModel:
-    loader = getLoadersFromInfo(info).projects
+    loader = getLoaders(info).projects
     row = await loader.update(project)
     result = ProjectResultGQLModel()
     result.msg = "ok"
