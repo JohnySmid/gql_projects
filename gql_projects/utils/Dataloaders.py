@@ -4,7 +4,7 @@ import datetime
 import logging
 from sqlalchemy import select
 from functools import cache
-
+import os
 
 from gql_projects.DBDefinitions import ProjectCategoryModel, ProjectTypeModel, ProjectModel, MilestoneModel, MilestoneLinkModel, FinanceCategory, FinanceTypeModel, FinanceModel
 
@@ -96,10 +96,6 @@ def prepareSelect(model, where: dict):
         }
 
         opName = ops.get(opName, None)
-        # if opName is None:
-        #     print("op", attributeName, opName, opValue)
-        #     result = convertRelationship(model, attributeName, woNone, opName, opValue)
-        # else:
         result = convertAttributeOp(model, attributeName, opName, opValue)
         return result
         
@@ -140,6 +136,13 @@ def prepareSelect(model, where: dict):
     filterStatement = convertAny(model, limitDict(where))
     result = baseStatement.filter(filterStatement)
     return result
+
+@cache
+def composeAuthUrl():
+    hostname = os.environ.get("AUTHURL", "http://localhost:8088/gql")
+    assert "://" in hostname, "probably bad formated url, has it 'protocol' part?"
+    assert "." not in hostname, "security check failed, change source code"
+    return hostname
 
 def update(destination, source=None, extraValues={}):
     """Updates destination's attributes with source's attributes.
@@ -219,8 +222,11 @@ def createLoader(asyncSessionMaker, DBModel):
                         statement = statement.filter_by(**extendedfilter)
                     logging.info(f"loader.page statement {statement}")
                     return await self.execute_select(statement)
+        def set_cache(self, cache_object):
+            self.cache = True
+            self._cache = cache_object
 
-    return Loader()
+    return Loader(cache=True)
 
 class Loaders:
     authorizations = None
