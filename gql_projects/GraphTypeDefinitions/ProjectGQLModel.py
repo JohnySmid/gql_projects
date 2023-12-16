@@ -3,7 +3,9 @@ import strawberry as strawberryA
 import datetime
 import typing
 import uuid
+import strawberry
 from gql_projects.utils.DBFeeder import randomDataStructure
+from gql_projects.utils.Dataloaders import getLoadersFromInfo, getUserFromInfo
 
 from gql_projects.GraphResolvers import (
     resolveProjectAll,
@@ -24,7 +26,8 @@ def AsyncSessionFromInfo(info):
 
 
 def getLoaders(info):
-    return info.context['all']
+    #return info.context['all']
+    return getLoadersFromInfo(info).projects
 
 
 @strawberryA.federation.type(
@@ -110,12 +113,26 @@ async def withInfo(info):
         finally:
             pass
 
+from dataclasses import dataclass
+from .utils import createInputs
+@createInputs
+@dataclass
+class ProjectWhereFilter:
+    name: str
+    type_id: uuid.UUID
+    value: str
+
 @strawberryA.field(description="""Returns a list of projects""")
 async def project_page(
-    self, info: strawberryA.types.Info, skip: int = 0, limit: int = 10
+    self, info: strawberryA.types.Info, skip: int = 0, limit: int = 10,
+    where: Optional[ProjectWhereFilter] = None
 ) -> List[ProjectGQLModel]:
+    # otazka: musi tady byt async? 
     async with withInfo(info) as session:
-        result = await resolveProjectAll(session, skip, limit)
+        loader = getLoadersFromInfo(info).projects
+        wf = None if where is None else strawberry.asdict(where)
+        #result = await resolveProjectAll(session, skip, limit)
+        result = await loader.page(skip, limit, where = wf)
         return result
     
     
