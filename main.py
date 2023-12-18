@@ -92,7 +92,7 @@ class MyGraphQL(GraphQL):
             "session": self._session,
             "asyncSessionMaker": asyncSessionMaker,
             "user": self._user,
-            "all": createLoaders(asyncSessionMaker)
+            "loaders": createLoaders(asyncSessionMaker)
         }
 
 
