@@ -128,12 +128,12 @@ async def project_page(
     where: Optional[ProjectWhereFilter] = None
 ) -> List[ProjectGQLModel]:
     # otazka: musi tady byt async? 
-    async with withInfo(info) as session:
-        loader = getLoadersFromInfo(info).projects
-        wf = None if where is None else strawberry.asdict(where)
-        #result = await resolveProjectAll(session, skip, limit)
-        result = await loader.page(skip, limit, where = wf)
-        return result
+    # async with withInfo(info) as session:
+    loader = getLoadersFromInfo(info).projects
+    wf = None if where is None else strawberry.asdict(where)
+    #result = await resolveProjectAll(session, skip, limit)
+    result = await loader.page(skip, limit, where = wf)
+    return result
     
     
 @strawberryA.field(description="""Returns project by its id""")
