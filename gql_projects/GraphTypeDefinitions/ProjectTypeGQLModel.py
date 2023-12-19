@@ -3,6 +3,10 @@ import strawberry as strawberryA
 from typing import List, Annotated, Optional, Union
 from contextlib import asynccontextmanager
 
+import strawberry
+from gql_projects.utils.DBFeeder import randomDataStructure
+from gql_projects.utils.Dataloaders import getLoadersFromInfo, getUserFromInfo
+
 @asynccontextmanager
 async def withInfo(info):
     asyncSessionMaker = info.context["asyncSessionMaker"]
@@ -21,7 +25,8 @@ ProjectGQLModel = Annotated["ProjectGQLModel",strawberryA.lazy(".ProjectGQLModel
 
 
 def getLoaders(info):
-    return info.context['all']
+    #return info.context['all']
+    return getLoadersFromInfo(info).projecttypes
 
 
 
@@ -61,13 +66,27 @@ class ProjectTypeGQLModel:
 #
 ###########################################################################################################################
 
+from dataclasses import dataclass
+from .utils import createInputs
+@createInputs
+@dataclass
+class ProjectTypeWhereFilter:
+    name: str
+    type_id: uuid.UUID
+    value: str
+
 @strawberryA.field(description="""Returns a list of project types""")
 async def project_type_page(
-    self, info: strawberryA.types.Info, skip: int = 0, limit: int = 10
+    self, info: strawberryA.types.Info, skip: int = 0, limit: int = 10,
+    where: Optional[ProjectTypeWhereFilter] = None
 ) -> List[ProjectTypeGQLModel]:
-    async with withInfo(info) as session:
-        result = await resolveProjectTypeAll(session, skip, limit)
-        return result
+    # async with withInfo(info) as session:
+    #     result = await resolveProjectTypeAll(session, skip, limit)
+    #     return result
+    loader = getLoadersFromInfo(info).projecttypes
+    wf = None if where is None else strawberry.asdict(where)
+    result = await loader.page(skip, limit, where = wf)
+    return result
 
 ###########################################################################################################################
 #

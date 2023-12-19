@@ -310,15 +310,20 @@ def get_demodata():
     return jsonData
 
 async def initDB(asyncSessionMaker):
-    #category -> type -> model
+    #category -> type -> model 
+    # gql_forms main a dbfeeder
     defaultNoDemo = "False"
-    if defaultNoDemo == os.environ.get("DEMO", defaultNoDemo):
+    if defaultNoDemo == os.environ.get("DEMO", "True"):
         dbModels = [
             ProjectCategoryModel,
             ProjectTypeModel,
             ProjectModel,
             FinanceCategory,
             FinanceTypeModel,
+            FinanceModel,
+            MilestoneModel,
+            MilestoneLinkModel
+
         ]
     else:
         dbModels = [

@@ -10,6 +10,10 @@ from gql_projects.GraphResolvers import (
 from contextlib import asynccontextmanager
 from .ProjectGQLModel import ProjectResultGQLModel
 
+import strawberry
+from gql_projects.utils.DBFeeder import randomDataStructure
+from gql_projects.utils.Dataloaders import getLoadersFromInfo, getUserFromInfo
+
 @asynccontextmanager
 async def withInfo(info):
     asyncSessionMaker = info.context["asyncSessionMaker"]
@@ -23,7 +27,8 @@ ProjectGQLModel = Annotated["ProjectGQLModel",strawberryA.lazy(".ProjectGQLModel
 
 
 def getLoaders(info):
-    return info.context['all']
+    #return info.context['all']
+    return getLoadersFromInfo(info).milestones
 
 
 @strawberryA.federation.type(
@@ -94,13 +99,28 @@ class MilestoneGQLModel:
 #
 ###########################################################################################################################
 
+from dataclasses import dataclass
+from .utils import createInputs
+@createInputs
+@dataclass
+class MilestoneWhereFilter:
+    name: str
+    type_id: uuid.UUID
+    value: str
+
 @strawberryA.field(description="""Returns a list of milestones""")
 async def milestone_page(
-    self, info: strawberryA.types.Info, skip: int = 0, limit: int = 10
+    self, info: strawberryA.types.Info, skip: int = 0, limit: int = 10,
+    where: Optional[MilestoneWhereFilter] = None
 ) -> List[MilestoneGQLModel]:
-    async with withInfo(info) as session:
-        result = await resolveMilestoneAll(session, skip, limit)
-        return result
+    # async with withInfo(info) as session:
+    #     result = await resolveMilestoneAll(session, skip, limit)
+    #     return result
+    loader = getLoadersFromInfo(info).milestones
+    wf = None if where is None else strawberry.asdict(where)
+    result = await loader.page(skip, limit, where = wf)
+    return result
+
 
 ###########################################################################################################################
 #

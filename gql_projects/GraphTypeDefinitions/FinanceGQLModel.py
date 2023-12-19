@@ -3,6 +3,9 @@ import datetime
 import uuid
 from typing import List, Annotated, Optional, Union
 
+import strawberry
+from gql_projects.utils.DBFeeder import randomDataStructure
+from gql_projects.utils.Dataloaders import getLoadersFromInfo, getUserFromInfo
 
 from gql_projects.GraphResolvers import (
     resolveFinanceTypeById,
@@ -15,7 +18,8 @@ FinanceTypeGQLModel = Annotated ["FinanceTypeGQLModel",strawberryA.lazy(".Financ
 
 
 def getLoaders(info):
-    return info.context['all']
+    #return info.context['all']
+    return getLoadersFromInfo(info).finances
 
 
 @strawberryA.federation.type(
@@ -77,13 +81,28 @@ async def withInfo(info):
         finally:
             pass
 
+from dataclasses import dataclass
+from .utils import createInputs
+@createInputs
+@dataclass
+class FinanceWhereFilter:
+    name: str
+    type_id: uuid.UUID
+    value: str
+
 @strawberryA.field(description="""Returns a list of finances""")
 async def finance_page(
-    self, info: strawberryA.types.Info, skip: int = 0, limit: int = 10
+    self, info: strawberryA.types.Info, skip: int = 0, limit: int = 10,
+    where: Optional[FinanceWhereFilter] = None
 ) -> List[FinanceGQLModel]:
-    async with withInfo(info) as session:
-        result = await resolveFinanceAll(session, skip, limit)
-        return result
+    # async with withInfo(info) as session:
+    #     result = await resolveFinanceAll(session, skip, limit)
+    #     return result
+    loader = getLoadersFromInfo(info).financetypes
+    wf = None if where is None else strawberry.asdict(where)
+    result = await loader.page(skip, limit, where = wf)
+    return result
+
 
 ###########################################################################################################################
 #
