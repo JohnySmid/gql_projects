@@ -2,6 +2,7 @@ import uuid
 import strawberry as strawberryA
 from typing import List, Annotated, Optional, Union
 from contextlib import asynccontextmanager
+import datetime
 
 import strawberry
 from gql_projects.utils.DBFeeder import randomDataStructure
@@ -24,10 +25,6 @@ from gql_projects.GraphResolvers import (
 ProjectGQLModel = Annotated["ProjectGQLModel",strawberryA.lazy(".ProjectGQLModel")]
 
 
-def getLoaders(info):
-    #return info.context['all']
-    return getLoadersFromInfo(info).projecttypes
-
 
 
 @strawberryA.federation.type(
@@ -36,7 +33,7 @@ def getLoaders(info):
 class ProjectTypeGQLModel:
     @classmethod
     async def resolve_reference(cls, info: strawberryA.types.Info, id: uuid.UUID):
-        loader = getLoaders(info).projecttypes
+        loader = getLoadersFromInfo(info).projecttypes
         result = await loader.load(id)
         if result is not None:
             result._type_definition = cls._type_definition  # little hack :)
@@ -53,6 +50,10 @@ class ProjectTypeGQLModel:
     @strawberryA.field(description="""Name en""")
     def name_en(self) -> str:
         return self.name_en
+    
+    @strawberryA.field(description="""Last change""")
+    def lastchange(self) -> datetime.datetime:
+        return self.lastchange
 
     @strawberryA.field(description="""List of projects, related to project type""")
     async def projects(self, info: strawberryA.types.Info) -> List["ProjectGQLModel"]:
@@ -98,18 +99,21 @@ async def project_type_page(
 
 @strawberryA.input(description="Definition of a project used for creation")
 class ProjectTypeInsertGQLModel:
-    projecttype_id: uuid.UUID = strawberryA.field(description="")
+    # projecttype_id: uuid.UUID = strawberryA.field(description="")
     name: str = strawberryA.field(description="")
     name_en: str = strawberryA.field(description="")
 
     id: Optional[uuid.UUID] = strawberryA.field(description="Primary key (UUID), could be client-generated", default=None)
-    
+    createdby: strawberry.Private[uuid.UUID] = None 
 
 @strawberryA.input(description="Definition of a project used for update")
 class ProjectTypeUpdateGQLModel:
     id: uuid.UUID = strawberryA.field(description="The ID of the project")
+    lastchange: datetime.datetime = strawberry.field(description="timestamp of last change = TOKEN")
+
     name: Optional[str] = strawberryA.field(description="The name of the project (optional)", default=None)
     name_en: Optional[str] = strawberryA.field(description="The name of the project (optional)", default=None)
+    changedby: strawberry.Private[uuid.UUID] = None
 
 @strawberryA.type(description="Result of a mutation over Project")
 class ProjectTypeResultGQLModel:
@@ -123,7 +127,9 @@ class ProjectTypeResultGQLModel:
 
 @strawberryA.mutation(description="Adds a new project.")
 async def projectType_insert(self, info: strawberryA.types.Info, project: ProjectTypeInsertGQLModel) -> ProjectTypeResultGQLModel:
-    loader = getLoaders(info).projecttypes
+    # user = getUserFromInfo(info)
+    # project.createdby = uuid.UUID(user["id"])
+    loader = getLoadersFromInfo(info).projecttypes
     row = await loader.insert(project)
     result = ProjectTypeResultGQLModel()
     result.msg = "ok"
@@ -132,7 +138,9 @@ async def projectType_insert(self, info: strawberryA.types.Info, project: Projec
 
 @strawberryA.mutation(description="Update the project.")
 async def projectType_update(self, info: strawberryA.types.Info, project: ProjectTypeUpdateGQLModel) -> ProjectTypeResultGQLModel:
-    loader = getLoaders(info).projecttypes
+    # user = getUserFromInfo(info)
+    # project.changedby = uuid.UUID(user["id"])
+    loader = getLoadersFromInfo(info).projecttypes
     row = await loader.update(project)
     result = ProjectTypeResultGQLModel()
     result.msg = "ok"

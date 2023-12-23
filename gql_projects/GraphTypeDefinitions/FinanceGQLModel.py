@@ -17,10 +17,6 @@ ProjectGQLModel = Annotated["ProjectGQLModel",strawberryA.lazy(".ProjectGQLModel
 FinanceTypeGQLModel = Annotated ["FinanceTypeGQLModel",strawberryA.lazy(".FinanceTypeGQLModel")]
 
 
-def getLoaders(info):
-    #return info.context['all']
-    return getLoadersFromInfo(info).finances
-
 
 @strawberryA.federation.type(
     keys=["id"], description="""Entity representing a finance"""
@@ -28,7 +24,7 @@ def getLoaders(info):
 class FinanceGQLModel:
     @classmethod
     async def resolve_reference(cls, info: strawberryA.types.Info, id: uuid.UUID):
-        loader = getLoaders(info).finances
+        loader = getLoadersFromInfo(info).finances
         result = await loader.load(id)
         if result is not None:
             result._type_definition = cls._type_definition  # little hack :)
@@ -98,7 +94,7 @@ async def finance_page(
     # async with withInfo(info) as session:
     #     result = await resolveFinanceAll(session, skip, limit)
     #     return result
-    loader = getLoadersFromInfo(info).financetypes
+    loader = getLoadersFromInfo(info).finances
     wf = None if where is None else strawberry.asdict(where)
     result = await loader.page(skip, limit, where = wf)
     return result
@@ -117,15 +113,20 @@ class FinanceInsertGQLModel:
     name: str = strawberryA.field(description="Name of the financial data")
     financetype_id: uuid.UUID = strawberryA.field(description="The ID of the financial data type")
     project_id: uuid.UUID = strawberryA.field(description="The ID of the associated project")
+
     id: Optional[uuid.UUID] = strawberryA.field(description="The ID of the financial data (optional)",default=None)
     amount: Optional[float] = strawberryA.field(description="The amount of financial data (optional)", default=0.0)
+    createdby: strawberry.Private[uuid.UUID] = None 
 
 @strawberryA.input(description="Definition of financial data used for update")
 class FinanceUpdateGQLModel:
     id: uuid.UUID = strawberryA.field(description="The ID of the financial data")
+    lastchange: datetime.datetime = strawberry.field(description="timestamp of last change = TOKEN")
+
     name: Optional[str] = strawberryA.field(description="The name of the financial data (optional)")
     financetype_id: Optional[uuid.UUID] = strawberryA.field(description="The ID of the financial data type (optional)")
     amount: Optional[float] = strawberryA.field(description="The amount of financial data (optional)", default=None)
+    changedby: strawberry.Private[uuid.UUID] = None
 
 @strawberryA.type(description="Result of a financial data operation")
 class FinanceResultGQLModel:
@@ -139,7 +140,9 @@ class FinanceResultGQLModel:
 
 @strawberryA.mutation(description="Adds a new finance record.")
 async def finance_insert(self, info: strawberryA.types.Info, finance: FinanceInsertGQLModel) -> FinanceResultGQLModel:
-    loader = getLoaders(info).finances
+    # user = getUserFromInfo(info)
+    # finance.createdby = uuid.UUID(user["id"])
+    loader = getLoadersFromInfo(info).finances
     row = await loader.insert(finance)
     result = FinanceResultGQLModel()
     result.msg = "ok"
@@ -148,7 +151,9 @@ async def finance_insert(self, info: strawberryA.types.Info, finance: FinanceIns
 
 @strawberryA.mutation(description="Update the finance record.")
 async def finance_update(self, info: strawberryA.types.Info, finance: FinanceUpdateGQLModel) -> FinanceResultGQLModel:
-    loader = getLoaders(info).finances
+    # user = getUserFromInfo(info)
+    # finance.changedby = uuid.UUID(user["id"])
+    loader = getLoadersFromInfo(info).finances
     row = await loader.update(finance)
     result = FinanceResultGQLModel()
     result.msg = "ok"

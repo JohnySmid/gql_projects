@@ -26,9 +26,6 @@ async def withInfo(info):
 ProjectGQLModel = Annotated["ProjectGQLModel",strawberryA.lazy(".ProjectGQLModel")]
 
 
-def getLoaders(info):
-    #return info.context['all']
-    return getLoadersFromInfo(info).milestones
 
 
 @strawberryA.federation.type(
@@ -37,7 +34,7 @@ def getLoaders(info):
 class MilestoneGQLModel:
     @classmethod
     async def resolve_reference(cls, info: strawberryA.types.Info, id: uuid.UUID):
-        loader = getLoaders(info).milestones
+        loader = getLoadersFromInfo(info).milestones
         result = await loader.load(id)
         if result is not None:
             result._type_definition = cls._type_definition  # little hack :)
@@ -78,7 +75,7 @@ class MilestoneGQLModel:
         # async with withInfo(info) as session:
         #     result = await resolveProjectById(session, self.project_id)
         #     return result
-        loader = getLoaders(info).milestonelinks
+        loader = getLoadersFromInfo(info).milestonelinks
         rows = await loader.filter_by(next_id=self.id)
         awaitable = (MilestoneGQLModel.resolve_reference(info, row.previous_id) for row in rows)
         return await asyncio.gather(*awaitable)
@@ -88,7 +85,7 @@ class MilestoneGQLModel:
         # async with withInfo(info) as session:
         #     result = await resolveProjectById(session, self.project_id)
         #     return result
-        loader = getLoaders(info).milestonelinks
+        loader = getLoadersFromInfo(info).milestonelinks
         rows = await loader.filter_by(previous_id=self.id)
         awaitable = (MilestoneGQLModel.resolve_reference(info, row.next_id) for row in rows)
         return await asyncio.gather(*awaitable)
@@ -163,7 +160,7 @@ class MilestoneLinkAddGQLModel:
 
 @strawberryA.mutation(description="Adds a new milestones link.")
 async def milestones_link_add(self, info: strawberryA.types.Info, link: MilestoneLinkAddGQLModel) -> MilestoneResultGQLModel:
-    loader = getLoaders(info).milestonelinks
+    loader = getLoadersFromInfo(info).milestonelinks
     rows = await loader.filter_by(previous_id=link.previous_id, next_id=link.next_id)
     row = next(rows, None)
     result = MilestoneResultGQLModel()
@@ -177,7 +174,7 @@ async def milestones_link_add(self, info: strawberryA.types.Info, link: Mileston
 
 @strawberryA.mutation(description="Removes the milestones link.")
 async def milestones_link_remove(self, info: strawberryA.types.Info, link: MilestoneLinkAddGQLModel) -> MilestoneResultGQLModel:
-    loader = getLoaders(info).milestonelinks
+    loader = getLoadersFromInfo(info).milestonelinks
     rows = await loader.filter_by(previous_id=link.previous_id, next_id=link.next_id)
     row = next(rows, None)
     result = MilestoneResultGQLModel()
@@ -191,7 +188,7 @@ async def milestones_link_remove(self, info: strawberryA.types.Info, link: Miles
 
 @strawberryA.mutation(description="Adds a new milestone.")
 async def milestone_insert(self, info: strawberryA.types.Info, milestone: MilestoneInsertGQLModel) -> MilestoneResultGQLModel:
-    loader = getLoaders(info).milestones
+    loader = getLoadersFromInfo(info).milestones
     row = await loader.insert(milestone)
     result = MilestoneResultGQLModel()
     result.msg = "ok"
@@ -200,7 +197,7 @@ async def milestone_insert(self, info: strawberryA.types.Info, milestone: Milest
 
 @strawberryA.mutation(description="Update the milestone.")
 async def milestone_update(self, info: strawberryA.types.Info, milestone: MilestoneUpdateGQLModel) -> MilestoneResultGQLModel:
-    loader = getLoaders(info).milestones
+    loader = getLoadersFromInfo(info).milestones
     row = await loader.update(milestone)
     result = MilestoneResultGQLModel()
     result.msg = "ok"
@@ -211,7 +208,7 @@ async def milestone_update(self, info: strawberryA.types.Info, milestone: Milest
 
 @strawberryA.mutation(description="Delete the milestone.")
 async def milestone_delete(self, info: strawberryA.types.Info, id: uuid.UUID) -> ProjectResultGQLModel:
-    loader = getLoaders(info).milestonelinks
+    loader = getLoadersFromInfo(info).milestonelinks
     rows = await loader.filter_by(previous_id=id)
     linksids = [row.id for row in rows]
     rows = await loader.filter_by(next_id=id)
@@ -219,7 +216,7 @@ async def milestone_delete(self, info: strawberryA.types.Info, id: uuid.UUID) ->
     for id in linksids:
         await loader.delete(id)
 
-    loader = getLoaders(info).milestones
+    loader = getLoadersFromInfo(info).milestones
     row = await loader.load(id)
     result = ProjectResultGQLModel()
     result.id = row.project_id

@@ -10,7 +10,8 @@ from gql_projects.utils.Dataloaders import getLoadersFromInfo, getUserFromInfo
 from gql_projects.GraphResolvers import (
     resolveProjectAll,
     resolveProjectById,
-    resolveProjectsForGroup
+    resolveProjectsForGroup,
+    resolveFinancesForProject
 )
 
 ProjectTypeGQLModel = Annotated ["ProjectTypeGQLModel", strawberryA.lazy(".ProjectTypeGQLModel")]
@@ -25,9 +26,7 @@ def AsyncSessionFromInfo(info):
     return info.context["session"]
 
 
-def getLoaders(info):
-    #return info.context['all']
-    return getLoadersFromInfo(info).projects
+
 
 
 @strawberryA.federation.type(
@@ -37,7 +36,7 @@ def getLoaders(info):
 class ProjectGQLModel:
     @classmethod
     async def resolve_reference(cls, info: strawberryA.types.Info, id: uuid.UUID):
-        loader = getLoaders(info).projects
+        loader = getLoadersFromInfo(info).projects
         result = await loader.load(id)
         if result is not None:
             result._type_definition = cls._type_definition  # little hack :)
@@ -74,25 +73,25 @@ class ProjectGQLModel:
         result = await ProjectTypeGQLModel.resolve_reference(info, self.projecttype_id)
         return result
 
-    @strawberryA.field(description="""List of finances, related to a project""")
+    @strawberryA.field(description="""List of finances, related to finance type""")
     async def finances(
         self, info: strawberryA.types.Info
-    ) -> Optional["FinanceGQLModel"]:
-        loader = getLoaders(info).finances
-        result = await loader.filter_by(id=self.id)
-        return result
+    ) -> List["FinanceGQLModel"]:
+        async with withInfo(info) as session:
+            result = await resolveFinancesForProject(session, self.id)
+            return result
 
     @strawberryA.field(description="""List of milestones, related to a project""")
     async def milestones(
         self, info: strawberryA.types.Info
     ) -> List["MilestoneGQLModel"]:
-        loader = getLoaders(info).milestones
+        loader = getLoadersFromInfo(info).milestones
         result = await loader.filter_by(project_id=self.id)
         return result
 
     @strawberryA.field(description="""Group, related to a project""")
     async def group(self, info: strawberryA.types.Info) -> Optional ["GroupGQLModel"]:
-        loader = getLoaders(info).projects
+        loader = getLoadersFromInfo(info).projects
         result = await loader.filter_by(id=self.group_id)
         return result
     
@@ -173,22 +172,27 @@ from typing import Optional
 class ProjectInsertGQLModel:
     projecttype_id: uuid.UUID = strawberryA.field(description="The ID of the project type")
     name: str = strawberryA.field(description="Name/label of the project")
-
+    
+    
     id: Optional[uuid.UUID] = strawberryA.field(description="Primary key (UUID), could be client-generated", default=None)
     name: Optional[str] = strawberryA.field(description="The name of the project (optional)", default="Project")
     startdate: Optional[datetime.datetime] = strawberryA.field(description="Moment when the project starts (optional)", default_factory=lambda: datetime.datetime.now())
     enddate: Optional[datetime.datetime] = strawberryA.field(description="Moment when the project ends (optional)", default_factory=lambda: datetime.datetime.now())
-
     group_id: Optional[uuid.UUID] = strawberryA.field(description="The ID of the group associated with the project (optional)", default=None)
+    createdby: strawberry.Private[uuid.UUID] = None 
 
 @strawberryA.input(description="Definition of a project used for update")
 class ProjectUpdateGQLModel:
     id: uuid.UUID = strawberryA.field(description="The ID of the project")
+    lastchange: datetime.datetime = strawberry.field(description="timestamp of last change = TOKEN")
+
     name: Optional[str] = strawberryA.field(description="The name of the project (optional)", default=None)
     projecttype_id: Optional[uuid.UUID] = strawberryA.field(description="The ID of the project type (optional)",default=None)
     startdate: Optional[datetime.datetime] = strawberryA.field(description="Moment when the project starts (optional)", default_factory=lambda: datetime.datetime.now())
     enddate: Optional[datetime.datetime] = strawberryA.field(description="Moment when the project ends (optional)", default_factory=lambda: datetime.datetime.now())
     group_id: Optional[uuid.UUID] = strawberryA.field(description="The ID of the group associated with the project (optional)", default=None)
+    changedby: strawberry.Private[uuid.UUID] = None
+
 
 @strawberryA.type(description="Result of a mutation over Project")
 class ProjectResultGQLModel:
@@ -204,7 +208,10 @@ class ProjectResultGQLModel:
 
 @strawberryA.mutation(description="Adds a new project.")
 async def project_insert(self, info: strawberryA.types.Info, project: ProjectInsertGQLModel) -> ProjectResultGQLModel:
-    loader = getLoaders(info).projects
+    # user = getUserFromInfo(info)
+    # project.createdby = uuid.UUID(user["id"])
+
+    loader = getLoadersFromInfo(info).projects
     row = await loader.insert(project)
     result = ProjectResultGQLModel()
     result.msg = "ok"
@@ -213,7 +220,9 @@ async def project_insert(self, info: strawberryA.types.Info, project: ProjectIns
 
 @strawberryA.mutation(description="Update the project.")
 async def project_update(self, info: strawberryA.types.Info, project: ProjectUpdateGQLModel) -> ProjectResultGQLModel:
-    loader = getLoaders(info).projects
+    user = getUserFromInfo(info)
+    project.changedby = uuid.UUID(user["id"])
+    loader = getLoadersFromInfo(info).projects
     row = await loader.update(project)
     result = ProjectResultGQLModel()
     result.msg = "ok"

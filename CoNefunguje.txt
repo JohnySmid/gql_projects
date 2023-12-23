@@ -1,0 +1,12 @@
+
+1 mutation MyMutation {
+  __typename
+  projectUpdate(project: {lastchange: "2023-12-23T09:19:52.794215", id: "43dd2ff1-5c17-42a5-ba36-8b30e2a243bb", name:"XDXD"}) {
+    id
+  }
+}
+
+ValueError: badly formed hexadecimal UUID string
+
+user = getUserFromInfo(info)
+    project.changedby = uuid.UUID(user["id"])
