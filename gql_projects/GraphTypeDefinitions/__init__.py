@@ -38,7 +38,11 @@ class Query:
     from .MilestoneGQLModel import milestone_page
     milestone_page = milestone_page
 
+    from .ProjectCategoryGQLModel import project_category_page
+    project_category_page= project_category_page
 
+    from .FinanceCategoryGQLModel import finance_category_page
+    finance_category_page = finance_category_page
 
 
 @strawberry.type(description="""Type for mutation root""")
@@ -81,6 +85,19 @@ class Mutation:
 
     from .ProjectTypeGQLModel import projectType_update
     projectType_update = projectType_update
+
+    from .ProjectCategoryGQLModel import project_category_insert
+    project_category_insert = project_category_insert
+
+    from .ProjectCategoryGQLModel import project_category_update
+    project_category_update = project_category_update
+
+    from .FinanceCategoryGQLModel import finance_category_insert
+    finance_category_insert = finance_category_insert
+
+    from .FinanceCategoryGQLModel import finance_category_update
+    finance_category_update = finance_category_update
+
 
 schema = strawberry.federation.Schema(
     query=Query,

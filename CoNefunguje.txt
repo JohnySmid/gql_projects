@@ -10,3 +10,34 @@ ValueError: badly formed hexadecimal UUID string
 
 user = getUserFromInfo(info)
     project.changedby = uuid.UUID(user["id"])
+
+2. v systemdata.json nema projcettypes definovany category_id 
+  "projecttypes": [
+        {
+            "id": "a825d8e1-2e60-4884-afdb-25642db581d8",
+            "name": "GAČR",
+            "name_en": "GAČR"
+        },
+
+    nemužu udělat
+    
+    query MyQuery {
+  __typename
+  projectTypePage {
+    category{
+      name
+    }
+  }
+}
+
+to same u financeCategory name_en
+
+3. 
+mutation{
+	project/financeCategoryUpdate(project:{id: "5c8c4c5a-df3b-44a9-ab90-396bdc84542b", lastchange: "2023-12-23T11:12:00.397561"}){
+    msg
+    id
+  }
+}
+
+(Background on this error at: https://sqlalche.me/e/20/dbapi)
