@@ -98,7 +98,7 @@ async def finance_type_page(
 class FinanceTypeInsertGQLModel:
     name: str = strawberryA.field(description="")
 
-    name_en: Optional[str] = strawberryA.field(description="The name of the financial data (optional)")
+    name_en: Optional[str] = strawberryA.field(description="The name of the financial data (optional)",default=None)
     id: Optional[uuid.UUID] = strawberryA.field(description="Primary key (UUID), could be client-generated", default=None)
     createdby: strawberry.Private[uuid.UUID] = None 
 
@@ -107,8 +107,8 @@ class FinanceTypeUpdateGQLModel:
     id: uuid.UUID = strawberryA.field(description="The ID of the financial data")
     lastchange: datetime.datetime = strawberry.field(description="timestamp of last change = TOKEN")
 
-    name: Optional[str] = strawberryA.field(description="The name of the financial data (optional)")
-    name_en: Optional[str] = strawberryA.field(description="The name of the financial data (optional)")
+    name: Optional[str] = strawberryA.field(description="The name of the financial data (optional)",default=None)
+    name_en: Optional[str] = strawberryA.field(description="The name of the financial data (optional)",default=None)
     changedby: strawberry.Private[uuid.UUID] = None
 
 @strawberryA.type(description="Result of a mutation over Project")
