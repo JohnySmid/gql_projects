@@ -131,6 +131,7 @@ async def milestone_page(
 class MilestoneInsertGQLModel:
     name: str = strawberryA.field(description="Name of the milestone")
     project_id: uuid.UUID = strawberryA.field(description="The ID of the associated project")
+    
     startdate: Optional[datetime.datetime] = strawberryA.field(description="Start date of the milestone (optional)", default=datetime.datetime.now())
     enddate: Optional[datetime.datetime] = strawberryA.field(description="End date of the milestone (optional)", default=datetime.datetime.now() + datetime.timedelta(days=30))
     id: Optional[uuid.UUID] = strawberryA.field(description="The ID of the milestone (optional)",default=None)

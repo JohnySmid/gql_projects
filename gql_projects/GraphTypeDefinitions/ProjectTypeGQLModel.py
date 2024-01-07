@@ -107,8 +107,8 @@ async def project_type_page(
 class ProjectTypeInsertGQLModel:
     category_id: uuid.UUID = strawberryA.field(description="")
     name: str = strawberryA.field(description="")
-    name_en: str = strawberryA.field(description="")
 
+    name_en: str = strawberryA.field(description="", default=None)
     id: Optional[uuid.UUID] = strawberryA.field(description="Primary key (UUID), could be client-generated", default=None)
     createdby: strawberry.Private[uuid.UUID] = None 
 

@@ -99,8 +99,8 @@ from typing import Optional
 @strawberryA.input(description="Definition of a project used for creation")
 class ProjectCategoryInsertGQLModel:
     name: str = strawberryA.field(description="Name/label of the project")
-    name_en: str = strawberryA.field
     
+    name_en: str = strawberryA.field(description="", default=None)
     id: Optional[uuid.UUID] = strawberryA.field(description="Primary key (UUID), could be client-generated", default=None)
     createdby: strawberry.Private[uuid.UUID] = None 
 

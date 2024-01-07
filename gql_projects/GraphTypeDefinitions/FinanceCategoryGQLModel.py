@@ -87,8 +87,8 @@ from typing import Optional
 @strawberryA.input(description="Definition of a project used for creation")
 class FinanceCategoryInsertGQLModel:
     name: str = strawberryA.field(description="Name/label of the project")
-    name_en: str = strawberryA.field
-    
+
+    name_en: str = strawberryA.field(description="", default=None)
     id: Optional[uuid.UUID] = strawberryA.field(description="Primary key (UUID), could be client-generated", default=None)
     createdby: strawberry.Private[uuid.UUID] = None 
 
@@ -98,7 +98,7 @@ class FinanceCategoryUpdateGQLModel:
     lastchange: datetime.datetime = strawberry.field(description="timestamp of last change = TOKEN")
 
     name: Optional[str] = strawberryA.field(description="The name of the project (optional)", default=None)
-    name_en: Optional[str] = strawberryA.field
+    name_en: str = strawberryA.field(description="", default=None)
     changedby: strawberry.Private[uuid.UUID] = None
 
 

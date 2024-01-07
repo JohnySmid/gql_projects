@@ -1,6 +1,7 @@
 import strawberry as strawberryA
 import strawberry
 from .GroupGQLModel import GroupGQLModel
+from .ProjectGQLModel import ProjectGQLModel
 
 
 @strawberry.type(description="""Type for query root""")
@@ -104,4 +105,4 @@ schema = strawberry.federation.Schema(
     mutation=Mutation
 )
 
-# schema = strawberryA.federation.Schema(Query, types=(GroupGQLModel,), mutation=Mutation)
+# schema = strawberryA.federation.Schema(Query, types=(ProjectGQLModel,), mutation=Mutation)
