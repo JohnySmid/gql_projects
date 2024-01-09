@@ -1,15 +1,22 @@
 import pytest
-from tests.tests_gt_definitions.gt_utils import (
-    createByIdTest, 
-    createPageTest, 
-    createResolveReferenceTest, 
-    createFrontendQuery, 
-    createUpdateQuery
+from tests.shared import (
+    prepare_demodata,
+    prepare_in_memory_sqllite,
+    get_demodata,
+    create_context,
 )
 
-test_reference_milestones = createResolveReferenceTest(tableName='projectmilestones', gqltype='MilestoneGQLModel')
+from tests.gqlshared import (
+    create_by_id_test,
+    create_page_test,
+    create_resolve_reference_test,
+    create_frontend_query,
+    create_update_query
+)
 
-test_insert_milestone = createFrontendQuery(
+test_reference_milestones = create_resolve_reference_test(tableName='projectmilestones', gqltype='MilestoneGQLModel')
+
+test_insert_milestone = create_frontend_query(
     query="""mutation ($id: UUID!, $name: String!, $project_id: UUID!) {
         result: MilestoneInsert(link: {id: $id, name: $name, project_id: $project_id}) {
             id
@@ -27,7 +34,7 @@ test_insert_milestone = createFrontendQuery(
     }
 )
 
-test_update_history = createUpdateQuery(
+test_update_history = create_update_query(
     query="""mutation ($id: UUID!, $name: String!, $lastchange: DateTime!) {
         result: MilestoneUpdate(link: {id: $id, name: $name, lastchange: $lastchange}) {
             id

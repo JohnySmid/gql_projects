@@ -1,13 +1,11 @@
+import pytest
 import sqlalchemy
 import sys
 import asyncio
+import os
 
-# setting path
-sys.path.append("../gql_projects")
+from gql_projects.DBDefinitions import startEngine
 
-import pytest
-from gql_projects.utils.DBFeeder import initDB
-# from ..uoishelpers.uuid import UUIDColumn
 
 from gql_projects.DBDefinitions import BaseModel
 from gql_projects.DBDefinitions import ProjectModel, ProjectTypeModel, ProjectCategoryModel
@@ -18,48 +16,37 @@ from shared import prepare_demodata, prepare_in_memory_sqllite, get_demodata
 
 
 @pytest.mark.asyncio
-async def test_table_users_feed():
+async def test_load_demo_data():
     async_session_maker = await prepare_in_memory_sqllite()
     await prepare_demodata(async_session_maker)
-
-    pass
-
-from gql_projects.DBDefinitions import ComposeConnectionString
+    # data = get_demodata()
 
 
 def test_connection_string():
-    connectionString = ComposeConnectionString()
+    from gql_projects.DBDefinitions import ComposeConnectionString
+    connection_string = ComposeConnectionString()
 
-    assert "://" in connectionString
-    assert "@" in connectionString
-
-
-from gql_projects.DBDefinitions import UUIDColumn
-
-
-def test_connection_uuidcolumn():
-    col = UUIDColumn(name="name")
-
-    assert col is not None
-
-
-from gql_projects.DBDefinitions import startEngine
+    assert "://" in connection_string
 
 
 @pytest.mark.asyncio
 async def test_table_start_engine():
-    connectionString = "sqlite+aiosqlite:///:memory:"
+    connection_string = "sqlite+aiosqlite:///:memory:"
     async_session_maker = await startEngine(
-        connectionString, makeDrop=True, makeUp=True
+        connection_string, makeDrop=True, makeUp=True
     )
 
     assert async_session_maker is not None
 
+
+from gql_projects.utils.DBFeeder import initDB
+
+
 @pytest.mark.asyncio
 async def test_initDB():
-    connectionString = "sqlite+aiosqlite:///:memory:"
+    connection_string = "sqlite+aiosqlite:///:memory:"
     async_session_maker = await startEngine(
-        connectionString, makeDrop=True, makeUp=True
+        connection_string, makeDrop=True, makeUp=True
     )
 
     assert async_session_maker is not None

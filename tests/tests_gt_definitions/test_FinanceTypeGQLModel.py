@@ -1,18 +1,24 @@
 import pytest
-from tests.tests_gt_definitions.gt_utils import (
-    createByIdTest, 
-    createPageTest, 
-    createResolveReferenceTest, 
-    createFrontendQuery, 
-    createUpdateQuery
+from tests.shared import (
+    prepare_demodata,
+    prepare_in_memory_sqllite,
+    get_demodata,
+    create_context,
 )
 
-test_reference_financetypes = createResolveReferenceTest(tableName='projectfinancetypes', gqltype='FinanceTypeItemGQLModel', attributeNames=["id", "name", "lastchange", "name_en"])
+from tests.gqlshared import (
+    create_by_id_test,
+    create_page_test,
+    create_resolve_reference_test,
+    create_frontend_query,
+    create_update_query
+)
+test_reference_financetypes = create_resolve_reference_test(tableName='projectfinancetypes', gqltype='FinanceTypeItemGQLModel', attributeNames=["id", "name", "lastchange", "name_en"])
 
-test_query_finance_type_by_id = createByIdTest(tableName="projectfinancetypes", queryEndpoint="financeTypeById")
-test_query_finance_type_page = createPageTest(tableName="projectfinancetypes", queryEndpoint="financeTypePage")
+test_query_finance_type_by_id = create_by_id_test(tableName="projectfinancetypes", queryEndpoint="financeTypeById")
+test_query_finance_type_page = create_page_test(tableName="projectfinancetypes", queryEndpoint="financeTypePage")
 
-test_insert_finance_type = createFrontendQuery(query="""
+test_insert_finance_type = create_frontend_query(query="""
     mutation($id: UUID!, $name: String!, $name_en: String!) { 
         result: FinanceTypeInsert(finance: {id: $id, name: $name, nameEn: $name_en}) { 
             id
@@ -30,7 +36,7 @@ test_insert_finance_type = createFrontendQuery(query="""
 )
 
 
-test_update_finance_type = createUpdateQuery(
+test_update_finance_type = create_update_query(
     query="""
         mutation($id: UUID!, $name: String!, $lastchange: DateTime!,) {
             FinanceTypeUpdate(finance: {id: $id, name: $name, lastchange: $lastchange}) {

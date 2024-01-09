@@ -1,18 +1,25 @@
 import pytest
-from tests.tests_gt_definitions.gt_utils import (
-    createByIdTest, 
-    createPageTest, 
-    createResolveReferenceTest, 
-    createFrontendQuery, 
-    createUpdateQuery
+from tests.shared import (
+    prepare_demodata,
+    prepare_in_memory_sqllite,
+    get_demodata,
+    create_context,
 )
 
-test_reference_financecategory = createResolveReferenceTest(tableName='projectfinancecategories', gqltype='FinanceCategoryItemGQLModel', attributeNames=["id", "name", "lastchange", "name_en"])
+from tests.gqlshared import (
+    create_by_id_test,
+    create_page_test,
+    create_resolve_reference_test,
+    create_frontend_query,
+    create_update_query
+)
 
-test_query_finance_category_by_id = createByIdTest(tableName="projectfinancecategories", queryEndpoint="financeCategoryeById")
-test_query_finance_category_page = createPageTest(tableName="projectfinancecategories", queryEndpoint="financeCategoryPage")
+test_reference_financecategory = create_resolve_reference_test(tableName='projectfinancecategories', gqltype='FinanceCategoryItemGQLModel', attributeNames=["id", "name", "lastchange", "name_en"])
 
-test_insert_finance_category = createFrontendQuery(query="""
+test_query_finance_category_by_id = create_by_id_test(tableName="projectfinancecategories", queryEndpoint="financeCategoryeById")
+test_query_finance_category_page = create_page_test(tableName="projectfinancecategories", queryEndpoint="financeCategoryPage")
+
+test_insert_finance_category = create_frontend_query(query="""
     mutation($id: UUID!, $name: String!, $name_en: String!) { 
         result: FinanceCategoryInsert(finance: {id: $id, name: $name, nameEn: $name_en}) { 
             id
@@ -30,7 +37,7 @@ test_insert_finance_category = createFrontendQuery(query="""
 )
 
 
-test_update_finance_category = createUpdateQuery(
+test_update_finance_category = create_update_query(
     query="""
         mutation($id: UUID!, $name: String!, $lastchange: DateTime!,) {
             FinanceCategoryUpdate(finance: {id: $id, name: $name, lastchange: $lastchange}) {

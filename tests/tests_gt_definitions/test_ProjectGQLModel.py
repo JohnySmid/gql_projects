@@ -1,20 +1,27 @@
 import pytest
 
-from tests.tests_gt_definitions.gt_utils import (
-    createByIdTest, 
-    createPageTest, 
-    createResolveReferenceTest, 
-    createFrontendQuery, 
-    createUpdateQuery
+from tests.shared import (
+    prepare_demodata,
+    prepare_in_memory_sqllite,
+    get_demodata,
+    create_context,
 )
 
-test_reference_project = createResolveReferenceTest(
+from tests.gqlshared import (
+    create_by_id_test,
+    create_page_test,
+    create_resolve_reference_test,
+    create_frontend_query,
+    create_update_query
+)
+
+test_reference_project = create_resolve_reference_test(
     tableName='projects', gqltype='ProjectGQLModel', 
     attributeNames=["id", "name", "startdate", "enddate", "projecttype_id", "projecttype", "group_id", "created {id}", "lastchange", "createdby {id}", "changedby {id}", "updatedby {id}"])
-test_query_project_by_id = createByIdTest(tableName="projects", queryEndpoint="projectById")
-test_query_project_page = createPageTest(tableName="projects", queryEndpoint="projectPage")
+test_query_project_by_id = create_by_id_test(tableName="projects", queryEndpoint="projectById")
+test_query_project_page = create_page_test(tableName="projects", queryEndpoint="projectPage")
 
-test_project_insert = createFrontendQuery(query="""
+test_project_insert = create_frontend_query(query="""
     mutation($id: UUID!,$projecttype_id: UUID!, $name: String!) { 
         result: ProjectInsert(project: {id: $id, projecttypeId: $projecttype_id, name: $name}) { 
             id
@@ -35,7 +42,7 @@ test_project_insert = createFrontendQuery(query="""
     asserts=[]
 )
 
-test_project_update = createUpdateQuery(
+test_project_update = create_update_query(
     query="""
         mutation($id: UUID!, $name: String!, $lastchange: DateTime!) {
             ProjectUpdate(project: {id: $id, name: $name, lastchange: $lastchange}) {
@@ -52,7 +59,7 @@ test_project_update = createUpdateQuery(
     tableName="projects"
 )
 
-test_hello_project = createFrontendQuery(query="""
+test_hello_project = create_frontend_query(query="""
     query($id: UUID!){ sayHelloProjects(id: $id) }""", 
     variables={"id": "ccde3a8b-81d0-4e2b-9aac-42e0eb2255b3"},
     asserts=[]
