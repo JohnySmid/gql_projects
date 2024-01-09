@@ -3,7 +3,7 @@ import sys
 import asyncio
 
 # setting path
-# sys.path.append("../gql_projects")
+sys.path.append("../gql_projects")
 
 import pytest
 from gql_projects.utils.DBFeeder import initDB
