@@ -11,6 +11,11 @@
 # production
 /build
 
+**/__pycache__
+*.pyc
+**/.pytest_cache
+**/.venv
+
 # misc
 .DS_Store
 .env.local
@@ -24,3 +29,8 @@ yarn-error.log*
 
 config.json
 data.json
+
+.idea
+
+# mypy
+mypy.ini
