@@ -1,18 +1,19 @@
 import pytest
-import sqlalchemy
-import sys
-import asyncio
-import os
+# import sqlalchemy
+# import sys
+# import asyncio
+# import os
 
 from gql_projects.DBDefinitions import startEngine
 
 
-from gql_projects.DBDefinitions import BaseModel
-from gql_projects.DBDefinitions import ProjectModel, ProjectTypeModel, ProjectCategoryModel
-from gql_projects.DBDefinitions import FinanceModel, FinanceTypeModel, FinanceCategory
-from gql_projects.DBDefinitions import MilestoneModel, MilestoneLinkModel
+# from gql_projects.DBDefinitions import BaseModel
+# from gql_projects.DBDefinitions import ProjectModel, ProjectTypeModel, ProjectCategoryModel
+# from gql_projects.DBDefinitions import FinanceModel, FinanceTypeModel, FinanceCategory
+# from gql_projects.DBDefinitions import MilestoneModel, MilestoneLinkModel
 
-from shared import prepare_demodata, prepare_in_memory_sqllite, get_demodata
+from .shared import prepare_demodata, prepare_in_memory_sqllite
+#get_demodata
 
 
 @pytest.mark.asyncio

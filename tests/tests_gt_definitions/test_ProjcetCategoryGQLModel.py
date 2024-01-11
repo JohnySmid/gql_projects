@@ -15,10 +15,10 @@ from tests.gqlshared import (
     create_update_query
 )
 
-test_reference_projectcategories = create_resolve_reference_test(tableName='projectcategories', gqltype='ProjectCategoryGQLModel', attributeNames=["id", "name", "lastchange"])
+test_reference_projectcategories = create_resolve_reference_test(table_name='projectcategories', gqltype='ProjectCategoryGQLModel', attribute_names=["id", "name", "lastchange"])
 
-test_query_form_project_by_id = create_by_id_test(tableName="projectcategories", queryEndpoint="projectCategoryById")
-test_query_form_project_page = create_page_test(tableName="projectcategories", queryEndpoint="projectCategoryPage")
+test_query_form_project_by_id = create_by_id_test(table_name="projectcategories", query_endpoint="projectCategoryById")
+test_query_form_project_page = create_page_test(table_name="projectcategories", query_endpoint="projectCategoryPage")
 
 test_insert_project_category = create_frontend_query(
     query="""mutation ($id: UUID!, $name: String!) {
@@ -46,5 +46,5 @@ test_update_project_category = create_update_query(
         }
     }""",
     variables={"id": "5c8c4c5a-df3b-44a9-ab90-396bdc84542b", "name": "new name"},
-    tableName="projectcategories"
+    table_name="projectcategories"
 )

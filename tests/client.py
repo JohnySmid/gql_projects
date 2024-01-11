@@ -1,10 +1,10 @@
 import logging
-import json
+#import json
 
 
 def create_gql_client():
 
-    from fastapi import FastAPI
+    #from fastapi import FastAPI
     from fastapi.testclient import TestClient
     import gql_projects.DBDefinitions
 
@@ -38,7 +38,7 @@ def create_client_function():
 
 
 def update_introspection_query():
-    from introspection import query
+    from .introspection import query
     client = create_gql_client()
     inputjson = {"query": query, "variables": {}}
     response = client.post("/gql", headers={}, json=inputjson)

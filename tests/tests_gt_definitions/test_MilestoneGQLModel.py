@@ -14,7 +14,7 @@ from tests.gqlshared import (
     create_update_query
 )
 
-test_reference_milestones = create_resolve_reference_test(tableName='projectmilestones', gqltype='MilestoneGQLModel')
+test_reference_milestones = create_resolve_reference_test(table_name='projectmilestones', gqltype='MilestoneGQLModel')
 
 test_insert_milestone = create_frontend_query(
     query="""mutation ($id: UUID!, $name: String!, $project_id: UUID!) {
@@ -46,5 +46,5 @@ test_update_history = create_update_query(
         }
     }""",
     variables={"id": "d7266936-17c1-4810-88d2-079ebb864d2e", "name": "new name"},
-    tableName="projectmilestones"
+    table_name="projectmilestones"
 )

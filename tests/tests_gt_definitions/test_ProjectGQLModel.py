@@ -16,10 +16,10 @@ from tests.gqlshared import (
 )
 
 test_reference_project = create_resolve_reference_test(
-    tableName='projects', gqltype='ProjectGQLModel', 
-    attributeNames=["id", "name", "startdate", "enddate", "projecttype_id", "projecttype", "group_id", "created {id}", "lastchange", "createdby {id}", "changedby {id}", "updatedby {id}"])
-test_query_project_by_id = create_by_id_test(tableName="projects", queryEndpoint="projectById")
-test_query_project_page = create_page_test(tableName="projects", queryEndpoint="projectPage")
+    table_name='projects', gqltype='ProjectGQLModel', 
+    attribute_names=["id", "name", "startdate", "enddate", "projecttype_id", "projecttype", "group_id", "created {id}", "lastchange", "createdby {id}", "changedby {id}", "updatedby {id}"])
+test_query_project_by_id = create_by_id_test(table_name="projects", query_endpoint="projectById")
+test_query_project_page = create_page_test(table_name="projects", query_endpoint="projectPage")
 
 test_project_insert = create_frontend_query(query="""
     mutation($id: UUID!,$projecttype_id: UUID!, $name: String!) { 
@@ -56,7 +56,7 @@ test_project_update = create_update_query(
         }
     """,
     variables={"id": "43dd2ff1-5c17-42a5-ba36-8b30e2a243bb", "name": "new name"},
-    tableName="projects"
+    table_name="projects"
 )
 
 test_hello_project = create_frontend_query(query="""

@@ -1,11 +1,11 @@
-import pytest
-from tests.shared import (
-    prepare_demodata,
-    prepare_in_memory_sqllite,
-    get_demodata,
-    create_context,
-)
-
+#import pytest
+# from tests.shared import (
+#     prepare_demodata,
+#     prepare_in_memory_sqllite,
+#     get_demodata,
+#     create_context,
+# )
+ 
 from tests.gqlshared import (
     create_by_id_test,
     create_page_test,
@@ -14,10 +14,10 @@ from tests.gqlshared import (
     create_update_query
 )
 
-test_reference_financecategory = create_resolve_reference_test(tableName='projectfinancecategories', gqltype='FinanceCategoryItemGQLModel', attributeNames=["id", "name", "lastchange", "name_en"])
+test_reference_financecategory = create_resolve_reference_test(table_name='projectfinancecategories', gqltype='FinanceCategoryItemGQLModel', attribute_names=["id", "name", "lastchange", "name_en"])
 
-test_query_finance_category_by_id = create_by_id_test(tableName="projectfinancecategories", queryEndpoint="financeCategoryeById")
-test_query_finance_category_page = create_page_test(tableName="projectfinancecategories", queryEndpoint="financeCategoryPage")
+test_query_finance_category_by_id = create_by_id_test(table_name="projectfinancecategories", query_endpoint="financeCategoryeById")
+test_query_finance_category_page = create_page_test(table_name="projectfinancecategories", query_endpoint="financeCategoryPage")
 
 test_insert_finance_category = create_frontend_query(query="""
     mutation($id: UUID!, $name: String!, $name_en: String!) { 
@@ -53,5 +53,5 @@ test_update_finance_category = create_update_query(
 
     """,
     variables={"id": "5a15450e-67e6-42a8-923a-aa7ed555b008", "name": "new name"},
-    tableName="projectfinancecategories"
+    table_name="projectfinancecategories"
 )

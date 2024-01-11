@@ -14,10 +14,10 @@ from tests.gqlshared import (
     create_update_query
 )
 
-test_reference_finances = create_resolve_reference_test(tableName='projectfinances', gqltype='FinanceItemGQLModel', attributeNames=["id", "name", "lastchange", "financetype_id", "project_id"])
+test_reference_finances = create_resolve_reference_test(table_name='projectfinances', gqltype='FinanceItemGQLModel', attribute_names=["id", "name", "lastchange", "financetype_id", "project_id"])
 
-test_query_finance_by_id = create_by_id_test(tableName="projectfinances", queryEndpoint="financeById")
-test_query_finance_page = create_page_test(tableName="projectfinances", queryEndpoint="financePage")
+test_query_finance_by_id = create_by_id_test(table_name="projectfinances", query_endpoint="financeById")
+test_query_finance_page = create_page_test(table_name="projectfinances", query_endpoint="financePage")
 
 test_finance_insert = create_frontend_query(query="""
     mutation($id: UUID!, $name: String!, $financetype_id: UUID!, $project_id: UUID!) { 
@@ -54,5 +54,5 @@ test_finance_update = create_update_query(
 
     """,
     variables={"id": "f911230f-7e1f-4e9b-90a9-b921996ceb87", "name": "new name", "value": "other value"},
-    tableName="projectfinances"
+    table_name="projectfinances"
 )

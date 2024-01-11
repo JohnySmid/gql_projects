@@ -8,14 +8,14 @@ import sqlalchemy
 
 from gql_projects.GraphTypeDefinitions import schema
 
-from tests.gqlshared import (
+from tests.shared import (
     prepare_demodata,
     prepare_in_memory_sqllite,
     get_demodata,
     create_context,
     create_schema_function
 )
-from client import create_client_function
+from tests.client import create_client_function
 
 
 def append(
