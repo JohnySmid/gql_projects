@@ -19,38 +19,60 @@ test_query_finance_type_by_id = create_by_id_test(table_name="projectfinancetype
 test_query_finance_type_page = create_page_test(table_name="projectfinancetypes", query_endpoint="financeTypePage")
 
 test_insert_finance_type = create_frontend_query(query="""
-    mutation($id: UUID!, $name: String!, $name_en: String!) { 
-        result: FinanceTypeInsert(finance: {id: $id, name: $name, nameEn: $name_en}) { 
+   mutation ($id: UUID!, $name: String!, $name_en: String) {
+        result: financeTypeInsert(finance: {id: $id, name: $name, nameEn: $name_en}) {
             id
             msg
             finance {
-                id
-                name
-                name_en
+                id 
+                name 
+                nameEn 
+                lastchange
+                finances {
+                    project {
+                        id 
+                        name
+                    }
+                }
             }
+            
         }
     }
     """, 
-    variables={"id": "ee50b3bf-ac51-4dbb-8f73-d5da30bf8017", "name": "new finance", "name_en": "new en Finance"},
+    variables={
+        "id": "ee50b3bf-ac51-4dbb-8f73-d5da30bf8017", 
+        "name": "nove finance", 
+        "name_en": "new en Finance"
+    },
     asserts=[]
 )
 
 
 test_update_finance_type = create_update_query(
     query="""
-        mutation($id: UUID!, $name: String!, $lastchange: DateTime!,) {
-            FinanceTypeUpdate(finance: {id: $id, name: $name, lastchange: $lastchange}) {
-                id
-                msg
-                finance {
-                    id
-                    name
-                    lastchange
+    mutation ($id: UUID!, $name: String, $name_en: String, $lastchange: DateTime!) {
+        result: financeTypeUpdate(finance: {id: $id, name: $name, nameEn: $name_en, lastchange: $lastchange}) {
+            id
+            msg
+            finance{
+                id 
+                name 
+                nameEn 
+                lastchange
+                finances{
+                    project {
+                        id 
+                        name
+                    }
                 }
-            }
+            }   
         }
-
+    }
     """,
-    variables={"id": "9e37059c-de2c-4112-9009-559c8b0396f1", "name": "new name"},
+    variables={
+        "id": "9e37059c-de2c-4112-9009-559c8b0396f1", 
+        "name": "nove finance1", 
+        "name_en": "new en Finance1"
+        },
     table_name="projectfinancetypes"
 )

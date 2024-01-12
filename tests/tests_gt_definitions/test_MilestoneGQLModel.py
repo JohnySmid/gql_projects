@@ -14,7 +14,8 @@ from tests.gqlshared import (
     create_update_query
 )
 
-test_reference_milestones = create_resolve_reference_test(table_name='projectmilestones', gqltype='MilestoneGQLModel')
+test_reference_milestones = create_resolve_reference_test(table_name='projectmilestones', gqltype='MilestoneGQLModel', 
+                                                          attribute_names=["id", "name", "lastchange", "project_id", "start_date", "end_date"])
 
 test_insert_milestone = create_frontend_query(
     query="""
