@@ -21,7 +21,7 @@ test_query_finance_category_page = create_page_test(table_name="projectfinanceca
 
 test_insert_finance_category = create_frontend_query(query="""
     mutation($id: UUID!, $name: String!, $name_en: String!) { 
-        result: FinanceCategoryInsert(finance: {id: $id, name: $name, nameEn: $name_en}) { 
+        result: financeCategoryInsert(finance: {id: $id, name: $name, nameEn: $name_en}) { 
             id
             msg
             finance {
@@ -39,8 +39,8 @@ test_insert_finance_category = create_frontend_query(query="""
 
 test_update_finance_category = create_update_query(
     query="""
-        mutation($id: UUID!, $name: String!, $lastchange: DateTime!,) {
-            FinanceCategoryUpdate(finance: {id: $id, name: $name, lastchange: $lastchange}) {
+        mutation($id: UUID!, $name: String!, $lastchange: DateTime!) {
+            financeCategoryUpdate(finance: {id: $id, name: $name, lastchange: $lastchange}) {
                 id
                 msg
                 finance {
