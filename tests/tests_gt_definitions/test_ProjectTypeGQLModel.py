@@ -44,7 +44,7 @@ test_insert_project_type = create_frontend_query(
 test_update_project_type = create_update_query(
     query="""
         mutation ($id: UUID!, $name: String, $name_en: String, $lastchange: DateTime!) {
-            result: ProjectTypeUpdate(project: {id: $id, name: $name, nameEn: $name_en, lastchange: $lastchange}) {
+            result: projectTypeUpdate(project: {id: $id, name: $name, nameEn: $name_en, lastchange: $lastchange}) {
                 id
                 msg
                 project {
