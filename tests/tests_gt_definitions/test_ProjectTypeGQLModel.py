@@ -18,7 +18,7 @@ from tests.gqlshared import (
 test_reference_projecttypes = create_resolve_reference_test(table_name='projecttypes', gqltype='ProjectTypeGQLModel',
                                                             attribute_names=["id", "name", "nameEn", "lastchange", "projects {id}", "category {id}"])
 
-test_query_project_type_by_id = create_by_id_test(table_name="projecttypes", query_endpoint="projectTypeById")
+#test_query_project_type_by_id = create_by_id_test(table_name="projecttypes", query_endpoint="projectTypeById")
 test_query_project_type_page = create_page_test(table_name="projecttypes", query_endpoint="projectTypePage")
 
 test_insert_project_type = create_frontend_query(

@@ -98,7 +98,7 @@ class FinanceCategoryUpdateGQLModel:
     lastchange: datetime.datetime = strawberry.field(description="timestamp of last change = TOKEN")
 
     name: Optional[str] = strawberryA.field(description="The name of the project (optional)", default=None)
-    name_en: str = strawberryA.field(description="", default=None)
+    name_en: Optional[str] = strawberryA.field(description="", default=None)
     changedby: strawberry.Private[uuid.UUID] = None
 
 

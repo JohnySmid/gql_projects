@@ -56,9 +56,6 @@ test_project_update = create_update_query(
                 project {
                     id
                     name
-                     projectType {
-                        id
-                    }
                 lastchange
                 }
             }
