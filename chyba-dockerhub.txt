@@ -1,0 +1,100 @@
+File "/usr/local/lib/python3.9/site-packages/gunicorn/util.py", line 359, in import_app
+    mod = importlib.import_module(module)
+  File "/usr/local/lib/python3.9/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1030, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1007, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 986, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 680, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 850, in exec_module
+  File "<frozen importlib._bootstrap>", line 228, in _call_with_frames_removed
+  File "/app/main.py", line 97, in <module>
+    from gql_projects.GraphTypeDefinitions import schema
+  File "/app/gql_projects/GraphTypeDefinitions/__init__.py", line 3, in <module>
+    from .GroupGQLModel import GroupGQLModel
+  File "/app/gql_projects/GraphTypeDefinitions/GroupGQLModel.py", line 15, in <module>
+    ProjectGQLModel = Annotated["ProjectGQLModel",strawberryA.lazy(".ProjectGQLModel")]
+AttributeError: module 'strawberry' has no attribute 'lazy'
+[2024-01-11 11:07:13 +0000] [7] [INFO] Worker exiting (pid: 7)
+[2024-01-11 11:07:14 +0000] [1] [INFO] Shutting down: Master
+[2024-01-11 11:07:14 +0000] [1] [INFO] Reason: Worker failed to boot.
+[2024-01-11 11:08:15 +0000] [1] [INFO] Starting gunicorn 20.1.0
+[2024-01-11 11:08:15 +0000] [1] [INFO] Listening at: http://0.0.0.0:8000 (1)
+[2024-01-11 11:08:15 +0000] [1] [INFO] Using worker: uvicorn.workers.UvicornWorker
+[2024-01-11 11:08:15 +0000] [7] [INFO] Booting worker with pid: 7
+[2024-01-11 11:08:16 +0000] [7] [ERROR] Exception in worker process
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.9/site-packages/gunicorn/arbiter.py", line 589, in spawn_worker
+    worker.init_process()
+  File "/usr/local/lib/python3.9/site-packages/uvicorn/workers.py", line 66, in init_process
+    super(UvicornWorker, self).init_process()
+  File "/usr/local/lib/python3.9/site-packages/gunicorn/workers/base.py", line 134, in init_process
+    self.load_wsgi()
+  File "/usr/local/lib/python3.9/site-packages/gunicorn/workers/base.py", line 146, in load_wsgi
+    self.wsgi = self.app.wsgi()
+  File "/usr/local/lib/python3.9/site-packages/gunicorn/app/base.py", line 67, in wsgi
+    self.callable = self.load()
+  File "/usr/local/lib/python3.9/site-packages/gunicorn/app/wsgiapp.py", line 58, in load
+    return self.load_wsgiapp()
+  File "/usr/local/lib/python3.9/site-packages/gunicorn/app/wsgiapp.py", line 48, in load_wsgiapp
+    return util.import_app(self.app_uri)
+  File "/usr/local/lib/python3.9/site-packages/gunicorn/util.py", line 359, in import_app
+    mod = importlib.import_module(module)
+  File "/usr/local/lib/python3.9/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1030, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1007, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 986, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 680, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 850, in exec_module
+  File "<frozen importlib._bootstrap>", line 228, in _call_with_frames_removed
+  File "/app/main.py", line 97, in <module>
+    from gql_projects.GraphTypeDefinitions import schema
+  File "/app/gql_projects/GraphTypeDefinitions/__init__.py", line 3, in <module>
+    from .GroupGQLModel import GroupGQLModel
+  File "/app/gql_projects/GraphTypeDefinitions/GroupGQLModel.py", line 15, in <module>
+    ProjectGQLModel = Annotated["ProjectGQLModel",strawberryA.lazy(".ProjectGQLModel")]
+AttributeError: module 'strawberry' has no attribute 'lazy'
+[2024-01-11 11:08:16 +0000] [7] [INFO] Worker exiting (pid: 7)
+[2024-01-11 11:08:16 +0000] [1] [INFO] Shutting down: Master
+[2024-01-11 11:08:16 +0000] [1] [INFO] Reason: Worker failed to boot.
+[2024-01-11 11:09:17 +0000] [1] [INFO] Starting gunicorn 20.1.0
+[2024-01-11 11:09:17 +0000] [1] [INFO] Listening at: http://0.0.0.0:8000 (1)
+[2024-01-11 11:09:17 +0000] [1] [INFO] Using worker: uvicorn.workers.UvicornWorker
+[2024-01-11 11:09:17 +0000] [7] [INFO] Booting worker with pid: 7
+[2024-01-11 11:09:17 +0000] [7] [ERROR] Exception in worker process
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.9/site-packages/gunicorn/arbiter.py", line 589, in spawn_worker
+    worker.init_process()
+  File "/usr/local/lib/python3.9/site-packages/uvicorn/workers.py", line 66, in init_process
+    super(UvicornWorker, self).init_process()
+  File "/usr/local/lib/python3.9/site-packages/gunicorn/workers/base.py", line 134, in init_process
+    self.load_wsgi()
+  File "/usr/local/lib/python3.9/site-packages/gunicorn/workers/base.py", line 146, in load_wsgi
+    self.wsgi = self.app.wsgi()
+  File "/usr/local/lib/python3.9/site-packages/gunicorn/app/base.py", line 67, in wsgi
+    self.callable = self.load()
+  File "/usr/local/lib/python3.9/site-packages/gunicorn/app/wsgiapp.py", line 58, in load
+    return self.load_wsgiapp()
+  File "/usr/local/lib/python3.9/site-packages/gunicorn/app/wsgiapp.py", line 48, in load_wsgiapp
+    return util.import_app(self.app_uri)
+  File "/usr/local/lib/python3.9/site-packages/gunicorn/util.py", line 359, in import_app
+    mod = importlib.import_module(module)
+  File "/usr/local/lib/python3.9/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1030, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1007, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 986, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 680, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 850, in exec_module
+  File "<frozen importlib._bootstrap>", line 228, in _call_with_frames_removed
+  File "/app/main.py", line 97, in <module>
+    from gql_projects.GraphTypeDefinitions import schema
+  File "/app/gql_projects/GraphTypeDefinitions/__init__.py", line 3, in <module>
+    from .GroupGQLModel import GroupGQLModel
+  File "/app/gql_projects/GraphTypeDefinitions/GroupGQLModel.py", line 15, in <module>
+    ProjectGQLModel = Annotated["ProjectGQLModel",strawberryA.lazy(".ProjectGQLModel")]
+AttributeError: module 'strawberry' has no attribute 'lazy'
+[2024-01-11 11:09:17 +0000] [7] [INFO] Worker exiting (pid: 7)
+[2024-01-11 11:09:17 +0000] [1] [INFO] Shutting down: Master
+[2024-01-11 11:09:17 +0000] [1] [INFO] Reason: Worker failed to boot.
