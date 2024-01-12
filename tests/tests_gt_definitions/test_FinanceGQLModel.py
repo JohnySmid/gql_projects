@@ -21,14 +21,22 @@ test_reference_finances = create_resolve_reference_test(table_name='projectfinan
 test_query_finance_page = create_page_test(table_name="projectfinances", query_endpoint="financePage")
 
 test_finance_insert = create_frontend_query(query="""
-    mutation($id: UUID!, $name: String!, $financetype_id: UUID!, $project_id: UUID!) { 
-        result: FinanceInsert(finance: {id: $id, name: $name, financetypeId: $financetype_id, projectId: $project_id}) { 
+   mutation ($id: UUID, $name: String!, $amount: Float, $financetype_id: UUID!, $project_id: UUID!) {
+        result: financeInsert(finance: {id: $id, name: $name, amount: $amount, financetypeId: $financetype_id, projectId: $project_id}) {
             id
             msg
             finance {
                 id
+                lastchange
                 name
-                financeType { id }
+                project {
+                    id
+                    name
+                }
+                financeType {
+                    id
+                    name
+                }
             }
         }
     }
@@ -40,20 +48,31 @@ test_finance_insert = create_frontend_query(query="""
 
 test_finance_update = create_update_query(
     query="""
-        mutation($id: UUID!, $name: String!, $lastchange: DateTime!,) {
-            FinanceUpdate(finance: {id: $id, name: $name, lastchange: $lastchange, value: $value}) {
+        mutation ($id: UUID!, $name: String!, $amount: Float, $financetype_id: UUID, $lastchange: DateTime!) {
+            result: financeUpdate(finance: {id: $id, name: $name, amount: $amount, financetypeId: $financetype_id, lastchange: $lastchange}) {
                 id
                 msg
                 finance {
                     id
-                    name
-                    value
                     lastchange
+                    name
+                    project {
+                        id
+                        name
+                    }
+                    financeType {
+                        id
+                        name
+                    }
                 }
             }
         }
-
     """,
-    variables={"id": "f911230f-7e1f-4e9b-90a9-b921996ceb87", "name": "new name", "value": "other value"},
+    variables={	
+        "id": "f911230f-7e1f-4e9b-90a9-b921996ceb87", 
+        "name": "new name",
+        "financetype_id": "9e37059c-de2c-4112-9009-559c8b0396f1",
+        "amount":  1,
+        "lastchange": "2024-01-12T19:17:59.613945"},
     table_name="projectfinances"
 )
