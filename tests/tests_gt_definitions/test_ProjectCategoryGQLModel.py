@@ -16,7 +16,7 @@ from tests.gqlshared import (
 )
 
 test_reference_projectcategories = create_resolve_reference_test(table_name='projectcategories', gqltype='ProjectCategoryGQLModel',
-                                                                 attribute_names=["id", "name", "name_en", "lastchange"])
+                                                                 attribute_names=["id", "name", "nameEn", "lastchange"])
 
 #test_query_form_project_by_id = create_by_id_test(table_name="projectcategories", query_endpoint="projectCategoryById")
 test_query_form_project_page = create_page_test(table_name="projectcategories", query_endpoint="projectCategoryPage")
@@ -52,6 +52,7 @@ test_update_project_category = create_update_query(
                 name
                 nameEn
                 lastchange
+                enddate
             }
         }
     }""",

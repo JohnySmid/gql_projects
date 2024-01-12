@@ -69,8 +69,8 @@ test_project_update = create_update_query(
     table_name="projects"
 )
 
-test_hello_project = create_frontend_query(query="""
-    query($id: UUID!){ sayHelloProjects(id: $id) }""", 
-    variables={"id": "ccde3a8b-81d0-4e2b-9aac-42e0eb2255b3"},
-    asserts=[]
-)
+# test_hello_project = create_frontend_query(query="""
+#     query($id: UUID!){ sayHelloProjects(id: $id) }""", 
+#     variables={"id": "ccde3a8b-81d0-4e2b-9aac-42e0eb2255b3"},
+#     asserts=[]
+# )

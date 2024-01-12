@@ -16,7 +16,7 @@ from tests.gqlshared import (
 )
 
 test_reference_projecttypes = create_resolve_reference_test(table_name='projecttypes', gqltype='ProjectTypeGQLModel',
-                                                            attribute_names=["id", "name", "nameEn", "lastchange", "projects {id}", "category {id}"])
+                                                            attribute_names=["id", "name", "nameEn", "lastchange", "categoryId"])
 
 #test_query_project_type_by_id = create_by_id_test(table_name="projecttypes", query_endpoint="projectTypeById")
 test_query_project_type_page = create_page_test(table_name="projecttypes", query_endpoint="projectTypePage")
@@ -30,7 +30,7 @@ test_insert_project_type = create_frontend_query(
                 id
                 name
                 nameEn
-                projects { id }
+                category { id }
             }
         }
     }""",
@@ -57,6 +57,6 @@ test_update_project_type = create_update_query(
             }
         }
     """,
-    variables={"id": "2e1140f4-afb0-11ed-9bd8-0242ac110002", "name": "nove jmeno1", "name_en": "new name1",},
+    variables={"id": "2e1140f4-afb0-11ed-9bd8-0242ac110002", "name": "nove jmeno1", "name_en": "new name1"},
     table_name="projecttypes"
 )

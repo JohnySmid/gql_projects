@@ -15,7 +15,7 @@ from tests.gqlshared import (
 )
 
 test_reference_milestones = create_resolve_reference_test(table_name='projectmilestones', gqltype='MilestoneGQLModel', 
-                                                          attribute_names=["id", "name", "lastchange", "project_id", "start_date", "end_date"])
+                                                          attribute_names=["id", "name", "lastchange", "project_id", "startdate", "enddate"])
 
 test_insert_milestone = create_frontend_query(
     query="""
@@ -30,9 +30,14 @@ test_insert_milestone = create_frontend_query(
                 startdate
                 enddate
                 lastchange
-                project{
+                previous{
                     id
-                    }
+                    name
+                }
+                nexts{
+                    id
+                    name
+                }
             }
         }
     }
@@ -44,7 +49,7 @@ test_insert_milestone = create_frontend_query(
     }
 )
 
-test_update_history = create_update_query(
+test_update_milestone = create_update_query(
     query="""
     mutation ($id: UUID!, $name: String, $lastchange: DateTime!, $start_date: DateTime, $end_date: DateTime) {
         result: milestoneUpdate(milestone: {id: $id, name: $name, lastchange: $lastchange, startdate: $start_date, enddate: $end_date}) {
@@ -56,8 +61,13 @@ test_update_history = create_update_query(
                 startdate
                 enddate
                 lastchange
-                project {
+                previous{
                     id
+                    name
+                }
+                nexts{
+                    id
+                    name
                 }
             }
         }
@@ -65,7 +75,7 @@ test_update_history = create_update_query(
     """,
     variables={
         "id": "d7266936-17c1-4810-88d2-079ebb864d2e", 
-        "name": "new milestone1"
+        "name": "newMilestone1"
         },
     table_name="projectmilestones"
 )
