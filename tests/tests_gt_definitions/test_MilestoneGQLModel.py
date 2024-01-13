@@ -58,17 +58,7 @@ test_update_milestone = create_update_query(
             milestone {
                 id
                 name
-                startdate
-                enddate
                 lastchange
-                previous{
-                    id
-                    name
-                }
-                nexts{
-                    id
-                    name
-                }
             }
         }
     }

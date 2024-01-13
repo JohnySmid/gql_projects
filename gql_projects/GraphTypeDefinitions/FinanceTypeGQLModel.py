@@ -1,12 +1,23 @@
 import strawberry as strawberryA
 import uuid
 from typing import List, Annotated, Optional, Union
-from gql_projects.GraphResolvers import resolveFinancesForFinanceType, resolveFinanceTypeAll
+from gql_projects.GraphResolversOLD import resolveFinancesForFinanceType, resolveFinanceTypeAll
 from contextlib import asynccontextmanager
 import datetime
 
 from .BaseGQLModel import BaseGQLModel
-
+from gql_projects.GraphTypeDefinitions.GraphResolvers import (
+    resolve_id,
+    resolve_authorization_id,
+    resolve_user_id,
+    resolve_accesslevel,
+    resolve_created,
+    resolve_lastchange,
+    resolve_createdby,
+    resolve_changedby,
+    createRootResolver_by_id,
+    createRootResolver_by_page,
+)
 import strawberry
 from gql_projects.utils.DBFeeder import randomDataStructure
 from gql_projects.utils.Dataloaders import getLoadersFromInfo, getUserFromInfo
@@ -29,12 +40,14 @@ FinanceGQLModel = Annotated ["FinanceGQLModel",strawberryA.lazy(".FinanceGQLMode
 )
 class FinanceTypeGQLModel(BaseGQLModel):
     @classmethod
-    async def resolve_reference(cls, info: strawberryA.types.Info, id: uuid.UUID):
-        loader = getLoadersFromInfo(info).financetypes
-        result = await loader.load(id)
-        if result is not None:
-            result._type_definition = cls._type_definition  # little hack :)
-        return result
+    def getLoader(cls, info):
+        return getLoadersFromInfo(info).financetypes
+    # async def resolve_reference(cls, info: strawberryA.types.Info, id: uuid.UUID):
+    #     loader = getLoadersFromInfo(info).financetypes
+    #     result = await loader.load(id)
+    #     if result is not None:
+    #         result._type_definition = cls._type_definition  # little hack :)
+    #     return result
 
     @strawberryA.field(description="""Primary key""")
     def id(self) -> uuid.UUID:
@@ -90,7 +103,8 @@ async def finance_type_page(
     result = await loader.page(skip, limit, where = wf)
     return result
 
-    
+finance_type_by_id = createRootResolver_by_id(FinanceTypeGQLModel, description="Returns finance type by its id")
+
 ###########################################################################################################################
 #
 #
@@ -127,7 +141,7 @@ class FinanceTypeResultGQLModel:
         return result
 
 @strawberryA.mutation(description="Adds a new project.")
-async def financeType_insert(self, info: strawberryA.types.Info, finance: FinanceTypeInsertGQLModel) -> FinanceTypeResultGQLModel:
+async def finance_type_insert(self, info: strawberryA.types.Info, finance: FinanceTypeInsertGQLModel) -> FinanceTypeResultGQLModel:
     loader = getLoadersFromInfo(info).financetypes
     row = await loader.insert(finance)
     result = FinanceTypeResultGQLModel()
@@ -136,7 +150,7 @@ async def financeType_insert(self, info: strawberryA.types.Info, finance: Financ
     return result
 
 @strawberryA.mutation(description="Update the finance record.")
-async def financeType_update(self, info: strawberryA.types.Info, finance: FinanceTypeUpdateGQLModel) -> FinanceTypeResultGQLModel:
+async def finance_type_update(self, info: strawberryA.types.Info, finance: FinanceTypeUpdateGQLModel) -> FinanceTypeResultGQLModel:
     loader = getLoadersFromInfo(info).financetypes
     row = await loader.update(finance)
     result = FinanceTypeResultGQLModel()

@@ -3,9 +3,22 @@ import strawberry as strawberryA
 from typing import List, Annotated, Optional, Union
 import datetime
 import uuid
-from gql_projects.GraphResolvers import (
-    resolveProjectById,
-    resolveMilestoneAll
+# from gql_projects.GraphResolvers import (
+#     resolveProjectById,
+#     resolveMilestoneAll
+# )
+
+from gql_projects.GraphTypeDefinitions.GraphResolvers import (
+    resolve_id,
+    resolve_authorization_id,
+    resolve_user_id,
+    resolve_accesslevel,
+    resolve_created,
+    resolve_lastchange,
+    resolve_createdby,
+    resolve_changedby,
+    createRootResolver_by_id,
+    createRootResolver_by_page,
 )
 from contextlib import asynccontextmanager
 from .ProjectGQLModel import ProjectResultGQLModel
@@ -125,6 +138,7 @@ async def milestone_page(
     result = await loader.page(skip, limit, where = wf)
     return result
 
+milestone_by_id = createRootResolver_by_id(MilestoneGQLModel, description="Returns milestone by its id")
 
 ###########################################################################################################################
 #

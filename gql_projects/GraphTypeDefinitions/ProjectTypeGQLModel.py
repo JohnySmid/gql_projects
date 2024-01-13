@@ -17,9 +17,22 @@ async def withInfo(info):
         finally:
             pass
 
-from gql_projects.GraphResolvers import (
+from gql_projects.GraphResolversOLD import (
     resolveProjectsForProjectType,
     resolveProjectTypeAll
+)
+
+from gql_projects.GraphTypeDefinitions.GraphResolvers import (
+    resolve_id,
+    resolve_authorization_id,
+    resolve_user_id,
+    resolve_accesslevel,
+    resolve_created,
+    resolve_lastchange,
+    resolve_createdby,
+    resolve_changedby,
+    createRootResolver_by_id,
+    createRootResolver_by_page,
 )
 
 ProjectGQLModel = Annotated["ProjectGQLModel",strawberryA.lazy(".ProjectGQLModel")]
@@ -97,6 +110,8 @@ async def project_type_page(
     result = await loader.page(skip, limit, where = wf)
     return result
 
+project_type_by_id = createRootResolver_by_id(ProjectTypeGQLModel, description="Returns project type by its id")
+
 ###########################################################################################################################
 #
 #
@@ -134,7 +149,7 @@ class ProjectTypeResultGQLModel:
         return result
 
 @strawberryA.mutation(description="Adds a new project.")
-async def projectType_insert(self, info: strawberryA.types.Info, project: ProjectTypeInsertGQLModel) -> ProjectTypeResultGQLModel:
+async def project_type_insert(self, info: strawberryA.types.Info, project: ProjectTypeInsertGQLModel) -> ProjectTypeResultGQLModel:
     # user = getUserFromInfo(info)
     # project.createdby = uuid.UUID(user["id"])
     loader = getLoadersFromInfo(info).projecttypes
@@ -145,7 +160,7 @@ async def projectType_insert(self, info: strawberryA.types.Info, project: Projec
     return result
 
 @strawberryA.mutation(description="Update the project.")
-async def projectType_update(self, info: strawberryA.types.Info, project: ProjectTypeUpdateGQLModel) -> ProjectTypeResultGQLModel:
+async def project_type_update(self, info: strawberryA.types.Info, project: ProjectTypeUpdateGQLModel) -> ProjectTypeResultGQLModel:
     # user = getUserFromInfo(info)
     # project.changedby = uuid.UUID(user["id"])
     loader = getLoadersFromInfo(info).projecttypes

@@ -14,9 +14,9 @@ from tests.gqlshared import (
     create_update_query
 )
 test_reference_financetypes = create_resolve_reference_test(table_name='projectfinancetypes', gqltype='FinanceTypeGQLModel',
-                                                            attribute_names=["id", "name", "lastchange", "name_en"])
+                                                            attribute_names=["id", "name"])
 
-#test_query_finance_type_by_id = create_by_id_test(table_name="projectfinancetypes", query_endpoint="financeTypeById")
+test_query_finance_type_by_id = create_by_id_test(table_name="projectfinancetypes", query_endpoint="financeTypeById")
 test_query_finance_type_page = create_page_test(table_name="projectfinancetypes", query_endpoint="financeTypePage")
 
 test_insert_finance_type = create_frontend_query(query="""

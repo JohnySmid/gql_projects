@@ -8,10 +8,23 @@ import strawberry
 from gql_projects.utils.DBFeeder import randomDataStructure
 from gql_projects.utils.Dataloaders import getLoadersFromInfo, getUserFromInfo
 
-from gql_projects.GraphResolvers import (
-    resolveFinanceTypeById,
-    resolveProjectById,
-    resolveFinanceAll
+# from gql_projects.GraphResolvers import (
+#     resolveFinanceTypeById,
+#     resolveProjectById,
+#     resolveFinanceAll
+# )
+
+from gql_projects.GraphTypeDefinitions.GraphResolvers import (
+    resolve_id,
+    resolve_authorization_id,
+    resolve_user_id,
+    resolve_accesslevel,
+    resolve_created,
+    resolve_lastchange,
+    resolve_createdby,
+    resolve_changedby,
+    createRootResolver_by_id,
+    createRootResolver_by_page,
 )
 
 ProjectGQLModel = Annotated["ProjectGQLModel",strawberryA.lazy(".ProjectGQLModel")]
@@ -109,6 +122,7 @@ async def finance_page(
     result = await loader.page(skip, limit, where = wf)
     return result
 
+finance_by_id = createRootResolver_by_id(FinanceGQLModel, description="Returns finance by its id")
 
 ###########################################################################################################################
 #

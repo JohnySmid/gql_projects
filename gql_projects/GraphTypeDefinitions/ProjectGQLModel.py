@@ -8,12 +8,25 @@ from gql_projects.utils.DBFeeder import randomDataStructure
 from gql_projects.utils.Dataloaders import getLoadersFromInfo, getUserFromInfo
 from .BaseGQLModel import BaseGQLModel
 
-from gql_projects.GraphResolvers import (
-    resolveProjectAll,
-    resolveProjectById,
-    resolveProjectsForGroup,
-    resolveFinancesForProject
+from gql_projects.GraphTypeDefinitions.GraphResolvers import (
+    resolve_id,
+    resolve_authorization_id,
+    resolve_user_id,
+    resolve_accesslevel,
+    resolve_created,
+    resolve_lastchange,
+    resolve_createdby,
+    resolve_changedby,
+    createRootResolver_by_id,
+    createRootResolver_by_page,
 )
+
+from gql_projects.GraphResolversOLD import (
+     resolveProjectAll,
+     resolveProjectById,
+     resolveProjectsForGroup,
+     resolveFinancesForProject
+ )
 
 ProjectTypeGQLModel = Annotated ["ProjectTypeGQLModel", strawberryA.lazy(".ProjectTypeGQLModel")]
 GroupGQLModel = Annotated ["GroupGQLModel",strawberryA.lazy(".GroupGQLModel")]
@@ -38,6 +51,13 @@ class ProjectGQLModel(BaseGQLModel):
     @classmethod
     def getLoader(cls, info):
         return getLoadersFromInfo(info).projects
+
+    id = resolve_id
+    accesslevel = resolve_accesslevel
+    created = resolve_created
+    lastchange = resolve_lastchange
+    createdby = resolve_createdby
+    changedby = resolve_changedby
 
     # async def resolve_reference(cls, info: strawberryA.types.Info, id: uuid.UUID):
     #     loader = getLoadersFromInfo(info).projects
@@ -142,14 +162,18 @@ async def project_page(
     return result
     
     
-@strawberryA.field(description="""Returns project by its id""")
-async def project_by_id(
-    self, info: strawberryA.types.Info, id: uuid.UUID
-) -> Union[ProjectGQLModel, None]:
-    print(id)
-    async with withInfo(info) as session:
-        result = await resolveProjectById(session, id)
-        return result
+# @strawberryA.field(description="""Returns project by its id""")
+# async def project_by_id(
+#     self, info: strawberryA.types.Info, id: uuid.UUID
+# ) -> Union[ProjectGQLModel, None]:
+#     print(id)
+#     async with withInfo(info) as session:
+#         result = await resolveProjectById(session, id)
+#         return result
+
+project_by_id = createRootResolver_by_id(ProjectGQLModel, description="Returns project by its id")
+    
+
 @strawberryA.field(description="""Returns a list of projects for group""")
 async def project_by_group(
     self, info: strawberryA.types.Info, id: uuid.UUID

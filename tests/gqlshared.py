@@ -89,7 +89,6 @@ def create_by_id_test(table_name, query_endpoint, attribute_names=["id", "name"]
 
 
 def create_page_test(table_name, query_endpoint, attribute_names=["id"]):
-
     @pytest.mark.asyncio
     async def result_test() -> None:
         def test_result(response) -> None:

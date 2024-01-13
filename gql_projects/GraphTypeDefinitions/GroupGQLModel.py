@@ -1,4 +1,4 @@
-from gql_projects.GraphResolvers import resolveProjectsForGroup
+from gql_projects.GraphResolversOLD import resolveProjectsForGroup
 import strawberry as strawberryA
 import uuid
 from typing import Annotated, List

@@ -7,7 +7,20 @@ from .BaseGQLModel import BaseGQLModel
 import strawberry
 from gql_projects.utils.DBFeeder import randomDataStructure
 from gql_projects.utils.Dataloaders import getLoadersFromInfo, getUserFromInfo
-
+from gql_projects.GraphTypeDefinitions.GraphResolvers import (
+    resolve_id,
+    resolve_name,
+    resolve_name_en,
+    resolve_authorization_id,
+    resolve_user_id,
+    resolve_accesslevel,
+    resolve_created,
+    resolve_lastchange,
+    resolve_createdby,
+    resolve_changedby,
+    createRootResolver_by_id,
+    createRootResolver_by_page,
+)
 
 @strawberryA.federation.type(
     keys=["id"], description="""Entity representing a finance"""
@@ -23,21 +36,28 @@ class FinanceCategoryGQLModel(BaseGQLModel):
     #         result._type_definition = cls._type_definition  # little hack :)
     #     return result
 
-    @strawberryA.field(description="""Primary key""")
-    def id(self) -> uuid.UUID:
-        return self.id
+    # @strawberryA.field(description="""Primary key""")
+    # def id(self) -> uuid.UUID:
+    #     return self.id
 
-    @strawberryA.field(description="""Time stamp""")
-    def lastchange(self) -> uuid.UUID:
-        return self.lastchange
+    # @strawberryA.field(description="""Time stamp""")
+    # def lastchange(self) -> uuid.UUID:
+    #     return self.lastchange
 
-    @strawberryA.field(description="""Name""")
-    def name(self) -> str:
-        return self.name
+    # @strawberryA.field(description="""Name""")
+    # def name(self) -> str:
+    #     return self.name
     
-    @strawberryA.field(description="""Name en""")
-    def name_en(self) -> str:
-        return self.name_en
+    # @strawberryA.field(description="""Name en""")
+    # def name_en(self) -> str:
+    #     return self.name_en
+    id = resolve_id
+    name = resolve_name
+    changedby = resolve_changedby
+    lastchange = resolve_lastchange
+    created = resolve_created
+    createdby = resolve_createdby
+    name_en = resolve_name_en
 
 ###########################################################################################################################
 #
@@ -77,6 +97,8 @@ async def finance_category_page(
     #result = await resolveProjectAll(session, skip, limit)
     result = await loader.page(skip, limit, where = wf)
     return result
+
+finance_category_by_id = createRootResolver_by_id(FinanceCategoryGQLModel, description="Returns finance category by its id")
 
 ###########################################################################################################################
 #

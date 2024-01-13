@@ -8,11 +8,24 @@ from gql_projects.utils.DBFeeder import randomDataStructure
 from gql_projects.utils.Dataloaders import getLoadersFromInfo, getUserFromInfo
 from .BaseGQLModel import BaseGQLModel
 
-from gql_projects.GraphResolvers import (
-    resolveProjectAll,
-    resolveProjectById,
-    resolveProjectsForGroup,
-    resolveFinancesForProject
+# from gql_projects.GraphResolvers import (
+#     resolveProjectAll,
+#     resolveProjectById,
+#     resolveProjectsForGroup,
+#     resolveFinancesForProject
+# )
+
+from gql_projects.GraphTypeDefinitions.GraphResolvers import (
+    resolve_id,
+    resolve_authorization_id,
+    resolve_user_id,
+    resolve_accesslevel,
+    resolve_created,
+    resolve_lastchange,
+    resolve_createdby,
+    resolve_changedby,
+    createRootResolver_by_id,
+    createRootResolver_by_page,
 )
 
 @strawberryA.federation.type(
@@ -89,6 +102,8 @@ async def project_category_page(
     #result = await resolveProjectAll(session, skip, limit)
     result = await loader.page(skip, limit, where = wf)
     return result
+
+project_category_by_id = createRootResolver_by_id(ProjectCategoryGQLModel, description="Returns project category by its id")
 
 ###########################################################################################################################
 #

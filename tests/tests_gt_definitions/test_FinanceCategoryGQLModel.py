@@ -14,10 +14,10 @@ from tests.gqlshared import (
     create_update_query
 )
 
-#test_reference_financecategory = create_resolve_reference_test(table_name='projectfinancecategories', gqltype='FinanceCategoryGQLModel', 
-                                                              # attribute_names=["id", "name"])
+test_reference_financecategory = create_resolve_reference_test(table_name='projectfinancecategories', gqltype='FinanceCategoryGQLModel', 
+                                                               attribute_names=["id", "name"])
 
-#test_query_finance_category_by_id = create_by_id_test(table_name="projectfinancecategories", query_endpoint="financeCategoryById")
+test_query_finance_category_by_id = create_by_id_test(table_name="projectfinancecategories", query_endpoint="financeCategoryById")
 test_query_finance_category_page = create_page_test(table_name="projectfinancecategories", query_endpoint="financeCategoryPage")
 
 test_insert_finance_category = create_frontend_query(query="""
