@@ -152,6 +152,10 @@ class FinanceUpdateGQLModel:
     amount: Optional[float] = strawberryA.field(description="The amount of financial data (optional)", default=None)
     changedby: strawberry.Private[uuid.UUID] = None
 
+@strawberry.input(description="Input structure - D operation")
+class FinanceDeleteGQLModel:
+    id: uuid.UUID = strawberry.field(description="primary key (UUID), identifies object of operation")
+
 @strawberryA.type(description="Result of a financial data operation")
 class FinanceResultGQLModel:
     id: uuid.UUID = strawberryA.field(description="The ID of the financial data", default=None)
@@ -185,4 +189,16 @@ async def finance_update(self, info: strawberryA.types.Info, finance: FinanceUpd
     result.id = finance.id
     if row is None:
         result.msg = "fail"  
+    return result
+
+@strawberry.mutation(description="Delete the authorization user")
+async def finance_delete(
+        self, info: strawberry.types.Info, finance: FinanceDeleteGQLModel
+) -> FinanceResultGQLModel:
+    project_id_to_delete = finance.id
+    loader = getLoadersFromInfo(info).finances
+    row = await loader.delete(project_id_to_delete)
+    if not row:
+        return FinanceResultGQLModel(id=project_id_to_delete, msg="fail, user not found")
+    result = FinanceResultGQLModel(id=project_id_to_delete, msg="ok")
     return result

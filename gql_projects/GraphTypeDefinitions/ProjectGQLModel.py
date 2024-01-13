@@ -223,6 +223,11 @@ class ProjectUpdateGQLModel:
     group_id: Optional[uuid.UUID] = strawberryA.field(description="The ID of the group associated with the project (optional)", default=None)
     changedby: strawberry.Private[uuid.UUID] = None
 
+@strawberry.input(description="Input structure - D operation")
+class ProjectDeleteGQLModel:
+    id: uuid.UUID = strawberry.field(description="primary key (UUID), identifies object of operation")
+    # name: str = strawberryA.field(description="Name/label of the project")
+    # lastchange: datetime.datetime = strawberry.field(description="timestamp of last change = TOKEN")
 
 @strawberryA.type(description="Result of a mutation over Project")
 class ProjectResultGQLModel:
@@ -259,4 +264,16 @@ async def project_update(self, info: strawberryA.types.Info, project: ProjectUpd
     result.id = project.id
     if row is None:
         result.msg = "fail"
+    return result
+
+@strawberry.mutation(description="Delete the authorization user")
+async def project_delete(
+        self, info: strawberry.types.Info, project: ProjectDeleteGQLModel
+) -> ProjectResultGQLModel:
+    project_id_to_delete = project.id
+    loader = getLoadersFromInfo(info).projects
+    row = await loader.delete(project_id_to_delete)
+    if not row:
+        return ProjectResultGQLModel(id=project_id_to_delete, msg="fail, user not found")
+    result = ProjectResultGQLModel(id=project_id_to_delete, msg="ok")
     return result

@@ -130,6 +130,10 @@ class FinanceTypeUpdateGQLModel:
     name_en: Optional[str] = strawberryA.field(description="The name of the financial data (optional)",default=None)
     changedby: strawberry.Private[uuid.UUID] = None
 
+@strawberry.input(description="Input structure - D operation")
+class FinanceTypeDeleteGQLModel:
+    id: uuid.UUID = strawberry.field(description="primary key (UUID), identifies object of operation")
+
 @strawberryA.type(description="Result of a mutation over Project")
 class FinanceTypeResultGQLModel:
     id: uuid.UUID = strawberryA.field(description="The ID of the project", default=None)
@@ -158,4 +162,16 @@ async def finance_type_update(self, info: strawberryA.types.Info, finance: Finan
     result.id = finance.id
     if row is None:
         result.msg = "fail"  
+    return result
+
+@strawberry.mutation(description="Delete the authorization user")
+async def finance_type_delete(
+        self, info: strawberry.types.Info, finance: FinanceTypeDeleteGQLModel
+) -> FinanceTypeResultGQLModel:
+    project_id_to_delete = finance.id
+    loader = getLoadersFromInfo(info).financetypes
+    row = await loader.delete(project_id_to_delete)
+    if not row:
+        return FinanceTypeResultGQLModel(id=project_id_to_delete, msg="fail, user not found")
+    result = FinanceTypeResultGQLModel(id=project_id_to_delete, msg="ok")
     return result

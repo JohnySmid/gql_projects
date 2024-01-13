@@ -119,21 +119,26 @@ class Query:
 class Mutation:
     from .FinanceCategoryGQLModel import (
         finance_category_insert,
-        finance_category_update
+        finance_category_update,
+        finance_category_delete
     )
     finance_category_insert = finance_category_insert
     finance_category_update = finance_category_update
+    finance_category_delete = finance_category_delete
 
     from .FinanceGQLModel import (
         finance_insert,
-        finance_update
+        finance_update,
+        finance_delete
     )
     finance_insert = finance_insert
     finance_update = finance_update
+    finance_delete = finance_delete
 
     from .FinanceTypeGQLModel import (
         finance_type_insert,
-        finance_type_update
+        finance_type_update,
+        finance_type_delete
     )
     finance_type_insert = finance_type_insert
     finance_type_update = finance_type_update
@@ -150,23 +155,29 @@ class Mutation:
     from .ProjectCategoryGQLModel import (
         project_category_insert,
         project_category_update,
+        project_category_delete
     )
     project_category_insert = project_category_insert
     project_category_update = project_category_update
+    project_category_delete = project_category_delete
 
     from .ProjectGQLModel import (
         project_insert,
         project_update,
+        project_delete,
     )
     project_insert = project_insert
     project_update = project_update
+    project_delete = project_delete
 
     from .ProjectTypeGQLModel import (
         project_type_insert,
-        project_type_update
+        project_type_update,
+        project_type_delete
     )
     project_type_insert = project_type_insert
     project_type_update = project_type_update
+    project_type_delete = project_type_delete
 
 # @strawberry.type(description="""Type for mutation root""")
 # class Mutation:

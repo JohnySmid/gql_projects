@@ -164,6 +164,12 @@ class MilestoneUpdateGQLModel:
     name: Optional[str] = strawberryA.field(description="The name of the milestone (optional)",default=None)
     startdate: Optional[datetime.datetime] = strawberryA.field(description="Start date of the milestone (optional)",default=None)
     enddate: Optional[datetime.datetime] = strawberryA.field(description="End date of the milestone (optional)",default=None)
+
+@strawberry.input(description="Input structure - D operation")
+class MilestoneDeleteGQLModel:
+    id: uuid.UUID = strawberry.field(description="primary key (UUID), identifies object of operation")
+    # name: str = strawberryA.field(description="Name/label of the project")
+    # lastchange: datetime.datetime = strawberry.field(description="timestamp of last change = TOKEN")
     
 @strawberryA.type(description="Result of a user operation on a milestone")
 class MilestoneResultGQLModel:
@@ -228,20 +234,14 @@ async def milestone_update(self, info: strawberryA.types.Info, milestone: Milest
         result.msg = "fail"  
     return result
 
-@strawberryA.mutation(description="Delete the milestone.")
-async def milestone_delete(self, info: strawberryA.types.Info, id: uuid.UUID) -> ProjectResultGQLModel:
-    loader = getLoadersFromInfo(info).milestonelinks
-    rows = await loader.filter_by(previous_id=id)
-    linksids = [row.id for row in rows]
-    rows = await loader.filter_by(next_id=id)
-    linksids.extend([row.id for row in rows])
-    for id in linksids:
-        await loader.delete(id)
-
+@strawberry.mutation(description="Delete the authorization user")
+async def milestone_delete(
+        self, info: strawberry.types.Info, project: MilestoneDeleteGQLModel
+) -> MilestoneResultGQLModel:
+    project_id_to_delete = project.id
     loader = getLoadersFromInfo(info).milestones
-    row = await loader.load(id)
-    result = ProjectResultGQLModel()
-    result.id = row.project_id
-    await loader.delete(id)       
-    result.msg = "ok"
+    row = await loader.delete(project_id_to_delete)
+    if not row:
+        return MilestoneResultGQLModel(id=project_id_to_delete, msg="fail, user not found")
+    result = MilestoneResultGQLModel(id=project_id_to_delete, msg="ok")
     return result
