@@ -18,7 +18,7 @@ from tests.gqlshared import (
 test_reference_projecttypes = create_resolve_reference_test(table_name='projecttypes', gqltype='ProjectTypeGQLModel',
                                                             attribute_names=["id", "name"])
 
-#test_query_project_type_by_id = create_by_id_test(table_name="projecttypes", query_endpoint="projectTypeById")
+test_query_project_type_by_id = create_by_id_test(table_name="projecttypes", query_endpoint="projectTypeById")
 test_query_project_type_page = create_page_test(table_name="projecttypes", query_endpoint="projectTypePage")
 
 test_insert_project_type = create_frontend_query(
@@ -41,7 +41,8 @@ test_insert_project_type = create_frontend_query(
                "category_id": "5c8c4c5a-df3b-44a9-ab90-396bdc84542b"
                }
 )
-#  FAILED tests/tests_gt_definitions/test_ProjectTypeGQLModel.py::test_update_project_type - TypeError: 'NoneType' object is not subscriptable
+
+
 test_update_project_type = create_update_query(
     query="""
         mutation ($id: UUID!, $name: String, $lastchange: DateTime!) {
