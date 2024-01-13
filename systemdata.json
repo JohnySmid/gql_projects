@@ -670,7 +670,9 @@
     "projectfinancecategories": [
         {
             "id": "5a15450e-67e6-42a8-923a-aa7ed555b008",
-            "name": "účelová podpora"
+            "name": "účelová podpora",
+            "name_en": "english name"
+            
         }
     ],
     "projectmilestones": [
