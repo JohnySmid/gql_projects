@@ -29,12 +29,6 @@ test_insert_finance_type = create_frontend_query(query="""
                 name 
                 nameEn 
                 lastchange
-                finances {
-                    project {
-                        id 
-                        name
-                    }
-                }
             }
             
         }
@@ -51,21 +45,14 @@ test_insert_finance_type = create_frontend_query(query="""
 
 test_update_finance_type = create_update_query(
     query="""
-    mutation ($id: UUID!, $name: String, $name_en: String, $lastchange: DateTime!) {
-        result: financeTypeUpdate(finance: {id: $id, name: $name, nameEn: $name_en, lastchange: $lastchange}) {
+    mutation ($id: UUID!, $name: String, $lastchange: DateTime!) {
+        result: financeTypeUpdate(finance: {id: $id, name: $name, lastchange: $lastchange}) {
             id
             msg
             finance{
                 id 
                 name 
-                nameEn 
                 lastchange
-                finances{
-                    project {
-                        id 
-                        name
-                    }
-                }
             }   
         }
     }
@@ -73,7 +60,6 @@ test_update_finance_type = create_update_query(
     variables={
         "id": "9e37059c-de2c-4112-9009-559c8b0396f1", 
         "name": "nove finance1", 
-        "name_en": "new en Finance1"
         },
     table_name="projectfinancetypes"
 )

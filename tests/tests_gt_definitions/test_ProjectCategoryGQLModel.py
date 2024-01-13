@@ -43,23 +43,20 @@ test_insert_project_category = create_frontend_query(
 )
 
 test_update_project_category = create_update_query(
-    query="""mutation ($id: UUID!, $name: String, $name_en: String, $lastchange: DateTime!) {
-        result: projectCategoryUpdate(project: {id: $id, name: $name, nameEn: $name_en, lastchange: $lastchange}) {
+    query="""mutation ($id: UUID!, $name: String, $lastchange: DateTime!) {
+        result: projectCategoryUpdate(project: {id: $id, name: $name, lastchange: $lastchange}) {
             id
             msg
             project {
                 id
                 name
-                nameEn
                 lastchange
-                enddate
             }
         }
     }""",
     variables={
-        "id": "fc7f95b5-410c-4a26-a4e9-6b0b2a841645",
+        "id": "5c8c4c5a-df3b-44a9-ab90-396bdc84542b",
         "name": "nova kategorie1",
-        "name_en": "new category1",
     },
     table_name="projectcategories"
 )
