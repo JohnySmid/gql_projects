@@ -2,6 +2,7 @@ import strawberry as strawberryA
 import datetime
 import uuid
 from typing import List, Annotated, Optional, Union
+from .BaseGQLModel import BaseGQLModel
 
 import strawberry
 from gql_projects.utils.DBFeeder import randomDataStructure
@@ -21,14 +22,17 @@ FinanceTypeGQLModel = Annotated ["FinanceTypeGQLModel",strawberryA.lazy(".Financ
 @strawberryA.federation.type(
     keys=["id"], description="""Entity representing a finance"""
 )
-class FinanceGQLModel:
+class FinanceGQLModel(BaseGQLModel):
     @classmethod
-    async def resolve_reference(cls, info: strawberryA.types.Info, id: uuid.UUID):
-        loader = getLoadersFromInfo(info).finances
-        result = await loader.load(id)
-        if result is not None:
-            result._type_definition = cls._type_definition  # little hack :)
-        return result
+
+    def getLoader(cls, info):
+        return getLoadersFromInfo(info).finances
+    # async def resolve_reference(cls, info: strawberryA.types.Info, id: uuid.UUID):
+    #     loader = getLoadersFromInfo(info).finances
+    #     result = await loader.load(id)
+    #     if result is not None:
+    #         result._type_definition = cls._type_definition  # little hack :)
+    #     return result
 
     @strawberryA.field(description="""Primary key""")
     def id(self) -> uuid.UUID:
@@ -52,15 +56,21 @@ class FinanceGQLModel:
 
     @strawberryA.field(description="""Project of finance""")
     async def project(self, info: strawberryA.types.Info) -> Optional ["ProjectGQLModel"]:
-        async with withInfo(info) as session:
-            result = await resolveProjectById(session, self.project_id)
-            return result
+        loader = getLoadersFromInfo(info).projects
+        result = await loader.load(self.project_id)
+        return result
+        # async with withInfo(info) as session:
+        #     result = await resolveProjectById(session, self.project_id)
+        #     return result
 
     @strawberryA.field(description="""Finance type of finance""")
     async def financeType(self, info: strawberryA.types.Info) -> Optional ["FinanceTypeGQLModel"]:
-        async with withInfo(info) as session:
-            result = await resolveFinanceTypeById(session, self.financetype_id)
-            return result
+        loader = getLoadersFromInfo(info).finances
+        result = await loader.load(self.financetype_id)
+        return result
+        # async with withInfo(info) as session:
+        #     result = await resolveFinanceTypeById(session, self.financetype_id)
+        #     return result
 ###########################################################################################################################
 #
 # Query 

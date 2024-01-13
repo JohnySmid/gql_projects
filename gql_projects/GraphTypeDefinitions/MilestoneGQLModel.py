@@ -9,19 +9,20 @@ from gql_projects.GraphResolvers import (
 )
 from contextlib import asynccontextmanager
 from .ProjectGQLModel import ProjectResultGQLModel
+from .BaseGQLModel import BaseGQLModel
 
 import strawberry
 from gql_projects.utils.DBFeeder import randomDataStructure
 from gql_projects.utils.Dataloaders import getLoadersFromInfo, getUserFromInfo
 
-@asynccontextmanager
-async def withInfo(info):
-    asyncSessionMaker = info.context["asyncSessionMaker"]
-    async with asyncSessionMaker() as session:
-        try:
-            yield session
-        finally:
-            pass
+# @asynccontextmanager
+# async def withInfo(info):
+#     asyncSessionMaker = info.context["asyncSessionMaker"]
+#     async with asyncSessionMaker() as session:
+#         try:
+#             yield session
+#         finally:
+#             pass
 
 ProjectGQLModel = Annotated["ProjectGQLModel",strawberryA.lazy(".ProjectGQLModel")]
 
@@ -31,14 +32,17 @@ ProjectGQLModel = Annotated["ProjectGQLModel",strawberryA.lazy(".ProjectGQLModel
 @strawberryA.federation.type(
     keys=["id"], description="""Entity representing a milestone"""
 )
-class MilestoneGQLModel:
+class MilestoneGQLModel(BaseGQLModel):
     @classmethod
-    async def resolve_reference(cls, info: strawberryA.types.Info, id: uuid.UUID):
-        loader = getLoadersFromInfo(info).milestones
-        result = await loader.load(id)
-        if result is not None:
-            result._type_definition = cls._type_definition  # little hack :)
-        return result
+    def getLoader(cls, info):
+        return getLoadersFromInfo(info).milestones
+    
+    # async def resolve_reference(cls, info: strawberryA.types.Info, id: uuid.UUID):
+    #     loader = getLoadersFromInfo(info).milestones
+    #     result = await loader.load(id)
+    #     if result is not None:
+    #         result._type_definition = cls._type_definition  # little hack :)
+    #     return result
 
     @strawberryA.field(description="""Primary key""")
     def id(self) -> uuid.UUID:
@@ -66,9 +70,12 @@ class MilestoneGQLModel:
 
     @strawberryA.field(description="""Project of milestone""")
     async def project(self, info: strawberryA.types.Info) -> Optional ["ProjectGQLModel"]:
-        async with withInfo(info) as session:
-            result = await resolveProjectById(session, self.project_id)
-            return result
+        loader = getLoadersFromInfo(info).projects
+        result = await loader.load(self.project_id)
+        return result
+        # async with withInfo(info) as session:
+        #     result = await resolveProjectById(session, self.project_id)
+        #     return result
 
     @strawberryA.field(description="""Milestones which has this one as follower""")
     async def previous(self, info: strawberryA.types.Info) -> List["MilestoneGQLModel"]:

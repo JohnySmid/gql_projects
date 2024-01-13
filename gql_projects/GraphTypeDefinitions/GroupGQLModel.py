@@ -4,6 +4,8 @@ import uuid
 from typing import Annotated, List
 from contextlib import asynccontextmanager
 
+from .BaseGQLModel import BaseGQLModel
+
 @asynccontextmanager
 async def withInfo(info):
     asyncSessionMaker = info.context["asyncSessionMaker"]
@@ -21,7 +23,7 @@ ProjectGQLModel = Annotated["ProjectGQLModel",strawberryA.lazy(".ProjectGQLModel
     description="""Entity representing a Group"""
     )
 
-class GroupGQLModel:
+class GroupGQLModel(BaseGQLModel):
     id: uuid.UUID = strawberryA.federation.field(external=True)
 
     @classmethod

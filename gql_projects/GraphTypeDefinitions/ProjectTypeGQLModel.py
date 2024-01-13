@@ -3,7 +3,7 @@ import strawberry as strawberryA
 from typing import List, Annotated, Optional, Union
 from contextlib import asynccontextmanager
 import datetime
-
+from .BaseGQLModel import BaseGQLModel
 import strawberry
 from gql_projects.utils.DBFeeder import randomDataStructure
 from gql_projects.utils.Dataloaders import getLoadersFromInfo, getUserFromInfo
@@ -30,14 +30,16 @@ ProjectCategoryGQLModel = Annotated["ProjectCategoryGQLModel",strawberryA.lazy("
 @strawberryA.federation.type(
     keys=["id"], description="""Entity representing a project types"""
 )
-class ProjectTypeGQLModel:
+class ProjectTypeGQLModel(BaseGQLModel):
     @classmethod
-    async def resolve_reference(cls, info: strawberryA.types.Info, id: uuid.UUID):
-        loader = getLoadersFromInfo(info).projecttypes
-        result = await loader.load(id)
-        if result is not None:
-            result._type_definition = cls._type_definition  # little hack :)
-        return result
+    def getLoader(cls, info):
+        return getLoadersFromInfo(info).projecttypes
+    # async def resolve_reference(cls, info: strawberryA.types.Info, id: uuid.UUID):
+    #     loader = getLoadersFromInfo(info).projecttypes
+    #     result = await loader.load(id)
+    #     if result is not None:
+    #         result._type_definition = cls._type_definition  # little hack :)
+    #     return result
 
     @strawberryA.field(description="""Primary key""")
     def id(self) -> uuid.UUID:

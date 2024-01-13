@@ -6,6 +6,7 @@ import uuid
 import strawberry
 from gql_projects.utils.DBFeeder import randomDataStructure
 from gql_projects.utils.Dataloaders import getLoadersFromInfo, getUserFromInfo
+from .BaseGQLModel import BaseGQLModel
 
 from gql_projects.GraphResolvers import (
     resolveProjectAll,
@@ -33,14 +34,17 @@ def AsyncSessionFromInfo(info):
     keys=["id"], 
     description="""Entity representing a project"""
 )
-class ProjectGQLModel:
+class ProjectGQLModel(BaseGQLModel):
     @classmethod
-    async def resolve_reference(cls, info: strawberryA.types.Info, id: uuid.UUID):
-        loader = getLoadersFromInfo(info).projects
-        result = await loader.load(id)
-        if result is not None:
-            result._type_definition = cls._type_definition  # little hack :)
-        return result
+    def getLoader(cls, info):
+        return getLoadersFromInfo(info).projects
+
+    # async def resolve_reference(cls, info: strawberryA.types.Info, id: uuid.UUID):
+    #     loader = getLoadersFromInfo(info).projects
+    #     result = await loader.load(id)
+    #     if result is not None:
+    #         result._type_definition = cls._type_definition  # little hack :)
+    #     return result
 
     @strawberryA.field(description="""Primary key""")
     def id(self) -> uuid.UUID:
@@ -77,9 +81,12 @@ class ProjectGQLModel:
     async def finances(
         self, info: strawberryA.types.Info
     ) -> List["FinanceGQLModel"]:
-        async with withInfo(info) as session:
-            result = await resolveFinancesForProject(session, self.id)
-            return result
+        loader = getLoadersFromInfo(info).finances
+        result = await loader.filter_by(project_id=self.id)
+        return result
+        # async with withInfo(info) as session:
+        #     result = await resolveFinancesForProject(session, self.id)
+        #     return result
 
     @strawberryA.field(description="""List of milestones, related to a project""")
     async def milestones(
@@ -105,8 +112,8 @@ from contextlib import asynccontextmanager
 
 @asynccontextmanager
 async def withInfo(info):
-    asyncSessionMaker = info.context["asyncSessionMaker"]
-    async with asyncSessionMaker() as session:
+     asyncSessionMaker = info.context["asyncSessionMaker"]
+     async with asyncSessionMaker() as session:
         try:
             yield session
         finally:

@@ -5,18 +5,20 @@ from gql_projects.GraphResolvers import resolveFinancesForFinanceType, resolveFi
 from contextlib import asynccontextmanager
 import datetime
 
+from .BaseGQLModel import BaseGQLModel
+
 import strawberry
 from gql_projects.utils.DBFeeder import randomDataStructure
 from gql_projects.utils.Dataloaders import getLoadersFromInfo, getUserFromInfo
 
-@asynccontextmanager
-async def withInfo(info):
-    asyncSessionMaker = info.context["asyncSessionMaker"]
-    async with asyncSessionMaker() as session:
-        try:
-            yield session
-        finally:
-            pass
+# @asynccontextmanager
+# async def withInfo(info):
+#     asyncSessionMaker = info.context["asyncSessionMaker"]
+#     async with asyncSessionMaker() as session:
+#         try:
+#             yield session
+#         finally:
+#             pass
 
 FinanceGQLModel = Annotated ["FinanceGQLModel",strawberryA.lazy(".FinanceGQLModel")]
 
@@ -25,7 +27,7 @@ FinanceGQLModel = Annotated ["FinanceGQLModel",strawberryA.lazy(".FinanceGQLMode
 @strawberryA.federation.type(
     keys=["id"], description="""Entity representing a finance type"""
 )
-class FinanceTypeGQLModel:
+class FinanceTypeGQLModel(BaseGQLModel):
     @classmethod
     async def resolve_reference(cls, info: strawberryA.types.Info, id: uuid.UUID):
         loader = getLoadersFromInfo(info).financetypes
@@ -54,9 +56,12 @@ class FinanceTypeGQLModel:
     async def finances(
         self, info: strawberryA.types.Info
     ) -> List["FinanceGQLModel"]:
-        async with withInfo(info) as session:
-            result = await resolveFinancesForFinanceType(session, self.id)
-            return result
+        loader = getLoadersFromInfo(info).financetypes
+        result = await loader.filter_by(financetype_id = self.id)
+        return result
+        # async with withInfo(info) as session:
+        #     result = await resolveFinancesForFinanceType(session, self.id)
+        #     return result
 ###########################################################################################################################
 #
 # Query 

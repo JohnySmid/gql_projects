@@ -2,6 +2,7 @@ import strawberry as strawberryA
 import datetime
 import uuid
 from typing import List, Annotated, Optional, Union
+from .BaseGQLModel import BaseGQLModel
 
 import strawberry
 from gql_projects.utils.DBFeeder import randomDataStructure
@@ -11,14 +12,16 @@ from gql_projects.utils.Dataloaders import getLoadersFromInfo, getUserFromInfo
 @strawberryA.federation.type(
     keys=["id"], description="""Entity representing a finance"""
 )
-class FinanceCategoryGQLModel:
+class FinanceCategoryGQLModel(BaseGQLModel):
     @classmethod
-    async def resolve_reference(cls, info: strawberryA.types.Info, id: uuid.UUID):
-        loader = getLoadersFromInfo(info).financecategory
-        result = await loader.load(id)
-        if result is not None:
-            result._type_definition = cls._type_definition  # little hack :)
-        return result
+    def getLoader(cls, info):
+        return getLoadersFromInfo(info).financecategory
+    # async def resolve_reference(cls, info: strawberryA.types.Info, id: uuid.UUID):
+    #     loader = getLoadersFromInfo(info).financecategory
+    #     result = await loader.load(id)
+    #     if result is not None:
+    #         result._type_definition = cls._type_definition  # little hack :)
+    #     return result
 
     @strawberryA.field(description="""Primary key""")
     def id(self) -> uuid.UUID:
