@@ -234,6 +234,7 @@ def create_resolve_reference_test(table_name, gqltype, attribute_names=["id", "n
             resp = await schemaExecutor(query, {**variable_values})
             testResult(resp)
 
+        print(f"{gqltype}_representation")
         append(queryname=f"{gqltype}_representation", query=query)
 
     return result_test
