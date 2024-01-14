@@ -238,10 +238,10 @@ async def milestone_update(self, info: strawberryA.types.Info, milestone: Milest
 async def milestone_delete(
         self, info: strawberry.types.Info, project: MilestoneDeleteGQLModel
 ) -> MilestoneResultGQLModel:
-    project_id_to_delete = project.id
+    milestone_id_to_delete = project.id
     loader = getLoadersFromInfo(info).milestones
-    row = await loader.delete(project_id_to_delete)
+    row = await loader.delete(milestone_id_to_delete)
     if not row:
-        return MilestoneResultGQLModel(id=project_id_to_delete, msg="fail, user not found")
-    result = MilestoneResultGQLModel(id=project_id_to_delete, msg="ok")
+        return MilestoneResultGQLModel(id=milestone_id_to_delete, msg="fail, user not found")
+    result = MilestoneResultGQLModel(id=milestone_id_to_delete, msg="ok")
     return result

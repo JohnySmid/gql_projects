@@ -177,10 +177,10 @@ async def project_category_update(self, info: strawberryA.types.Info, project: P
 async def project_category_delete(
         self, info: strawberry.types.Info, project: ProjectCategoryDeleteGQLModel
 ) -> ProjectCategoryResultGQLModel:
-    project_id_to_delete = project.id
+    project_category_id_to_delete = project.id
     loader = getLoadersFromInfo(info).projectcategories
-    row = await loader.delete(project_id_to_delete)
+    row = await loader.delete(project_category_id_to_delete)
     if not row:
-        return ProjectCategoryResultGQLModel(id=project_id_to_delete, msg="fail, user not found")
-    result = ProjectCategoryResultGQLModel(id=project_id_to_delete, msg="ok")
+        return ProjectCategoryResultGQLModel(id=project_category_id_to_delete, msg="fail, user not found")
+    result = ProjectCategoryResultGQLModel(id=project_category_id_to_delete, msg="ok")
     return result

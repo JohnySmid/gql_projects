@@ -182,10 +182,10 @@ async def project_type_update(self, info: strawberryA.types.Info, project: Proje
 async def project_type_delete(
         self, info: strawberry.types.Info, project: ProjectTypeDeleteGQLModel
 ) -> ProjectTypeResultGQLModel:
-    project_id_to_delete = project.id
+    project_type_id_to_delete = project.id
     loader = getLoadersFromInfo(info).projecttypes
-    row = await loader.delete(project_id_to_delete)
+    row = await loader.delete(project_type_id_to_delete)
     if not row:
-        return ProjectTypeResultGQLModel(id=project_id_to_delete, msg="fail, user not found")
-    result = ProjectTypeResultGQLModel(id=project_id_to_delete, msg="ok")
+        return ProjectTypeResultGQLModel(id=project_type_id_to_delete, msg="fail, user not found")
+    result = ProjectTypeResultGQLModel(id=project_type_id_to_delete, msg="ok")
     return result

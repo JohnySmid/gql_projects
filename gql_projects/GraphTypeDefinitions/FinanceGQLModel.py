@@ -195,10 +195,10 @@ async def finance_update(self, info: strawberryA.types.Info, finance: FinanceUpd
 async def finance_delete(
         self, info: strawberry.types.Info, finance: FinanceDeleteGQLModel
 ) -> FinanceResultGQLModel:
-    project_id_to_delete = finance.id
+    finance_id_to_delete = finance.id
     loader = getLoadersFromInfo(info).finances
-    row = await loader.delete(project_id_to_delete)
+    row = await loader.delete(finance_id_to_delete)
     if not row:
-        return FinanceResultGQLModel(id=project_id_to_delete, msg="fail, user not found")
-    result = FinanceResultGQLModel(id=project_id_to_delete, msg="ok")
+        return FinanceResultGQLModel(id=finance_id_to_delete, msg="fail, user not found")
+    result = FinanceResultGQLModel(id=finance_id_to_delete, msg="ok")
     return result
