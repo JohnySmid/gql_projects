@@ -93,18 +93,17 @@ test_milestone_delete = create_delete_query (
 )
 
 
-# test_milestone_add_link=create_milestones_link_add_query(
-#     query="""
-#         mutation($previous_id: UUID!, next_id: UUID!) {
-#             milestones_link_add(project: {previousId: $previous_id, nextId: next_id}) {
-#                 id
-#                 msg
-#             }
-#         }
-#     """,
-#     variables={
-#          "previous_id": "d7266936-17c1-4810-88d2-079ebb864d2e",
-#          "next_id": "53633106-3a84-4c2f-8f9f-7ec359ba8584",
-#     },
-#     table_name="projectmilestones"
-# )
+test_milestone_add_link=create_frontend_query(
+     query="""
+          mutation($previous_id: UUID!, $next_id: UUID!) {
+             milestonesLinkAdd(link: {previousId: $previous_id, nextId: $next_id}) {
+                 id
+                 msg
+ }    
+}
+     """,
+     variables={
+          "previous_id": "512cf74f-3e8c-40cf-a815-7fd960a31a60",
+          "next_id": "4ca54daf-38e1-4658-9a3f-f893548fb4aa",
+     }
+ )

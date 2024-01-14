@@ -178,8 +178,8 @@ class MilestoneResultGQLModel:
 
 @strawberryA.input(description="Definition of milestone link used for addition")
 class MilestoneLinkAddGQLModel:
-    previous_id: uuid.UUID = strawberryA.field(description="The ID of the previous milestone")
-    next_id: uuid.UUID = strawberryA.field(description="The ID of the next milestone")
+    previous_id: Optional[uuid.UUID] = strawberryA.field(description="The ID of the previous milestone")
+    next_id: Optional[uuid.UUID]  = strawberryA.field(description="The ID of the next milestone")
 
 @strawberryA.mutation(description="Adds a new milestones link.")
 async def milestones_link_add(self, info: strawberryA.types.Info, link: MilestoneLinkAddGQLModel) -> MilestoneResultGQLModel:
@@ -190,7 +190,7 @@ async def milestones_link_add(self, info: strawberryA.types.Info, link: Mileston
     if row is None:
         row = await loader.insert(link)
         result.msg = "ok"
-    else:
+    if row is not None:
         result.msg = "exists"
     result.id = link.previous_id
     return result
