@@ -11,7 +11,8 @@ from tests.gqlshared import (
     create_page_test,
     create_resolve_reference_test,
     create_frontend_query,
-    create_update_query
+    create_update_query,
+    create_delete_query
 )
 test_reference_financetypes = create_resolve_reference_test(table_name='projectfinancetypes', gqltype='FinanceTypeGQLModel',
                                                             attribute_names=["id", "name"])
@@ -20,7 +21,7 @@ test_query_finance_type_by_id = create_by_id_test(table_name="projectfinancetype
 test_query_finance_type_page = create_page_test(table_name="projectfinancetypes", query_endpoint="financeTypePage")
 
 test_insert_finance_type = create_frontend_query(query="""
-   mutation ($id: UUID!, $name: String!, $name_en: String) {
+   mutation ($id: UUID!, $name: String!, $name_en: String, ) {
         result: financeTypeInsert(finance: {id: $id, name: $name, nameEn: $name_en}) {
             id
             msg
@@ -29,6 +30,9 @@ test_insert_finance_type = create_frontend_query(query="""
                 name 
                 nameEn 
                 lastchange
+                finances{
+                  id
+                }
             }
             
         }
@@ -61,5 +65,20 @@ test_update_finance_type = create_update_query(
         "id": "9e37059c-de2c-4112-9009-559c8b0396f1", 
         "name": "nove finance1", 
         },
+    table_name="projectfinancetypes"
+)
+
+test_finance_type_delete = create_delete_query (
+    query="""
+        mutation($id: UUID!) {
+            financeTypeDelete(finance: {id: $id}) {
+                id
+                msg
+            }
+        }
+    """,
+    variables={
+         "id": "9e37059c-de2c-4112-9009-559c8b0396f1",
+    },
     table_name="projectfinancetypes"
 )

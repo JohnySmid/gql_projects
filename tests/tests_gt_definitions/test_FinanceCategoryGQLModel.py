@@ -11,7 +11,8 @@ from tests.gqlshared import (
     create_page_test,
     create_resolve_reference_test,
     create_frontend_query,
-    create_update_query
+    create_update_query,
+    create_delete_query
 )
 
 test_reference_financecategory = create_resolve_reference_test(table_name='projectfinancecategories', gqltype='FinanceCategoryGQLModel', 
@@ -60,5 +61,20 @@ test_update_finance_category = create_update_query(
         "id": "5a15450e-67e6-42a8-923a-aa7ed555b008", 
         "name": "new financeC",
         },
+    table_name="projectfinancecategories"
+)
+
+test_finance_delete = create_delete_query (
+    query="""
+        mutation($id: UUID!) {
+            financeCategoryDelete(finance: {id: $id}) {
+                id
+                msg
+            }
+        }
+    """,
+    variables={
+         "id": "5a15450e-67e6-42a8-923a-aa7ed555b008",
+    },
     table_name="projectfinancecategories"
 )

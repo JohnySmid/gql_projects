@@ -12,7 +12,8 @@ from tests.gqlshared import (
     create_page_test,
     create_resolve_reference_test,
     create_frontend_query,
-    create_update_query
+    create_update_query,
+    create_delete_query
 )
 
 test_reference_project = create_resolve_reference_test(table_name='projects', gqltype='ProjectGQLModel', 
@@ -28,10 +29,20 @@ test_project_insert = create_frontend_query(query="""
             project {
             id
             name
+            startdate
+            enddate
             projectType {
                 id
                 }
             lastchange
+            finances{
+              id
+              name
+            }
+            milestones{
+                id
+                name
+            }
             }
         }
     }
@@ -65,6 +76,22 @@ test_project_update = create_update_query(
     },
     table_name="projects"
 )
+
+test_project_delete = create_delete_query (
+    query="""
+        mutation($id: UUID!) {
+            projectDelete(project: {id: $id}) {
+                id
+                msg
+            }
+        }
+    """,
+    variables={
+         "id": "43dd2ff1-5c17-42a5-ba36-8b30e2a243bb",
+    },
+    table_name="projects"
+)
+
 
 # test_hello_project = create_frontend_query(query="""
 #     query($id: UUID!){ sayHelloProjects(id: $id) }""", 

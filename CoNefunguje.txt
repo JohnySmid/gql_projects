@@ -1,43 +1,38 @@
+1. 
 
-1 mutation MyMutation {
-  __typename
-  projectUpdate(project: {lastchange: "2023-12-23T09:19:52.794215", id: "43dd2ff1-5c17-42a5-ba36-8b30e2a243bb", name:"XDXD"}) {
-    id
-  }
-}
+@strawberryA.field(description="""List of finances, related to finance type""")
+    async def finances(
+        self, info: strawberryA.types.Info
+    ) -> List["FinanceGQLModel"]:
+        loader = getLoadersFromInfo(info).financetypes
+        result = await loader.filter_by(financetype_id = self.id)
+        return result
+        # async with withInfo(info) as session:
+        #     result = await resolveFinancesForFinanceType(session, self.id)
+        #     return result
 
-ValueError: badly formed hexadecimal UUID string
-
-user = getUserFromInfo(info)
-    project.changedby = uuid.UUID(user["id"])
-
-2. v systemdata.json nema projcettypes definovany category_id 
-  "projecttypes": [
-        {
-            "id": "a825d8e1-2e60-4884-afdb-25642db581d8",
-            "name": "GAČR",
-            "name_en": "GAČR"
-        },
-
-    nemužu udělat
-    
-    query MyQuery {
-  __typename
-  projectTypePage {
-    category{
-      name
+{
+  "data": {
+    "result": {
+      "id": "f6f79926-ac0e-4833-9a38-4272cae33fa6",
+      "msg": "ok",
+      "finance": null
     }
-  }
+  },
+  "errors": [
+    {
+      "message": "Entity namespace for \"projectfinancetypes\" has no property \"financetype_id\"",
+      "locations": [
+        {
+          "line": 10,
+          "column": 16
+        }
+      ],
+      "path": [
+        "result",
+        "finance",
+        "finances"
+      ]
+    }
+  ]
 }
-
-to same u financeCategory name_en
-
-3. 
-mutation{
-	project/financeCategoryUpdate(project:{id: "5c8c4c5a-df3b-44a9-ab90-396bdc84542b", lastchange: "2023-12-23T11:12:00.397561"}){
-    msg
-    id
-  }
-}
-
-(Background on this error at: https://sqlalche.me/e/20/dbapi)

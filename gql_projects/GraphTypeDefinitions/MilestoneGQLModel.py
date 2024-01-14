@@ -60,10 +60,6 @@ class MilestoneGQLModel(BaseGQLModel):
     def id(self) -> uuid.UUID:
         return self.id
 
-    @strawberryA.field(description="""Time stamp""")
-    def lastchange(self) -> uuid.UUID:
-        return self.lastchange
-
     @strawberryA.field(description="""Name""")
     def name(self) -> str:
         return self.name
@@ -77,8 +73,8 @@ class MilestoneGQLModel(BaseGQLModel):
         return self.enddate
 
     @strawberryA.field(description="""Last change""")
-    def lastChange(self) -> datetime.datetime:
-        return self.lastChange
+    def lastchange(self) -> datetime.datetime:
+        return self.lastchange
 
     @strawberryA.field(description="""Project of milestone""")
     async def project(self, info: strawberryA.types.Info) -> Optional ["ProjectGQLModel"]:
@@ -199,19 +195,19 @@ async def milestones_link_add(self, info: strawberryA.types.Info, link: Mileston
     result.id = link.previous_id
     return result
 
-@strawberryA.mutation(description="Removes the milestones link.")
-async def milestones_link_remove(self, info: strawberryA.types.Info, link: MilestoneLinkAddGQLModel) -> MilestoneResultGQLModel:
-    loader = getLoadersFromInfo(info).milestonelinks
-    rows = await loader.filter_by(previous_id=link.previous_id, next_id=link.next_id)
-    row = next(rows, None)
-    result = MilestoneResultGQLModel()
-    if row is None:
-        result.msg = "fail"
-    else:
-        await loader.delete(row.id)
-        result.msg = "ok"
-    result.id = link.previous_id
-    return result
+# @strawberryA.mutation(description="Removes the milestones link.")
+# async def milestones_link_remove(self, info: strawberryA.types.Info, link: MilestoneLinkAddGQLModel) -> MilestoneResultGQLModel:
+#     loader = getLoadersFromInfo(info).milestonelinks
+#     rows = await loader.filter_by(previous_id=link.previous_id, next_id=link.next_id)
+#     row = next(rows, None)
+#     result = MilestoneResultGQLModel()
+#     if row is None:
+#         result.msg = "fail"
+#     else:
+#         await loader.delete(row.id)
+#         result.msg = "ok"
+#     result.id = link.previous_id
+#     return result
 
 @strawberryA.mutation(description="Adds a new milestone.")
 async def milestone_insert(self, info: strawberryA.types.Info, milestone: MilestoneInsertGQLModel) -> MilestoneResultGQLModel:
@@ -241,7 +237,5 @@ async def milestone_delete(
     milestone_id_to_delete = project.id
     loader = getLoadersFromInfo(info).milestones
     row = await loader.delete(milestone_id_to_delete)
-    if not row:
-        return MilestoneResultGQLModel(id=milestone_id_to_delete, msg="fail, user not found")
-    result = MilestoneResultGQLModel(id=milestone_id_to_delete, msg="ok")
+    result = MilestoneResultGQLModel(id=milestone_id_to_delete, msg="fail, user not found") if not row else MilestoneResultGQLModel(id=milestone_id_to_delete, msg="ok")
     return result

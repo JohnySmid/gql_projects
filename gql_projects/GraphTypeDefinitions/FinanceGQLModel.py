@@ -50,10 +50,6 @@ class FinanceGQLModel(BaseGQLModel):
     def id(self) -> uuid.UUID:
         return self.id
 
-    @strawberryA.field(description="""Time stamp""")
-    def lastchange(self) -> uuid.UUID:
-        return self.lastchange
-
     @strawberryA.field(description="""Name""")
     def name(self) -> str:
         return self.name
@@ -198,7 +194,5 @@ async def finance_delete(
     finance_id_to_delete = finance.id
     loader = getLoadersFromInfo(info).finances
     row = await loader.delete(finance_id_to_delete)
-    if not row:
-        return FinanceResultGQLModel(id=finance_id_to_delete, msg="fail, user not found")
-    result = FinanceResultGQLModel(id=finance_id_to_delete, msg="ok")
+    result = FinanceResultGQLModel(id=finance_id_to_delete, msg="fail, user not found") if not row else FinanceResultGQLModel(id=finance_id_to_delete, msg="ok")
     return result

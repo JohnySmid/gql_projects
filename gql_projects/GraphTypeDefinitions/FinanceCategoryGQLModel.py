@@ -177,7 +177,5 @@ async def finance_category_delete(
     finance_category_id_to_delete = finance.id
     loader = getLoadersFromInfo(info).financecategory
     row = await loader.delete(finance_category_id_to_delete)
-    if not row:
-        return FinanceCategoryResultGQLModel(id=finance_category_id_to_delete, msg="fail, user not found")
-    result = FinanceCategoryResultGQLModel(id=finance_category_id_to_delete, msg="ok")
+    result = FinanceCategoryResultGQLModel(id=finance_category_id_to_delete, msg="fail, user not found") if not row else FinanceCategoryResultGQLModel(id=finance_category_id_to_delete, msg="ok")
     return result

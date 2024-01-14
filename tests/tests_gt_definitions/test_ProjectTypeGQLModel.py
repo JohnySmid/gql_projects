@@ -12,7 +12,8 @@ from tests.gqlshared import (
     create_page_test,
     create_resolve_reference_test,
     create_frontend_query,
-    create_update_query
+    create_update_query,
+    create_delete_query
 )
 
 test_reference_projecttypes = create_resolve_reference_test(table_name='projecttypes', gqltype='ProjectTypeGQLModel',
@@ -31,6 +32,9 @@ test_insert_project_type = create_frontend_query(
                 name
                 nameEn
                 category { id }
+                projects{
+                  id
+                }
             }
         }
     }""",
@@ -62,5 +66,20 @@ test_update_project_type = create_update_query(
         "id": "a825d8e1-2e60-4884-afdb-25642db581d8", 
         "name": "nove jmeno1"
         },
+    table_name="projecttypes"
+)
+
+test_project_type_delete = create_delete_query (
+    query="""
+        mutation($id: UUID!) {
+            projectTypeDelete(project: {id: $id}) {
+                id
+                msg
+            }
+        }
+    """,
+    variables={
+         "id": "a825d8e1-2e60-4884-afdb-25642db581d8",
+    },
     table_name="projecttypes"
 )

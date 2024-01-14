@@ -146,7 +146,8 @@ class Mutation:
     from .MilestoneGQLModel import (
         milestone_insert,
         milestone_update,
-        milestone_delete
+        milestone_delete,
+        milestones_link_add
     )
     milestone_insert = milestone_insert
     milestone_update = milestone_update

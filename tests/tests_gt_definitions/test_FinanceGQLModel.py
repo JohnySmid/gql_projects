@@ -11,7 +11,8 @@ from tests.gqlshared import (
     create_page_test,
     create_resolve_reference_test,
     create_frontend_query,
-    create_update_query
+    create_update_query,
+    create_delete_query
 )
 
 test_reference_finances = create_resolve_reference_test(table_name='projectfinances', gqltype='FinanceGQLModel', 
@@ -29,6 +30,7 @@ test_finance_insert = create_frontend_query(query="""
                  id
                  lastchange
                  name
+                 amount
                  project {
                      id
                      name
@@ -66,5 +68,20 @@ test_finance_update = create_update_query(
         "financetype_id": "9e37059c-de2c-4112-9009-559c8b0396f1",
         "amount":  1,
         "lastchange": "2024-01-12T19:17:59.613945"},
+    table_name="projectfinances"
+)
+
+test_finance_delete = create_delete_query (
+    query="""
+        mutation($id: UUID!) {
+            financeDelete(finance: {id: $id}) {
+                id
+                msg
+            }
+        }
+    """,
+    variables={
+         "id": "f911230f-7e1f-4e9b-90a9-b921996ceb87",
+    },
     table_name="projectfinances"
 )

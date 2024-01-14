@@ -69,7 +69,7 @@ class FinanceTypeGQLModel(BaseGQLModel):
         self, info: strawberryA.types.Info
     ) -> List["FinanceGQLModel"]:
         loader = getLoadersFromInfo(info).financetypes
-        result = await loader.filter_by(financetype_id = self.id)
+        result = await loader.filter_by(id = self.id)
         return result
         # async with withInfo(info) as session:
         #     result = await resolveFinancesForFinanceType(session, self.id)
@@ -171,7 +171,5 @@ async def finance_type_delete(
     finance_type_id_to_delete = finance.id
     loader = getLoadersFromInfo(info).financetypes
     row = await loader.delete(finance_type_id_to_delete)
-    if not row:
-        return FinanceTypeResultGQLModel(id=finance_type_id_to_delete, msg="fail, user not found")
-    result = FinanceTypeResultGQLModel(id=finance_type_id_to_delete, msg="ok")
+    result = FinanceTypeResultGQLModel(id=finance_type_id_to_delete, msg="fail, user not found") if not row else FinanceTypeResultGQLModel(id=finance_type_id_to_delete, msg="ok")
     return result

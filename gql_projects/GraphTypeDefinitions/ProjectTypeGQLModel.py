@@ -72,7 +72,7 @@ class ProjectTypeGQLModel(BaseGQLModel):
     @strawberryA.field(description="""List of projects, related to project type""")
     async def projects(self, info: strawberryA.types.Info) -> List["ProjectGQLModel"]:
         loader = getLoadersFromInfo(info).projecttypes
-        result = await loader.filter_by(projecttype_id = self.id)
+        result = await loader.filter_by(id = self.id)
         return result
         # async with withInfo(info) as session:
         #     result = await resolveProjectsForProjectType(session, self.id)
@@ -188,7 +188,5 @@ async def project_type_delete(
     project_type_id_to_delete = project.id
     loader = getLoadersFromInfo(info).projecttypes
     row = await loader.delete(project_type_id_to_delete)
-    if not row:
-        return ProjectTypeResultGQLModel(id=project_type_id_to_delete, msg="fail, user not found")
-    result = ProjectTypeResultGQLModel(id=project_type_id_to_delete, msg="ok")
+    result = ProjectTypeResultGQLModel(id=project_type_id_to_delete, msg="fail, user not found") if not row else ProjectTypeResultGQLModel(id=project_type_id_to_delete, msg="ok")
     return result

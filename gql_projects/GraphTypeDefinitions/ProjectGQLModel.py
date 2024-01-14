@@ -85,10 +85,10 @@ class ProjectGQLModel(BaseGQLModel):
     def lastchange(self) -> datetime.datetime:
         return self.lastchange
 
-    @strawberryA.field(description="""Team related to the project""")
-    async def team(self) -> Union["GroupGQLModel", None]:
-        result = await GroupGQLModel.resolve_reference(self.group_id)
-        return result
+    # @strawberryA.field(description="""Team related to the project""")
+    # async def team(self) -> Union["GroupGQLModel", None]:
+    #     result = await GroupGQLModel.resolve_reference(self.group_id)
+    #     return result
 
     @strawberryA.field(description="""Project type of project""")
     async def project_type(self, info: strawberryA.types.Info) -> Optional ["ProjectTypeGQLModel"]:
@@ -115,11 +115,11 @@ class ProjectGQLModel(BaseGQLModel):
         result = await loader.filter_by(project_id=self.id)
         return result
 
-    @strawberryA.field(description="""Group, related to a project""")
-    async def group(self, info: strawberryA.types.Info) -> Optional ["GroupGQLModel"]:
-        loader = getLoadersFromInfo(info).projects
-        result = await loader.filter_by(id=self.group_id)
-        return result
+    # @strawberryA.field(description="""Group, related to a project""")
+    # async def group(self, info: strawberryA.types.Info) -> Optional ["GroupGQLModel"]:
+    #     loader = getLoadersFromInfo(info).projects
+    #     result = await loader.filter_by(id=self.group_id)
+    #     return result
     
 ###########################################################################################################################
 #
@@ -129,14 +129,14 @@ class ProjectGQLModel(BaseGQLModel):
 
 from contextlib import asynccontextmanager
 
-@asynccontextmanager
-async def withInfo(info):
-     asyncSessionMaker = info.context["asyncSessionMaker"]
-     async with asyncSessionMaker() as session:
-        try:
-            yield session
-        finally:
-            pass
+# @asynccontextmanager
+# async def withInfo(info):
+#      asyncSessionMaker = info.context["asyncSessionMaker"]
+#      async with asyncSessionMaker() as session:
+#         try:
+#             yield session
+#         finally:
+#             pass
 
 from dataclasses import dataclass
 from .utils import createInputs
@@ -173,13 +173,13 @@ async def project_page(
 project_by_id = createRootResolver_by_id(ProjectGQLModel, description="Returns project by its id")
     
 
-@strawberryA.field(description="""Returns a list of projects for group""")
-async def project_by_group(
-    self, info: strawberryA.types.Info, id: uuid.UUID
-) -> List[ProjectGQLModel]:
-    async with withInfo(info) as session:
-        result = await resolveProjectsForGroup(session, id)
-        return result
+# @strawberryA.field(description="""Returns a list of projects for group""")
+# async def project_by_group(
+#     self, info: strawberryA.types.Info, id: uuid.UUID
+# ) -> List[ProjectGQLModel]:
+#     async with withInfo(info) as session:
+#         result = await resolveProjectsForGroup(session, id)
+#         return result
 
 # @strawberryA.field(description="""Random publications""")
 # async def randomProject(
@@ -273,7 +273,5 @@ async def project_delete(
     project_id_to_delete = project.id
     loader = getLoadersFromInfo(info).projects
     row = await loader.delete(project_id_to_delete)
-    if not row:
-        return ProjectResultGQLModel(id=project_id_to_delete, msg="fail, user not found")
-    result = ProjectResultGQLModel(id=project_id_to_delete, msg="ok")
+    result = ProjectResultGQLModel(id=project_id_to_delete, msg="fail, user not found") if not row else ProjectResultGQLModel(id=project_id_to_delete, msg="ok")
     return result

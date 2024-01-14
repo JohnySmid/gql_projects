@@ -11,7 +11,8 @@ from tests.gqlshared import (
     create_page_test,
     create_resolve_reference_test,
     create_frontend_query,
-    create_update_query
+    create_update_query,
+    create_delete_query,
 )
 
 test_reference_milestones = create_resolve_reference_test(table_name='projectmilestones', gqltype='MilestoneGQLModel', 
@@ -75,3 +76,35 @@ test_update_milestone = create_update_query(
         },
     table_name="projectmilestones"
 )
+
+test_milestone_delete = create_delete_query (
+    query="""
+        mutation($id: UUID!) {
+            milestoneDelete(project: {id: $id}) {
+                id
+                msg
+            }
+        }
+    """,
+    variables={
+         "id": "d7266936-17c1-4810-88d2-079ebb864d2e",
+    },
+    table_name="projectmilestones"
+)
+
+
+# test_milestone_add_link=create_milestones_link_add_query(
+#     query="""
+#         mutation($previous_id: UUID!, next_id: UUID!) {
+#             milestones_link_add(project: {previousId: $previous_id, nextId: next_id}) {
+#                 id
+#                 msg
+#             }
+#         }
+#     """,
+#     variables={
+#          "previous_id": "d7266936-17c1-4810-88d2-079ebb864d2e",
+#          "next_id": "53633106-3a84-4c2f-8f9f-7ec359ba8584",
+#     },
+#     table_name="projectmilestones"
+# )

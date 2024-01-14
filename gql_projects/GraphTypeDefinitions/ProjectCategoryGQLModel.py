@@ -55,10 +55,6 @@ class ProjectCategoryGQLModel(BaseGQLModel):
     def name_en(self) -> str:
         return self.name_en
 
-    @strawberryA.field(description="""End date""")
-    def enddate(self) -> datetime.date:
-        return self.enddate
-
     @strawberryA.field(description="""Last change""")
     def lastchange(self) -> datetime.datetime:
         return self.lastchange
@@ -180,7 +176,5 @@ async def project_category_delete(
     project_category_id_to_delete = project.id
     loader = getLoadersFromInfo(info).projectcategories
     row = await loader.delete(project_category_id_to_delete)
-    if not row:
-        return ProjectCategoryResultGQLModel(id=project_category_id_to_delete, msg="fail, user not found")
-    result = ProjectCategoryResultGQLModel(id=project_category_id_to_delete, msg="ok")
+    result = ProjectCategoryResultGQLModel(id=project_category_id_to_delete, msg="fail, user not found") if not row else ProjectCategoryResultGQLModel(id=project_category_id_to_delete, msg="ok")
     return result

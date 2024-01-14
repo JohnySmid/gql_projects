@@ -12,7 +12,8 @@ from tests.gqlshared import (
     create_page_test,
     create_resolve_reference_test,
     create_frontend_query,
-    create_update_query
+    create_update_query,
+    create_delete_query
 )
 
 test_reference_projectcategories = create_resolve_reference_test(table_name='projectcategories', gqltype='ProjectCategoryGQLModel',
@@ -57,6 +58,21 @@ test_update_project_category = create_update_query(
     variables={
         "id": "5c8c4c5a-df3b-44a9-ab90-396bdc84542b",
         "name": "nova kategorie1",
+    },
+    table_name="projectcategories"
+)
+
+test_project_category_delete = create_delete_query (
+    query="""
+        mutation($id: UUID!) {
+            projectCategoryDelete(project: {id: $id}) {
+                id
+                msg
+            }
+        }
+    """,
+    variables={
+         "id": "5c8c4c5a-df3b-44a9-ab90-396bdc84542b",
     },
     table_name="projectcategories"
 )
