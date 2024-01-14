@@ -5,7 +5,7 @@ services:
     image: gql_projects
     build:
       # context definuje cestu k popisu
-      context: ./gql_projects
+      context: ./
     environment:
       # promenne, ktere lze cist v kontejneru
       - POSTGRES_USER=postgres
@@ -56,14 +56,3 @@ services:
       retries: 5
     ports:
       - 31122:80
-  nginx: # funguje jako proxy mezi vnejskem a vnitrkem, tudy tece cela HTTP komunikace
-    build:
-      # context definuje cestu k popisu
-      context: ./nginx
-    restart: always
-    ports:
-      # vnejsi port : port, kde sluzbu poskytuje kontejner
-      - 31180:80
-    depends_on:
-      # kontejnery, kter musi byt spusteny drive
-      - postgres
