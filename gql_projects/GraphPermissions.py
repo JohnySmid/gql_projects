@@ -1,74 +1,74 @@
-from sqlalchemy.future import select
-import strawberry
+# from sqlalchemy.future import select
+# import strawberry
 
-from gql_projects.DBDefinitions import (
-    BaseModel
-)
-from gql_projects.DBDefinitions import GroupTypeModel, RoleTypeModel
-
-
-def AsyncSessionFromInfo(info):
-    return info.context["session"]
+# from gql_projects.DBDefinitions import (
+#     BaseModel
+# )
+# from gql_projects.DBDefinitions import GroupTypeModel, RoleTypeModel
 
 
-def UserFromInfo(info):
-    return info.context["user"]
+# def AsyncSessionFromInfo(info):
+#     return info.context["session"]
 
 
-class BasePermission(strawberry.permission.BasePermission):
-    message = "User is not authenticated"
-
-    async def has_permission(
-        self, source, info: strawberry.types.Info, **kwargs
-    ) -> bool:
-        print("BasePermission", source)
-        print("BasePermission", self)
-        print("BasePermission", kwargs)
-        return True
+# def UserFromInfo(info):
+#     return info.context["user"]
 
 
-class GroupEditorPermission(BasePermission):
-    message = "User is not authenticated"
+# class BasePermission(strawberry.permission.BasePermission):
+#     message = "User is not authenticated"
 
-    async def canEditGroup(session, group_id, user_id):
-        stmt = select(RoleModel).filter_by(group_id=group_id, user_id=user_id)
-        dbRecords = await session.execute(stmt).scalars()
-        dbRecords = [*dbRecords]  # konverze na list
-        if len(dbRecords) > 0:
-            return True
-        else:
-            return False
-
-    async def has_permission(
-        self, source, info: strawberry.types.Info, **kwargs
-    ) -> bool:
-        print("GroupEditorPermission", source)
-        print("GroupEditorPermission", self)
-        print("GroupEditorPermission", kwargs)
-        # _ = await self.canEditGroup(session,  source.id, ...)
-        print("GroupEditorPermission")
-        return True
+#     async def has_permission(
+#         self, source, info: strawberry.types.Info, **kwargs
+#     ) -> bool:
+#         print("BasePermission", source)
+#         print("BasePermission", self)
+#         print("BasePermission", kwargs)
+#         return True
 
 
-class UserEditorPermission(BasePermission):
-    message = "User is not authenticated"
+# class GroupEditorPermission(BasePermission):
+#     message = "User is not authenticated"
 
-    async def has_permission(
-        self, source, info: strawberry.types.Info, **kwargs
-    ) -> bool:
-        print("UserEditorPermission", source)
-        print("UserEditorPermission", self)
-        print("UserEditorPermission", kwargs)
-        return True
+#     async def canEditGroup(session, group_id, user_id):
+#         stmt = select(RoleModel).filter_by(group_id=group_id, user_id=user_id)
+#         dbRecords = await session.execute(stmt).scalars()
+#         dbRecords = [*dbRecords]  # konverze na list
+#         if len(dbRecords) > 0:
+#             return True
+#         else:
+#             return False
+
+#     async def has_permission(
+#         self, source, info: strawberry.types.Info, **kwargs
+#     ) -> bool:
+#         print("GroupEditorPermission", source)
+#         print("GroupEditorPermission", self)
+#         print("GroupEditorPermission", kwargs)
+#         # _ = await self.canEditGroup(session,  source.id, ...)
+#         print("GroupEditorPermission")
+#         return True
 
 
-class UserGDPRPermission(BasePermission):
-    message = "User is not authenticated"
+# class UserEditorPermission(BasePermission):
+#     message = "User is not authenticated"
 
-    async def has_permission(
-        self, source, info: strawberry.types.Info, **kwargs
-    ) -> bool:
-        print("UserGDPRPermission", source)
-        print("UserGDPRPermission", self)
-        print("UserGDPRPermission", kwargs)
-        return True
+#     async def has_permission(
+#         self, source, info: strawberry.types.Info, **kwargs
+#     ) -> bool:
+#         print("UserEditorPermission", source)
+#         print("UserEditorPermission", self)
+#         print("UserEditorPermission", kwargs)
+#         return True
+
+
+# class UserGDPRPermission(BasePermission):
+#     message = "User is not authenticated"
+
+#     async def has_permission(
+#         self, source, info: strawberry.types.Info, **kwargs
+#     ) -> bool:
+#         print("UserGDPRPermission", source)
+#         print("UserGDPRPermission", self)
+#         print("UserGDPRPermission", kwargs)
+#         return True
