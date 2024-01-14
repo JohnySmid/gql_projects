@@ -28,7 +28,7 @@ from gql_projects.GraphResolversOLD import (
  )
 
 ProjectTypeGQLModel = Annotated ["ProjectTypeGQLModel", strawberryA.lazy(".ProjectTypeGQLModel")]
-GroupGQLModel = Annotated ["GroupGQLModel",strawberryA.lazy(".GroupGQLModel")]
+GroupGQLModel = Annotated["GroupGQLModel", strawberry.lazy(".externals")]
 MilestoneGQLModel = Annotated ["MilestoneGQLModel",strawberryA.lazy(".MilestoneGQLModel")]
 FinanceGQLModel = Annotated ["FinanceGQLModel",strawberryA.lazy(".FinanceGQLModel")]
 
@@ -85,11 +85,6 @@ class ProjectGQLModel(BaseGQLModel):
     def lastchange(self) -> datetime.datetime:
         return self.lastchange
 
-    # @strawberryA.field(description="""Team related to the project""")
-    # async def team(self) -> Union["GroupGQLModel", None]:
-    #     result = await GroupGQLModel.resolve_reference(self.group_id)
-    #     return result
-
     @strawberryA.field(description="""Project type of project""")
     async def project_type(self, info: strawberryA.types.Info) -> Optional ["ProjectTypeGQLModel"]:
         from .ProjectTypeGQLModel import ProjectTypeGQLModel  # Import here to avoid circular dependency
@@ -120,6 +115,21 @@ class ProjectGQLModel(BaseGQLModel):
     #     loader = getLoadersFromInfo(info).projects
     #     result = await loader.filter_by(id=self.group_id)
     #     return result
+
+    @strawberry.field(description="""Group, related to a project""")
+    def group(self) -> Optional["GroupGQLModel"]:
+        from .externals import GroupGQLModel
+        return GroupGQLModel(id=self.group_id)
+    
+     # @strawberryA.field(description="""Team related to the project""")
+    # async def team(self) -> Union["GroupGQLModel", None]:
+    #     result = await GroupGQLModel.resolve_reference(self.group_id)
+    #     return result
+    
+    @strawberry.field(description="""Team, related to a project""")
+    def team(self) -> Union["GroupGQLModel", None]:
+        from .externals import GroupGQLModel
+        return GroupGQLModel(id=self.group_id)
     
 ###########################################################################################################################
 #
