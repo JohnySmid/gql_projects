@@ -24,10 +24,6 @@ def resolve_name_en(self) -> str:
     result = self.name_en if self.name_en else ""
     return result
 
-@strawberry.field(description="""Authorization id """)
-def resolve_authorization_id(self) -> uuid.UUID:
-    return self.authorization_id
-
 
 async def resolve_group(group_id):
     from .externals import GroupGQLModel

@@ -9,7 +9,6 @@ from .BaseGQLModel import BaseGQLModel
 
 from gql_projects.GraphTypeDefinitions.GraphResolvers import (
     resolve_id,
-    resolve_authorization_id,
     resolve_user_id,
     resolve_accesslevel,
     resolve_created,
@@ -20,12 +19,6 @@ from gql_projects.GraphTypeDefinitions.GraphResolvers import (
     createRootResolver_by_page,
 )
 
-from gql_projects.GraphResolversOLD import (
-     resolveProjectAll,
-     resolveProjectById,
-     resolveProjectsForGroup,
-     resolveFinancesForProject
- )
 
 ProjectTypeGQLModel = Annotated ["ProjectTypeGQLModel", strawberryA.lazy(".ProjectTypeGQLModel")]
 GroupGQLModel = Annotated["GroupGQLModel", strawberry.lazy(".externals")]

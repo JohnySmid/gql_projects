@@ -10,7 +10,6 @@ from gql_projects.GraphTypeDefinitions.GraphResolvers import (
     resolve_id,
     resolve_name,
     resolve_name_en,
-    resolve_authorization_id,
     resolve_user_id,
     resolve_accesslevel,
     resolve_created,

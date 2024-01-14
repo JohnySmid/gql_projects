@@ -16,14 +16,10 @@ from gql_projects.utils.Dataloaders import getLoadersFromInfo, getUserFromInfo
 #         finally:
 #             pass
 
-from gql_projects.GraphResolversOLD import (
-    resolveProjectsForProjectType,
-    resolveProjectTypeAll
-)
+
 
 from gql_projects.GraphTypeDefinitions.GraphResolvers import (
     resolve_id,
-    resolve_authorization_id,
     resolve_user_id,
     resolve_accesslevel,
     resolve_created,

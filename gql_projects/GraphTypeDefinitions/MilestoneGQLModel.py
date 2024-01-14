@@ -10,7 +10,6 @@ import uuid
 
 from gql_projects.GraphTypeDefinitions.GraphResolvers import (
     resolve_id,
-    resolve_authorization_id,
     resolve_user_id,
     resolve_accesslevel,
     resolve_created,

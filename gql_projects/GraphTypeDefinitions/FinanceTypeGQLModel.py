@@ -1,14 +1,12 @@
 import strawberry as strawberryA
 import uuid
 from typing import List, Annotated, Optional, Union
-from gql_projects.GraphResolversOLD import resolveFinancesForFinanceType, resolveFinanceTypeAll
 from contextlib import asynccontextmanager
 import datetime
 
 from .BaseGQLModel import BaseGQLModel
 from gql_projects.GraphTypeDefinitions.GraphResolvers import (
     resolve_id,
-    resolve_authorization_id,
     resolve_user_id,
     resolve_accesslevel,
     resolve_created,
