@@ -4,7 +4,6 @@ import datetime
 import typing
 import uuid
 import strawberry
-from gql_projects.utils.DBFeeder import randomDataStructure
 from gql_projects.utils.Dataloaders import getLoadersFromInfo, getUserFromInfo
 from .BaseGQLModel import BaseGQLModel
 
@@ -33,11 +32,11 @@ GroupGQLModel = Annotated ["GroupGQLModel",strawberryA.lazy(".GroupGQLModel")]
 MilestoneGQLModel = Annotated ["MilestoneGQLModel",strawberryA.lazy(".MilestoneGQLModel")]
 FinanceGQLModel = Annotated ["FinanceGQLModel",strawberryA.lazy(".FinanceGQLModel")]
 
-def AsyncSessionFromInfo(info):
-    print(
-        "obsolete function used AsyncSessionFromInfo, use withInfo context manager instead"
-    )
-    return info.context["session"]
+# def AsyncSessionFromInfo(info):
+#     print(
+#         "obsolete function used AsyncSessionFromInfo, use withInfo context manager instead"
+#     )
+#     return info.context["session"]
 
 
 
@@ -182,13 +181,13 @@ async def project_by_group(
         result = await resolveProjectsForGroup(session, id)
         return result
 
-@strawberryA.field(description="""Random publications""")
-async def randomProject(
-    self, info: strawberryA.types.Info
-) -> Union[ProjectGQLModel, None]:
-    async with withInfo(info) as session:
-        result = await randomDataStructure(AsyncSessionFromInfo(info))
-        return result
+# @strawberryA.field(description="""Random publications""")
+# async def randomProject(
+#     self, info: strawberryA.types.Info
+# ) -> Union[ProjectGQLModel, None]:
+#     async with withInfo(info) as session:
+#         result = await randomDataStructure(AsyncSessionFromInfo(info))
+#         return result
 
 ###########################################################################################################################
 #
@@ -262,8 +261,9 @@ async def project_update(self, info: strawberryA.types.Info, project: ProjectUpd
     result = ProjectResultGQLModel()
     result.msg = "ok"
     result.id = project.id
-    if row is None:
-        result.msg = "fail"
+    result.msg = "ok" if (row is not None) else "fail"
+    # if row is None:
+    #     result.msg = "fail"
     return result
 
 @strawberry.mutation(description="Delete the authorization user")

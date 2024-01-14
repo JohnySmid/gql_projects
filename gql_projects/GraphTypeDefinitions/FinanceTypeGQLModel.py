@@ -19,7 +19,6 @@ from gql_projects.GraphTypeDefinitions.GraphResolvers import (
     createRootResolver_by_page,
 )
 import strawberry
-from gql_projects.utils.DBFeeder import randomDataStructure
 from gql_projects.utils.Dataloaders import getLoadersFromInfo, getUserFromInfo
 
 # @asynccontextmanager
@@ -160,8 +159,9 @@ async def finance_type_update(self, info: strawberryA.types.Info, finance: Finan
     result = FinanceTypeResultGQLModel()
     result.msg = "ok"
     result.id = finance.id
-    if row is None:
-        result.msg = "fail"  
+    result.msg = "ok" if (row is not None) else "fail"
+    # if row is None:
+    #     result.msg = "fail"  
     return result
 
 @strawberry.mutation(description="Delete the authorization user")

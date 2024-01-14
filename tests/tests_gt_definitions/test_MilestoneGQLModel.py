@@ -22,7 +22,7 @@ test_milestone_page = create_page_test(table_name="projectmilestones", query_end
 
 test_insert_milestone = create_frontend_query(
     query="""
-    mutation ($id: UUID, $name: String!, $project_id: UUID!, $start_date: DateTime, $end_date: DateTime) {
+   mutation ($id: UUID, $name: String!, $project_id: UUID!, $start_date: DateTime, $end_date: DateTime) {
         result: milestoneInsert(milestone: {id: $id, name: $name, projectId: $project_id, startdate: $start_date, enddate: $end_date}) {
             id
             msg
@@ -33,6 +33,9 @@ test_insert_milestone = create_frontend_query(
                 startdate
                 enddate
                 lastchange
+              	project{
+                    id
+                    }
                 previous{
                     id
                     name

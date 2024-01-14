@@ -25,7 +25,6 @@ from .ProjectGQLModel import ProjectResultGQLModel
 from .BaseGQLModel import BaseGQLModel
 
 import strawberry
-from gql_projects.utils.DBFeeder import randomDataStructure
 from gql_projects.utils.Dataloaders import getLoadersFromInfo, getUserFromInfo
 
 # @asynccontextmanager
@@ -230,8 +229,9 @@ async def milestone_update(self, info: strawberryA.types.Info, milestone: Milest
     result = MilestoneResultGQLModel()
     result.msg = "ok"
     result.id = milestone.id
-    if row is None:
-        result.msg = "fail"  
+    result.msg = "ok" if (row is not None) else "fail"
+    # if row is None:
+    #     result.msg = "fail"  
     return result
 
 @strawberry.mutation(description="Delete the authorization user")

@@ -5,7 +5,6 @@ from typing import List, Annotated, Optional, Union
 from .BaseGQLModel import BaseGQLModel
 
 import strawberry
-from gql_projects.utils.DBFeeder import randomDataStructure
 from gql_projects.utils.Dataloaders import getLoadersFromInfo, getUserFromInfo
 from gql_projects.GraphTypeDefinitions.GraphResolvers import (
     resolve_id,
@@ -163,10 +162,11 @@ async def finance_category_update(self, info: strawberryA.types.Info, finance: F
     loader = getLoadersFromInfo(info).financecategory
     row = await loader.update(finance)
     result = FinanceCategoryResultGQLModel()
-    result.msg = "ok"
+    #result.msg = "ok" if (row not None) else result.msg = "fail"
+    result.msg = "ok" if (row is not None) else "fail"
     result.id = finance.id
-    if row is None:
-        result.msg = "fail"
+    # if row is None:
+    #     result.msg = "fail"
     return result
 
 

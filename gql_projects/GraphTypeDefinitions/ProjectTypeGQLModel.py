@@ -5,17 +5,16 @@ from contextlib import asynccontextmanager
 import datetime
 from .BaseGQLModel import BaseGQLModel
 import strawberry
-from gql_projects.utils.DBFeeder import randomDataStructure
 from gql_projects.utils.Dataloaders import getLoadersFromInfo, getUserFromInfo
 
-@asynccontextmanager
-async def withInfo(info):
-    asyncSessionMaker = info.context["asyncSessionMaker"]
-    async with asyncSessionMaker() as session:
-        try:
-            yield session
-        finally:
-            pass
+# @asynccontextmanager
+# async def withInfo(info):
+#     asyncSessionMaker = info.context["asyncSessionMaker"]
+#     async with asyncSessionMaker() as session:
+#         try:
+#             yield session
+#         finally:
+#             pass
 
 from gql_projects.GraphResolversOLD import (
     resolveProjectsForProjectType,
@@ -72,9 +71,12 @@ class ProjectTypeGQLModel(BaseGQLModel):
 
     @strawberryA.field(description="""List of projects, related to project type""")
     async def projects(self, info: strawberryA.types.Info) -> List["ProjectGQLModel"]:
-        async with withInfo(info) as session:
-            result = await resolveProjectsForProjectType(session, self.id)
-            return result
+        loader = getLoadersFromInfo(info).projecttypes
+        result = await loader.filter_by(projecttype_id = self.id)
+        return result
+        # async with withInfo(info) as session:
+        #     result = await resolveProjectsForProjectType(session, self.id)
+        #     return result
         
     @strawberryA.field
     async def category(self, info: strawberryA.types.Info) -> Optional ["ProjectCategoryGQLModel"]:
@@ -174,8 +176,9 @@ async def project_type_update(self, info: strawberryA.types.Info, project: Proje
     result = ProjectTypeResultGQLModel()
     result.msg = "ok"
     result.id = project.id
-    if row is None:
-        result.msg = "fail"
+    result.msg = "ok" if (row is not None) else "fail"
+    # if row is None:
+    #     result.msg = "fail"
     return result
 
 @strawberry.mutation(description="Delete the authorization user")

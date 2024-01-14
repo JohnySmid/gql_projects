@@ -4,7 +4,6 @@ import datetime
 import typing
 import uuid
 import strawberry
-from gql_projects.utils.DBFeeder import randomDataStructure
 from gql_projects.utils.Dataloaders import getLoadersFromInfo, getUserFromInfo
 from .BaseGQLModel import BaseGQLModel
 
@@ -169,8 +168,9 @@ async def project_category_update(self, info: strawberryA.types.Info, project: P
     result = ProjectCategoryResultGQLModel()
     result.msg = "ok"
     result.id = project.id
-    if row is None:
-        result.msg = "fail"
+    result.msg = "ok" if (row is not None) else "fail"
+    # if row is None:
+    #     result.msg = "fail"
     return result
 
 @strawberry.mutation(description="Delete the authorization user")
