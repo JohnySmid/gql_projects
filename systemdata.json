@@ -626,22 +626,27 @@
         {
             "id": "a825d8e1-2e60-4884-afdb-25642db581d8",
             "name": "GAČR",
-            "name_en": "GAČR"
+            "name_en": "GAČR",
+            "category_id": "5c8c4c5a-df3b-44a9-ab90-396bdc84542b"
+
         },
         {
             "id": "6abcd26b-4f9b-4b49-8a5d-8ec9880acf3e",
             "name": "TAČR",
-            "name_en": "TAČR"
+            "name_en": "TAČR",
+            "category_id": "5c8c4c5a-df3b-44a9-ab90-396bdc84542b"
         },
         {
             "id": "d5d91230-6e52-4ebf-b467-bfe89311e31a",
             "name": "MV",
-            "name_en": "MV"
+            "name_en": "MV",
+            "category_id": "5c8c4c5a-df3b-44a9-ab90-396bdc84542b"
         },
         {
             "id": "4a9a0039-3363-4af7-866e-ee172bfb02ff",
             "name": "MŠMT",
-            "name_en": "MŠMT"
+            "name_en": "MŠMT",
+            "category_id": "5c8c4c5a-df3b-44a9-ab90-396bdc84542b"
         }
     ],
     "projectcategories": [
@@ -664,7 +669,8 @@
         {
             "id": "9e37059c-de2c-4112-9009-559c8b0396f1",
             "name": "osobní náklady",
-            "name_en": "personal"
+            "name_en": "personal",
+            "category_id": "5a15450e-67e6-42a8-923a-aa7ed555b008"
         }
     ],
     "projectfinancecategories": [
