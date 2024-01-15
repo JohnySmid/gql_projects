@@ -29,7 +29,7 @@ from gql_projects.utils.Dataloaders import getLoadersFromInfo, getUserFromInfo
 #             pass
 
 FinanceGQLModel = Annotated ["FinanceGQLModel",strawberryA.lazy(".FinanceGQLModel")]
-
+FinanceCategoryGQLModel = Annotated ["FinanceCategoryGQLModel",strawberryA.lazy(".FinanceCategoryGQLModel")]
 
 
 @strawberryA.federation.type(
@@ -72,6 +72,12 @@ class FinanceTypeGQLModel(BaseGQLModel):
         # async with withInfo(info) as session:
         #     result = await resolveFinancesForFinanceType(session, self.id)
         #     return result
+    
+    @strawberryA.field
+    async def category(self, info: strawberryA.types.Info) -> Optional ["FinanceCategoryGQLModel"]:
+        from .FinanceCategoryGQLModel import FinanceCategoryGQLModel  # Import here to avoid circular dependency
+        result = await FinanceCategoryGQLModel.resolve_reference(info, self.category_id)
+        return result
 ###########################################################################################################################
 #
 # Query 

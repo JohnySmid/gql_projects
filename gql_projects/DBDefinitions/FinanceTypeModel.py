@@ -15,6 +15,7 @@ class FinanceTypeModel(BaseModel):
     name_en = Column(String, comment="English name of the financial information type")
 
     finances = relationship("FinanceModel", back_populates="financetype")
+    category_id = Column(ForeignKey("projectfinancecategories.id"), index=True, nullable=True, comment="Foreign key referencing the project category")
 
     created = Column(DateTime, server_default=sqlalchemy.sql.func.now(), comment="Timestamp when the financial information type was created")
     lastchange = Column(DateTime, server_default=sqlalchemy.sql.func.now(), comment="Timestamp of the last change to the financial information type")
