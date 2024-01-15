@@ -2,6 +2,11 @@ import strawberry
 import uuid
 import datetime
 import typing
+import logging
+
+from inspect import signature
+import inspect 
+from functools import wraps
 
 UserGQLModel = typing.Annotated["UserGQLModel", strawberry.lazy(".externals")]
 GroupGQLModel = typing.Annotated["GroupGQLModel", strawberry.lazy(".externals")]
@@ -76,6 +81,15 @@ async def resolve_createdby(self) -> typing.Optional["UserGQLModel"]:
 async def resolve_changedby(self) -> typing.Optional["UserGQLModel"]:
     return await resolve_user(self.changedby)
 
+
+RBACObjectGQLModel = typing.Annotated["RBACObjectGQLModel", strawberry.lazy(".externals")]
+@strawberry.field(description="""Who made last change""")
+async def resolve_rbacobject(self, info: strawberry.types.Info) -> typing.Optional[RBACObjectGQLModel]:
+    from .externals import RBACObjectGQLModel
+    result = None if self.rbacobject is None else await RBACObjectGQLModel.resolve_reference(info, self.rbacobject)
+    return result
+
+
 resolve_result_id: uuid.UUID = strawberry.field(description="primary key of CU operation object")
 resolve_result_msg: str = strawberry.field(description="""Should be `ok` if descired state has been reached, otherwise `fail`.
 For update operation fail should be also stated when bad lastchange has been entered.""")
@@ -144,10 +158,10 @@ def createAttributeVectorResolver(
     return foreignkeyVector
 
 
-def createRootResolver_by_id(scalarType: None, description="Retrieves item by its id"):
+def createRootResolver_by_id(scalarType: None, description="Retrieves item by its id", permission_classes= []):
     assert scalarType is not None
 
-    @strawberry.field(description=description)
+    @strawberry.field(description=description, permission_classes=permission_classes)
     async def by_id(
             self, info: strawberry.types.Info, id: uuid.UUID
     ) -> typing.Optional[scalarType]:

@@ -13,6 +13,8 @@ from .ProjectCategoryGQLModel import ProjectCategoryGQLModel
 from .ProjectGQLModel import ProjectGQLModel
 from .ProjectTypeGQLModel import ProjectTypeGQLModel
 
+from gql_projects.GraphPermissions import RoleBasedPermission
+
 from .externals import UserGQLModel
 
 # @strawberry.type(description="""Type for query root""")
