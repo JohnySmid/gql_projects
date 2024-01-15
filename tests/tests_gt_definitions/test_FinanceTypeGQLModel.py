@@ -33,6 +33,7 @@ test_insert_finance_type = create_frontend_query(query="""
                 finances{
                   id
                 }
+            category { id }
             }
             
         }
