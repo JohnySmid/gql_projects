@@ -3,9 +3,12 @@ import uuid
 
 from gql_projects.utils.Dataloaders import getLoadersFromInfo
 
+# @classmethod
+# async def resolve_reference(cls, info: strawberry.types.Info, id: uuid.UUID):
+#     return cls(id=id)
 @classmethod
-async def resolve_reference(cls, info: strawberry.types.Info, id: uuid.UUID):
-    return cls(id=id)
+async def resolve_reference(cls, info: strawberry.types.Info, id: uuid.UUID): return cls(id=id)
+
 
 class BaseEternal:
     id: uuid.UUID = strawberry.federation.field(external=True)
