@@ -16,9 +16,11 @@ from gql_projects.GraphTypeDefinitions.GraphResolvers import (
     resolve_createdby,
     resolve_changedby,
     createRootResolver_by_id,
+    resolve_rbacobject,
     createRootResolver_by_page,
 )
 
+from gql_projects.GraphPermissions import RoleBasedPermission, OnlyForAuthentized
 
 ProjectTypeGQLModel = Annotated ["ProjectTypeGQLModel", strawberryA.lazy(".ProjectTypeGQLModel")]
 GroupGQLModel = Annotated["GroupGQLModel", strawberry.lazy(".externals")]
@@ -50,6 +52,23 @@ class ProjectGQLModel(BaseGQLModel):
     lastchange = resolve_lastchange
     createdby = resolve_createdby
     changedby = resolve_changedby
+    rbacobject = resolve_rbacobject
+
+    @strawberry.field(
+        description="""Form's validity""",
+        permission_classes=[OnlyForAuthentized()])
+    def valid(self) -> bool: return self.valid
+
+    # def valid(self) -> bool:
+    #     return self.valid
+
+    @strawberry.field(
+        description="""Form's status""",
+        permission_classes=[OnlyForAuthentized()])
+    def status(self) -> typing.Optional[str]: return self.status
+
+    # def status(self) -> typing.Optional[str]:
+    #     return self.status
 
     # async def resolve_reference(cls, info: strawberryA.types.Info, id: uuid.UUID):
     #     loader = getLoadersFromInfo(info).projects
@@ -150,7 +169,9 @@ class ProjectWhereFilter:
     type_id: uuid.UUID
     value: str
 
-@strawberryA.field(description="""Returns a list of projects""")
+
+@strawberryA.field(description="""Returns a list of projects""",
+                   permission_classes=[OnlyForAuthentized()])
 async def project_page(
     self, info: strawberryA.types.Info, skip: int = 0, limit: int = 10,
     where: Optional[ProjectWhereFilter] = None
@@ -173,7 +194,9 @@ async def project_page(
 #         result = await resolveProjectById(session, id)
 #         return result
 
+
 project_by_id = createRootResolver_by_id(ProjectGQLModel, description="Returns project by its id")
+#project_by_id = createRootResolver_by_id(ProjectGQLModel, description="Returns project by its id", permission_classes=[OnlyForAuthentized()])
     
 
 # @strawberryA.field(description="""Returns a list of projects for group""")
@@ -243,7 +266,8 @@ class ProjectResultGQLModel:
 
 # changeby? createby?....
 
-@strawberryA.mutation(description="Adds a new project.")
+@strawberryA.mutation(description="Adds a new project.",
+                      permission_classes=[OnlyForAuthentized()])
 async def project_insert(self, info: strawberryA.types.Info, project: ProjectInsertGQLModel) -> ProjectResultGQLModel:
     # user = getUserFromInfo(info)
     # project.createdby = uuid.UUID(user["id"])
@@ -255,7 +279,8 @@ async def project_insert(self, info: strawberryA.types.Info, project: ProjectIns
     result.id = row.id
     return result
 
-@strawberryA.mutation(description="Update the project.")
+@strawberryA.mutation(description="Update the project.",
+                      permission_classes=[OnlyForAuthentized()])
 async def project_update(self, info: strawberryA.types.Info, project: ProjectUpdateGQLModel) -> ProjectResultGQLModel:
     user = getUserFromInfo(info)
     project.changedby = uuid.UUID(user["id"])
