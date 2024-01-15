@@ -70,10 +70,19 @@ class FinanceGQLModel(BaseGQLModel):
         #     result = await resolveProjectById(session, self.project_id)
         #     return result
 
+    # @strawberryA.field(description="""Finance type of finance""")
+    # async def financeType(self, info: strawberryA.types.Info) -> Optional ["FinanceTypeGQLModel"]:
+    #     loader = getLoadersFromInfo(info).finances
+    #     # result = await loader.load(self.financetype_id)
+    #     result = await loader.filter_by(financetype_id = self.id)
+    #     return result
+    
     @strawberryA.field(description="""Finance type of finance""")
-    async def financeType(self, info: strawberryA.types.Info) -> Optional ["FinanceTypeGQLModel"]:
-        loader = getLoadersFromInfo(info).finances
-        result = await loader.load(self.financetype_id)
+    async def financeType(
+        self, info: strawberryA.types.Info
+    ) -> List["FinanceTypeGQLModel"]:
+        loader = getLoadersFromInfo(info).financetypes
+        result = await loader.filter_by(id = self.financetype_id)
         return result
         # async with withInfo(info) as session:
         #     result = await resolveFinanceTypeById(session, self.financetype_id)
