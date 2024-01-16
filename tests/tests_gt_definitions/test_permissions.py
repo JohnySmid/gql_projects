@@ -105,7 +105,8 @@ async def test_low_role2(DemoFalse, ClientExecutorNoAdmin2, FillDataViaGQL, Cont
    query = """
    query($id: UUID!) { 
        result: projectById(id: $id) { 
-           id          
+           id
+           projectType{ id }          
        }
    }
    """

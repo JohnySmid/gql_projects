@@ -3,7 +3,6 @@ import datetime
 import pytest_asyncio
 import uuid
 
-import pytest
 @pytest_asyncio.fixture
 async def GQLInsertQueries():
     result = {

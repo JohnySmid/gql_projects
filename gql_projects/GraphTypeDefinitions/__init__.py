@@ -16,50 +16,18 @@ from .ProjectTypeGQLModel import ProjectTypeGQLModel
 from gql_projects.GraphPermissions import RoleBasedPermission
 
 from .externals import UserGQLModel
-
-# @strawberry.type(description="""Type for query root""")
-# class Query:
-#     @strawberry.field(
-#         description="""Returns hello world"""
-#         )
-#     async def hello(
-#         self,
-#         info: strawberry.types.Info,
-#     ) -> str:
-#         return "hello world"
-
-#     from .ProjectGQLModel import project_page
-#     project_page = project_page
-
-#     from .ProjectGQLModel import project_by_id
-#     project_by_id = project_by_id
-
-#     from .ProjectGQLModel import project_by_group
-#     project_by_group = project_by_group
-
-#     from .ProjectGQLModel import randomProject
-#     randomProject = randomProject
-
-#     from .ProjectTypeGQLModel import project_type_page
-#     project_type_page = project_type_page
-
-#     from .FinanceGQLModel import finance_page
-#     finance_page = finance_page
-
-#     from .FinanceTypeGQLModel import finance_type_page
-#     finance_type_page = finance_type_page
-
-#     from .MilestoneGQLModel import milestone_page
-#     milestone_page = milestone_page
-
-#     from .ProjectCategoryGQLModel import project_category_page
-#     project_category_page= project_category_page
-
-#     from .FinanceCategoryGQLModel import finance_category_page
-#     finance_category_page = finance_category_page
+from gql_projects.utils.Dataloaders import getUserFromInfo
 
 @strawberry.type(description="""Type for query root""")
 class Query:
+    @strawberry.field(description="""Say hello to the world""")
+    async def say_hello_projects(
+        self, info: strawberry.types.Info, id: uuid.UUID
+    ) -> Union[str, None]:
+        user = getUserFromInfo(info)
+        result = f"Hello {id} `{user}`"
+        return result
+
     from .FinanceCategoryGQLModel import (
        finance_category_by_id,
        finance_category_page
@@ -240,6 +208,8 @@ class Mutation:
 #     query=Query,
 #     mutation=Mutation
 # )
-schema = strawberry.federation.Schema(Query, types=(UserGQLModel, ),
+schema = strawberry.federation.Schema(Query, types=(UserGQLModel, FinanceCategoryGQLModel, FinanceGQLModel, FinanceTypeGQLModel, 
+                                                    MilestoneGQLModel, 
+                                                    ProjectGQLModel, ProjectCategoryGQLModel, ProjectTypeGQLModel),
                                       mutation=Mutation)
 # schema = strawberryA.federation.Schema(Query, types=(ProjectGQLModel,), mutation=Mutation)
