@@ -55,10 +55,13 @@ test_update_project_category = createUpdateQuery(
 
 test_project_category_delete = createUpdateQuery (
     query="""
-        mutation($id: UUID!) {
-            projectCategoryDelete(project: {id: $id}) {
+        mutation($id: UUID!, $lastchange: DateTime!) {
+            projectCategoryDelete(project: {id: $id, lastchange: $lastchange}) {
                 id
                 msg
+                project {
+                id
+                }
             }
         }
     """,

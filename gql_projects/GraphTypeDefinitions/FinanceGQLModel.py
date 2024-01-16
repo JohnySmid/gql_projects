@@ -195,12 +195,32 @@ async def finance_update(self, info: strawberryA.types.Info, finance: FinanceUpd
     #     result.msg = "fail"  
     return result
 
-@strawberry.mutation(description="Delete the authorization user")
-async def finance_delete(
-        self, info: strawberry.types.Info, finance: FinanceDeleteGQLModel
-) -> FinanceResultGQLModel:
-    finance_id_to_delete = finance.id
+# @strawberry.mutation(description="Delete the authorization user")
+# async def finance_delete(
+#         self, info: strawberry.types.Info, finance: FinanceDeleteGQLModel
+# ) -> FinanceResultGQLModel:
+#     finance_id_to_delete = finance.id
+#     loader = getLoadersFromInfo(info).finances
+#     row = await loader.delete(finance_id_to_delete)
+#     result = FinanceResultGQLModel(id=finance_id_to_delete, msg="fail, user not found") if not row else FinanceResultGQLModel(id=finance_id_to_delete, msg="ok")
+#     return result
+
+@strawberry.mutation(description="""Deletes already existing preference settings 
+                     rrequires ID and lastchange""" )
+async def finance_delete(self, info: strawberry.types.Info, finance: FinanceUpdateGQLModel) -> FinanceResultGQLModel:
     loader = getLoadersFromInfo(info).finances
-    row = await loader.delete(finance_id_to_delete)
-    result = FinanceResultGQLModel(id=finance_id_to_delete, msg="fail, user not found") if not row else FinanceResultGQLModel(id=finance_id_to_delete, msg="ok")
-    return result
+
+    rows = await loader.filter_by(id=finance.id)
+    row = next(rows, None)
+    if row is None:     
+        return FinanceResultGQLModel(id=finance.id, msg="Fail bad ID")
+
+    rows = await loader.filter_by(lastchange=finance.lastchange)
+    row = next(rows, None)
+    if row is None:     
+        return FinanceResultGQLModel(id=finance.id, msg="Fail (bad lastchange?)")
+    
+    id_for_resposne = finance.id
+    await loader.delete(finance.id)
+    
+    return FinanceResultGQLModel(id=id_for_resposne, msg="OK, deleted")

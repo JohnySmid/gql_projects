@@ -168,12 +168,32 @@ async def project_category_update(self, info: strawberryA.types.Info, project: P
     #     result.msg = "fail"
     return result
 
-@strawberry.mutation(description="Delete the authorization user")
-async def project_category_delete(
-        self, info: strawberry.types.Info, project: ProjectCategoryDeleteGQLModel
-) -> ProjectCategoryResultGQLModel:
-    project_category_id_to_delete = project.id
+# @strawberry.mutation(description="Delete the authorization user")
+# async def project_category_delete(
+#         self, info: strawberry.types.Info, project: ProjectCategoryDeleteGQLModel
+# ) -> ProjectCategoryResultGQLModel:
+#     project_category_id_to_delete = project.id
+#     loader = getLoadersFromInfo(info).projectcategories
+#     row = await loader.delete(project_category_id_to_delete)
+#     result = ProjectCategoryResultGQLModel(id=project_category_id_to_delete, msg="fail, user not found") if not row else ProjectCategoryResultGQLModel(id=project_category_id_to_delete, msg="ok")
+#     return result
+
+@strawberry.mutation(description="""Deletes already existing preference settings 
+                     rrequires ID and lastchange""" )
+async def project_category_delete(self, info: strawberry.types.Info, project: ProjectCategoryUpdateGQLModel) -> ProjectCategoryResultGQLModel:
     loader = getLoadersFromInfo(info).projectcategories
-    row = await loader.delete(project_category_id_to_delete)
-    result = ProjectCategoryResultGQLModel(id=project_category_id_to_delete, msg="fail, user not found") if not row else ProjectCategoryResultGQLModel(id=project_category_id_to_delete, msg="ok")
-    return result
+
+    rows = await loader.filter_by(id=project.id)
+    row = next(rows, None)
+    if row is None:     
+        return ProjectCategoryResultGQLModel(id=project.id, msg="Fail bad ID")
+
+    rows = await loader.filter_by(lastchange=project.lastchange)
+    row = next(rows, None)
+    if row is None:     
+        return ProjectCategoryResultGQLModel(id=project.id, msg="Fail (bad lastchange?)")
+    
+    id_for_resposne = project.id
+    await loader.delete(project.id)
+    
+    return ProjectCategoryResultGQLModel(id=id_for_resposne, msg="OK, deleted")

@@ -310,12 +310,12 @@ async def project_update(self, info: strawberryA.types.Info, project: ProjectUpd
     #     result.msg = "fail"
     return result
 
-@strawberry.mutation(description="Delete the authorization user")
-async def project_delete(
-        self, info: strawberry.types.Info, project: ProjectDeleteGQLModel
-) -> ProjectResultGQLModel:
-    project_id_to_delete = project.id
-    loader = getLoadersFromInfo(info).projects
-    row = await loader.delete(project_id_to_delete)
-    result = ProjectResultGQLModel(id=project_id_to_delete, msg="fail, user not found") if not row else ProjectResultGQLModel(id=project_id_to_delete, msg="ok")
-    return result
+# @strawberry.mutation(description="Delete the authorization user")
+# async def project_delete(
+#         self, info: strawberry.types.Info, project: ProjectDeleteGQLModel
+# ) -> ProjectResultGQLModel:
+#     project_id_to_delete = project.id
+#     loader = getLoadersFromInfo(info).projects
+#     row = await loader.delete(project_id_to_delete)
+#     result = ProjectResultGQLModel(id=project_id_to_delete, msg="fail, user not found") if not row else ProjectResultGQLModel(id=project_id_to_delete, msg="ok")
+#     return result

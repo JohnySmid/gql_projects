@@ -63,10 +63,13 @@ test_update_project_type = createUpdateQuery(
 
 test_project_type_delete = createUpdateQuery (
     query="""
-        mutation($id: UUID!) {
-            projectTypeDelete(project: {id: $id}) {
+        mutation($id: UUID!, $lastchange: DateTime!) {
+            projectTypeDelete(project: {id: $id, lastchange: $lastchange}) {
                 id
                 msg
+                project {
+                    	id
+                        }
             }
         }
     """,

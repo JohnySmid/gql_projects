@@ -8,6 +8,7 @@ from gt_utils import (
     createUpdateQuery
 )
 
+
 test_reference_financecategory = createResolveReferenceTest(tableName='projectfinancecategories', gqltype='FinanceCategoryGQLModel', 
                                                                attributeNames=["id", "name"])
 
@@ -59,10 +60,13 @@ test_update_finance_category = createUpdateQuery(
 
 test_finance_delete = createUpdateQuery (
     query="""
-        mutation($id: UUID!) {
-            financeCategoryDelete(finance: {id: $id}) {
+        mutation($id: UUID!, $lastchange: DateTime!) {
+            financeCategoryDelete(finance: {id: $id, lastchange: $lastchange}) {
                 id
                 msg
+                project {
+                id
+                }
             }
         }
     """,

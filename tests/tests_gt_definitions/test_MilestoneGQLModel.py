@@ -72,10 +72,13 @@ test_update_milestone = createUpdateQuery(
 
 test_milestone_delete = createUpdateQuery (
     query="""
-        mutation($id: UUID!) {
-            milestoneDelete(project: {id: $id}) {
+        mutation($id: UUID!, $lastchange: DateTime!) {
+            milestoneDelete(milestone: {id: $id, lastchange: $lastchange}) {
                 id
                 msg
+                milestone {
+                id
+                }
             }
         }
     """,

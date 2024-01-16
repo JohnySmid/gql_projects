@@ -65,10 +65,13 @@ test_finance_update = createUpdateQuery(
 
 test_finance_delete = createUpdateQuery (
     query="""
-        mutation($id: UUID!) {
-            financeDelete(finance: {id: $id}) {
+        mutation($id: UUID!, $lastchange: DateTime!) {
+            financeDelete(finance: {id: $id, lastchange: $lastchange}) {
                 id
                 msg
+                finance {
+                    id
+                    }
             }
         }
     """,

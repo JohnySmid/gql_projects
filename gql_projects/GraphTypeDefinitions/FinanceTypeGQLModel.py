@@ -168,12 +168,32 @@ async def finance_type_update(self, info: strawberryA.types.Info, finance: Finan
     #     result.msg = "fail"  
     return result
 
-@strawberry.mutation(description="Delete the authorization user")
-async def finance_type_delete(
-        self, info: strawberry.types.Info, finance: FinanceTypeDeleteGQLModel
-) -> FinanceTypeResultGQLModel:
-    finance_type_id_to_delete = finance.id
+# @strawberry.mutation(description="Delete the authorization user")
+# async def finance_type_delete(
+#         self, info: strawberry.types.Info, finance: FinanceTypeDeleteGQLModel
+# ) -> FinanceTypeResultGQLModel:
+#     finance_type_id_to_delete = finance.id
+#     loader = getLoadersFromInfo(info).financetypes
+#     row = await loader.delete(finance_type_id_to_delete)
+#     result = FinanceTypeResultGQLModel(id=finance_type_id_to_delete, msg="fail, user not found") if not row else FinanceTypeResultGQLModel(id=finance_type_id_to_delete, msg="ok")
+#     return result
+
+@strawberry.mutation(description="""Deletes already existing preference settings 
+                     rrequires ID and lastchange""" )
+async def finance_type_delete(self, info: strawberry.types.Info, finance: FinanceTypeUpdateGQLModel) -> FinanceTypeResultGQLModel:
     loader = getLoadersFromInfo(info).financetypes
-    row = await loader.delete(finance_type_id_to_delete)
-    result = FinanceTypeResultGQLModel(id=finance_type_id_to_delete, msg="fail, user not found") if not row else FinanceTypeResultGQLModel(id=finance_type_id_to_delete, msg="ok")
-    return result
+
+    rows = await loader.filter_by(id=finance.id)
+    row = next(rows, None)
+    if row is None:     
+        return FinanceTypeResultGQLModel(id=finance.id, msg="Fail bad ID")
+
+    rows = await loader.filter_by(lastchange=finance.lastchange)
+    row = next(rows, None)
+    if row is None:     
+        return FinanceTypeResultGQLModel(id=finance.id, msg="Fail (bad lastchange?)")
+    
+    id_for_resposne = finance.id
+    await loader.delete(finance.id)
+    
+    return FinanceTypeResultGQLModel(id=id_for_resposne, msg="OK, deleted")

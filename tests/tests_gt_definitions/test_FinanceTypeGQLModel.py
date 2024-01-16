@@ -65,10 +65,13 @@ test_update_finance_type = createUpdateQuery(
 
 test_finance_type_delete = createUpdateQuery (
     query="""
-        mutation($id: UUID!) {
-            financeTypeDelete(finance: {id: $id}) {
+        mutation($id: UUID!, $lastchange: DateTime!) {
+            financeTypeDelete(finance: {id: $id, lastchange: $lastchange}) {
                 id
                 msg
+                finance {
+                id 
+                }
             }
         }
     """,

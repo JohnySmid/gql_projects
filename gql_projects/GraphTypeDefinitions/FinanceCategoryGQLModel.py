@@ -128,7 +128,7 @@ class FinanceCategoryUpdateGQLModel:
 class FinanceCategoryDeleteGQLModel:
     id: uuid.UUID = strawberry.field(description="primary key (UUID), identifies object of operation")
     # name: str = strawberryA.field(description="Name/label of the project")
-    # lastchange: datetime.datetime = strawberry.field(description="timestamp of last change = TOKEN")
+    lastchange: datetime.datetime = strawberry.field(description="timestamp of last change = TOKEN")
 
 
 @strawberryA.type(description="Result of a mutation over Project")
@@ -169,12 +169,33 @@ async def finance_category_update(self, info: strawberryA.types.Info, finance: F
     return result
 
 
-@strawberry.mutation(description="Delete the authorization user")
-async def finance_category_delete(
-        self, info: strawberry.types.Info, finance: FinanceCategoryDeleteGQLModel
-) -> FinanceCategoryResultGQLModel:
-    finance_category_id_to_delete = finance.id
+# @strawberry.mutation(description="Delete the authorization user")
+# async def finance_category_delete(
+#         self, info: strawberry.types.Info, finance: FinanceCategoryDeleteGQLModel
+# ) -> FinanceCategoryResultGQLModel:
+#     finance_category_id_to_delete = finance.id
+#     loader = getLoadersFromInfo(info).financecategory
+#     row = await loader.delete(finance_category_id_to_delete)
+#     result = FinanceCategoryResultGQLModel(id=finance_category_id_to_delete, msg="fail, user not found") if not row else FinanceCategoryResultGQLModel(id=finance_category_id_to_delete, msg="ok")
+#     return result
+
+
+@strawberry.mutation(description="""Deletes already existing preference settings 
+                     rrequires ID and lastchange""" )
+async def finance_category_delete(self, info: strawberry.types.Info, finance: FinanceCategoryUpdateGQLModel) -> FinanceCategoryResultGQLModel:
     loader = getLoadersFromInfo(info).financecategory
-    row = await loader.delete(finance_category_id_to_delete)
-    result = FinanceCategoryResultGQLModel(id=finance_category_id_to_delete, msg="fail, user not found") if not row else FinanceCategoryResultGQLModel(id=finance_category_id_to_delete, msg="ok")
-    return result
+
+    rows = await loader.filter_by(id=finance.id)
+    row = next(rows, None)
+    if row is None:     
+        return FinanceCategoryResultGQLModel(id=finance.id, msg="Fail bad ID")
+
+    rows = await loader.filter_by(lastchange=finance.lastchange)
+    row = next(rows, None)
+    if row is None:     
+        return FinanceCategoryResultGQLModel(id=finance.id, msg="Fail (bad lastchange?)")
+    
+    id_for_resposne = finance.id
+    await loader.delete(finance.id)
+    
+    return FinanceCategoryResultGQLModel(id=id_for_resposne, msg="OK, deleted")

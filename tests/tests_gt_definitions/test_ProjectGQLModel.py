@@ -80,20 +80,20 @@ test_project_update = createUpdateQuery(
     tableName="projects"
 )
 
-test_project_delete = createUpdateQuery (
-    query="""
-        mutation($id: UUID!) {
-            projectDelete(project: {id: $id}) {
-                id
-                msg
-            }
-        }
-    """,
-    variables={
-         "id": "43dd2ff1-5c17-42a5-ba36-8b30e2a243bb",
-    },
-    tableName="projects"
-)
+# test_project_delete = createUpdateQuery (
+#     query="""
+#         mutation($id: UUID!) {
+#             projectDelete(project: {id: $id}) {
+#                 id
+#                 msg
+#             }
+#         }
+#     """,
+#     variables={
+#          "id": "43dd2ff1-5c17-42a5-ba36-8b30e2a243bb",
+#     },
+#     tableName="projects"
+# )
 
 
 # test_hello_project = create_frontend_query(query="""

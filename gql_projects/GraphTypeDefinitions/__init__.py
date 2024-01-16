@@ -167,11 +167,11 @@ class Mutation:
     from .ProjectGQLModel import (
         project_insert,
         project_update,
-        project_delete,
+        #project_delete,
     )
     project_insert = project_insert
     project_update = project_update
-    project_delete = project_delete
+   # project_delete = project_delete
 
     from .ProjectTypeGQLModel import (
         project_type_insert,

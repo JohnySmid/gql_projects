@@ -163,7 +163,7 @@ class MilestoneUpdateGQLModel:
 class MilestoneDeleteGQLModel:
     id: uuid.UUID = strawberry.field(description="primary key (UUID), identifies object of operation")
     # name: str = strawberryA.field(description="Name/label of the project")
-    # lastchange: datetime.datetime = strawberry.field(description="timestamp of last change = TOKEN")
+    lastchange: datetime.datetime = strawberry.field(description="timestamp of last change = TOKEN")
     
 @strawberryA.type(description="Result of a user operation on a milestone")
 class MilestoneResultGQLModel:
@@ -229,12 +229,32 @@ async def milestone_update(self, info: strawberryA.types.Info, milestone: Milest
     #     result.msg = "fail"  
     return result
 
-@strawberry.mutation(description="Delete the authorization user")
-async def milestone_delete(
-        self, info: strawberry.types.Info, project: MilestoneDeleteGQLModel
-) -> MilestoneResultGQLModel:
-    milestone_id_to_delete = project.id
+# @strawberry.mutation(description="Delete the authorization user")
+# async def milestone_delete(
+#         self, info: strawberry.types.Info, project: MilestoneDeleteGQLModel
+# ) -> MilestoneResultGQLModel:
+#     milestone_id_to_delete = project.id
+#     loader = getLoadersFromInfo(info).milestones
+#     row = await loader.delete(milestone_id_to_delete)
+#     result = MilestoneResultGQLModel(id=milestone_id_to_delete, msg="fail, user not found") if not row else MilestoneResultGQLModel(id=milestone_id_to_delete, msg="ok")
+#     return result
+
+@strawberry.mutation(description="""Deletes already existing preference settings 
+                     rrequires ID and lastchange""" )
+async def milestone_delete(self, info: strawberry.types.Info, milestone: MilestoneUpdateGQLModel) -> MilestoneResultGQLModel:
     loader = getLoadersFromInfo(info).milestones
-    row = await loader.delete(milestone_id_to_delete)
-    result = MilestoneResultGQLModel(id=milestone_id_to_delete, msg="fail, user not found") if not row else MilestoneResultGQLModel(id=milestone_id_to_delete, msg="ok")
-    return result
+
+    rows = await loader.filter_by(id=milestone.id)
+    row = next(rows, None)
+    if row is None:     
+        return MilestoneResultGQLModel(id=milestone.id, msg="Fail bad ID")
+
+    rows = await loader.filter_by(lastchange=milestone.lastchange)
+    row = next(rows, None)
+    if row is None:     
+        return MilestoneResultGQLModel(id=milestone.id, msg="Fail (bad lastchange?)")
+    
+    id_for_resposne = milestone.id
+    await loader.delete(milestone.id)
+    
+    return MilestoneResultGQLModel(id=id_for_resposne, msg="OK, deleted")
