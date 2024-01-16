@@ -1,27 +1,19 @@
 import pytest
 
-from tests.shared import (
-    prepare_demodata,
-    prepare_in_memory_sqllite,
-    get_demodata,
-    create_context,
+from gt_utils import (
+    createByIdTest, 
+    createPageTest, 
+    createResolveReferenceTest, 
+    createFrontendQuery, 
+    createUpdateQuery
 )
 
-from tests.gqlshared import (
-    create_by_id_test,
-    create_page_test,
-    create_resolve_reference_test,
-    create_frontend_query,
-    create_update_query,
-    create_delete_query
-)
+test_reference_project = createResolveReferenceTest(tableName='projects', gqltype='ProjectGQLModel', 
+                                                       attributeNames=["id", "name"])
+test_query_project_by_id = createByIdTest(tableName="projects", queryEndpoint="projectById")
+test_query_project_page = createPageTest(tableName="projects", queryEndpoint="projectPage")
 
-test_reference_project = create_resolve_reference_test(table_name='projects', gqltype='ProjectGQLModel', 
-                                                       attribute_names=["id", "name"])
-test_query_project_by_id = create_by_id_test(table_name="projects", query_endpoint="projectById")
-test_query_project_page = create_page_test(table_name="projects", query_endpoint="projectPage")
-
-test_project_insert = create_frontend_query(query="""
+test_project_insert = createFrontendQuery(query="""
     mutation ($id: UUID!, $projecttype_id: UUID!, $name: String!, $group_id: UUID, $content_id: UUID) {
         result: projectInsert(project: {id: $id, projecttypeId: $projecttype_id, name: $name, groupId: $group_id, contentId: $content_id}) {
             id
@@ -66,7 +58,7 @@ test_project_insert = create_frontend_query(query="""
     asserts=[]
 )
 
-test_project_update = create_update_query(
+test_project_update = createUpdateQuery(
     query="""
         mutation($id: UUID!, $projecttype_id: UUID!, $name: String!, $lastchange: DateTime!) {
             projectUpdate(project: {id: $id, projecttypeId: $projecttype_id, name: $name, lastchange: $lastchange}) {
@@ -85,10 +77,10 @@ test_project_update = create_update_query(
         "name": "new project1", 
         "projecttype_id": "6abcd26b-4f9b-4b49-8a5d-8ec9880acf3e",
     },
-    table_name="projects"
+    tableName="projects"
 )
 
-test_project_delete = create_delete_query (
+test_project_delete = createUpdateQuery (
     query="""
         mutation($id: UUID!) {
             projectDelete(project: {id: $id}) {
@@ -100,7 +92,7 @@ test_project_delete = create_delete_query (
     variables={
          "id": "43dd2ff1-5c17-42a5-ba36-8b30e2a243bb",
     },
-    table_name="projects"
+    tableName="projects"
 )
 
 

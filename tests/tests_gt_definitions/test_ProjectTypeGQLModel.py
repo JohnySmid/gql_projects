@@ -1,28 +1,20 @@
 import pytest
 
-from tests.shared import (
-    prepare_demodata,
-    prepare_in_memory_sqllite,
-    get_demodata,
-    create_context,
+from gt_utils import (
+    createByIdTest, 
+    createPageTest, 
+    createResolveReferenceTest, 
+    createFrontendQuery, 
+    createUpdateQuery
 )
 
-from tests.gqlshared import (
-    create_by_id_test,
-    create_page_test,
-    create_resolve_reference_test,
-    create_frontend_query,
-    create_update_query,
-    create_delete_query
-)
+test_reference_projecttypes = createResolveReferenceTest(tableName='projecttypes', gqltype='ProjectTypeGQLModel',
+                                                            attributeNames=["id", "name"])
 
-test_reference_projecttypes = create_resolve_reference_test(table_name='projecttypes', gqltype='ProjectTypeGQLModel',
-                                                            attribute_names=["id", "name"])
+test_query_project_type_by_id = createByIdTest(tableName="projecttypes", queryEndpoint="projectTypeById")
+test_query_project_type_page = createPageTest(tableName="projecttypes", queryEndpoint="projectTypePage")
 
-test_query_project_type_by_id = create_by_id_test(table_name="projecttypes", query_endpoint="projectTypeById")
-test_query_project_type_page = create_page_test(table_name="projecttypes", query_endpoint="projectTypePage")
-
-test_insert_project_type = create_frontend_query(
+test_insert_project_type = createFrontendQuery(
     query="""mutation ($id: UUID!, $name: String!, $name_en: String!, $category_id: UUID!) {
         result: projectTypeInsert(project: {id: $id, name: $name, nameEn: $name_en, categoryId: $category_id}) {
             id
@@ -47,7 +39,7 @@ test_insert_project_type = create_frontend_query(
 )
 
 
-test_update_project_type = create_update_query(
+test_update_project_type = createUpdateQuery(
     query="""
         mutation ($id: UUID!, $name: String, $lastchange: DateTime!) {
             result: projectTypeUpdate(project: {id: $id, name: $name, lastchange: $lastchange}) {
@@ -66,10 +58,10 @@ test_update_project_type = create_update_query(
         "id": "a825d8e1-2e60-4884-afdb-25642db581d8", 
         "name": "nove jmeno1"
         },
-    table_name="projecttypes"
+    tableName="projecttypes"
 )
 
-test_project_type_delete = create_delete_query (
+test_project_type_delete = createUpdateQuery (
     query="""
         mutation($id: UUID!) {
             projectTypeDelete(project: {id: $id}) {
@@ -81,5 +73,5 @@ test_project_type_delete = create_delete_query (
     variables={
          "id": "a825d8e1-2e60-4884-afdb-25642db581d8",
     },
-    table_name="projecttypes"
+    tableName="projecttypes"
 )

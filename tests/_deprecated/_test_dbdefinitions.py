@@ -12,7 +12,7 @@ from gql_projects.DBDefinitions import startEngine
 # from gql_projects.DBDefinitions import FinanceModel, FinanceTypeModel, FinanceCategory
 # from gql_projects.DBDefinitions import MilestoneModel, MilestoneLinkModel
 
-from .shared import prepare_demodata, prepare_in_memory_sqllite
+from ..shared import prepare_demodata, prepare_in_memory_sqllite
 #get_demodata
 
 

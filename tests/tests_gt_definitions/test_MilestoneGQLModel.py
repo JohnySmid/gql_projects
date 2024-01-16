@@ -1,27 +1,20 @@
 import pytest
-from tests.shared import (
-    prepare_demodata,
-    prepare_in_memory_sqllite,
-    get_demodata,
-    create_context,
+
+from gt_utils import (
+    createByIdTest, 
+    createPageTest, 
+    createResolveReferenceTest, 
+    createFrontendQuery, 
+    createUpdateQuery
 )
 
-from tests.gqlshared import (
-    create_by_id_test,
-    create_page_test,
-    create_resolve_reference_test,
-    create_frontend_query,
-    create_update_query,
-    create_delete_query,
-)
+test_reference_milestones = createResolveReferenceTest(tableName='projectmilestones', gqltype='MilestoneGQLModel', 
+                                                          attributeNames=["id", "name"])
 
-test_reference_milestones = create_resolve_reference_test(table_name='projectmilestones', gqltype='MilestoneGQLModel', 
-                                                          attribute_names=["id", "name"])
+test_milestone_by_id = createByIdTest(tableName="projectmilestones", queryEndpoint="milestoneById")
+test_milestone_page = createPageTest(tableName="projectmilestones", queryEndpoint="milestonePage")
 
-test_milestone_by_id = create_by_id_test(table_name="projectmilestones", query_endpoint="milestoneById")
-test_milestone_page = create_page_test(table_name="projectmilestones", query_endpoint="milestonePage")
-
-test_insert_milestone = create_frontend_query(
+test_insert_milestone = createFrontendQuery(
     query="""
    mutation ($id: UUID, $name: String!, $project_id: UUID!, $start_date: DateTime, $end_date: DateTime) {
         result: milestoneInsert(milestone: {id: $id, name: $name, projectId: $project_id, startdate: $start_date, enddate: $end_date}) {
@@ -56,7 +49,7 @@ test_insert_milestone = create_frontend_query(
     }
 )
 
-test_update_milestone = create_update_query(
+test_update_milestone = createUpdateQuery(
     query="""
     mutation ($id: UUID!, $name: String, $lastchange: DateTime!, $start_date: DateTime, $end_date: DateTime) {
         result: milestoneUpdate(milestone: {id: $id, name: $name, lastchange: $lastchange, startdate: $start_date, enddate: $end_date}) {
@@ -74,10 +67,10 @@ test_update_milestone = create_update_query(
         "id": "d7266936-17c1-4810-88d2-079ebb864d2e", 
         "name": "newMilestone1"
         },
-    table_name="projectmilestones"
+    tableName="projectmilestones"
 )
 
-test_milestone_delete = create_delete_query (
+test_milestone_delete = createUpdateQuery (
     query="""
         mutation($id: UUID!) {
             milestoneDelete(project: {id: $id}) {
@@ -89,11 +82,11 @@ test_milestone_delete = create_delete_query (
     variables={
          "id": "d7266936-17c1-4810-88d2-079ebb864d2e",
     },
-    table_name="projectmilestones"
+    tableName="projectmilestones"
 )
 
 
-test_milestone_add_link=create_frontend_query(
+test_milestone_add_link=createFrontendQuery(
      query="""
           mutation($previous_id: UUID!, $next_id: UUID!) {
              milestonesLinkAdd(link: {previousId: $previous_id, nextId: $next_id}) {

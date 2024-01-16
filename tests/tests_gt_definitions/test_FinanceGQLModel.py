@@ -1,27 +1,19 @@
 import pytest
-from tests.shared import (
-    prepare_demodata,
-    prepare_in_memory_sqllite,
-    get_demodata,
-    create_context,
+
+from gt_utils import (
+    createByIdTest, 
+    createPageTest, 
+    createResolveReferenceTest, 
+    createFrontendQuery, 
+    createUpdateQuery
 )
+test_reference_finances = createResolveReferenceTest(tableName='projectfinances', gqltype='FinanceGQLModel', 
+                                                         attributeNames=["id", "name"])
 
-from tests.gqlshared import (
-    create_by_id_test,
-    create_page_test,
-    create_resolve_reference_test,
-    create_frontend_query,
-    create_update_query,
-    create_delete_query
-)
+test_query_finance_by_id = createByIdTest(tableName="projectfinances", queryEndpoint="financeById", attributeNames=["id"])
+test_query_finance_page = createPageTest(tableName="projectfinances", queryEndpoint="financePage", attributeNames=["id"])
 
-test_reference_finances = create_resolve_reference_test(table_name='projectfinances', gqltype='FinanceGQLModel', 
-                                                         attribute_names=["id", "name"])
-
-test_query_finance_by_id = create_by_id_test(table_name="projectfinances", query_endpoint="financeById", attribute_names=["id"])
-test_query_finance_page = create_page_test(table_name="projectfinances", query_endpoint="financePage", attribute_names=["id"])
-
-test_finance_insert = create_frontend_query(query="""
+test_finance_insert = createFrontendQuery(query="""
     mutation ($id: UUID, $name: String!, $amount: Float, $financetype_id: UUID!, $project_id: UUID!) {
          result: financeInsert(finance: {id: $id, name: $name, amount: $amount, financetypeId: $financetype_id, projectId: $project_id}) {
              id
@@ -48,7 +40,7 @@ test_finance_insert = create_frontend_query(query="""
  )
 
 
-test_finance_update = create_update_query(
+test_finance_update = createUpdateQuery(
     query="""
         mutation ($id: UUID!, $name: String!, $amount: Float, $financetype_id: UUID, $lastchange: DateTime!) {
             result: financeUpdate(finance: {id: $id, name: $name, amount: $amount, financetypeId: $financetype_id, lastchange: $lastchange}) {
@@ -68,10 +60,10 @@ test_finance_update = create_update_query(
         "financetype_id": "9e37059c-de2c-4112-9009-559c8b0396f1",
         "amount":  1,
         "lastchange": "2024-01-12T19:17:59.613945"},
-    table_name="projectfinances"
+    tableName="projectfinances"
 )
 
-test_finance_delete = create_delete_query (
+test_finance_delete = createUpdateQuery (
     query="""
         mutation($id: UUID!) {
             financeDelete(finance: {id: $id}) {
@@ -83,5 +75,5 @@ test_finance_delete = create_delete_query (
     variables={
          "id": "f911230f-7e1f-4e9b-90a9-b921996ceb87",
     },
-    table_name="projectfinances"
+    tableName="projectfinances"
 )

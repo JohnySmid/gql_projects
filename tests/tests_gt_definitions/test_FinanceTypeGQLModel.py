@@ -1,26 +1,20 @@
 import pytest
-from tests.shared import (
-    prepare_demodata,
-    prepare_in_memory_sqllite,
-    get_demodata,
-    create_context,
+
+from gt_utils import (
+    createByIdTest, 
+    createPageTest, 
+    createResolveReferenceTest, 
+    createFrontendQuery, 
+    createUpdateQuery
 )
 
-from tests.gqlshared import (
-    create_by_id_test,
-    create_page_test,
-    create_resolve_reference_test,
-    create_frontend_query,
-    create_update_query,
-    create_delete_query
-)
-test_reference_financetypes = create_resolve_reference_test(table_name='projectfinancetypes', gqltype='FinanceTypeGQLModel',
-                                                            attribute_names=["id", "name"])
+test_reference_financetypes = createResolveReferenceTest(tableName='projectfinancetypes', gqltype='FinanceTypeGQLModel',
+                                                            attributeNames=["id", "name"])
 
-test_query_finance_type_by_id = create_by_id_test(table_name="projectfinancetypes", query_endpoint="financeTypeById")
-test_query_finance_type_page = create_page_test(table_name="projectfinancetypes", query_endpoint="financeTypePage")
+test_query_finance_type_by_id = createByIdTest(tableName="projectfinancetypes", queryEndpoint="financeTypeById")
+test_query_finance_type_page = createPageTest(tableName="projectfinancetypes", queryEndpoint="financeTypePage")
 
-test_insert_finance_type = create_frontend_query(query="""
+test_insert_finance_type = createFrontendQuery(query="""
    mutation ($id: UUID!, $name: String!, $name_en: String, ) {
         result: financeTypeInsert(finance: {id: $id, name: $name, nameEn: $name_en}) {
             id
@@ -48,7 +42,7 @@ test_insert_finance_type = create_frontend_query(query="""
 )
 
 
-test_update_finance_type = create_update_query(
+test_update_finance_type = createUpdateQuery(
     query="""
     mutation ($id: UUID!, $name: String, $lastchange: DateTime!) {
         result: financeTypeUpdate(finance: {id: $id, name: $name, lastchange: $lastchange}) {
@@ -66,10 +60,10 @@ test_update_finance_type = create_update_query(
         "id": "9e37059c-de2c-4112-9009-559c8b0396f1", 
         "name": "nove finance1", 
         },
-    table_name="projectfinancetypes"
+    tableName="projectfinancetypes"
 )
 
-test_finance_type_delete = create_delete_query (
+test_finance_type_delete = createUpdateQuery (
     query="""
         mutation($id: UUID!) {
             financeTypeDelete(finance: {id: $id}) {
@@ -81,5 +75,5 @@ test_finance_type_delete = create_delete_query (
     variables={
          "id": "9e37059c-de2c-4112-9009-559c8b0396f1",
     },
-    table_name="projectfinancetypes"
+    tableName="projectfinancetypes"
 )

@@ -1,28 +1,19 @@
 import pytest
 
-from tests.shared import (
-    prepare_demodata,
-    prepare_in_memory_sqllite,
-    get_demodata,
-    create_context,
+from gt_utils import (
+    createByIdTest, 
+    createPageTest, 
+    createResolveReferenceTest, 
+    createFrontendQuery, 
+    createUpdateQuery
 )
+test_reference_projectcategories = createResolveReferenceTest(tableName='projectcategories', gqltype='ProjectCategoryGQLModel',
+                                                                 attributeNames=["id", "name", "nameEn", "lastchange"])
 
-from tests.gqlshared import (
-    create_by_id_test,
-    create_page_test,
-    create_resolve_reference_test,
-    create_frontend_query,
-    create_update_query,
-    create_delete_query
-)
+test_query_form_project_by_id = createByIdTest(tableName="projectcategories", queryEndpoint="projectCategoryById")
+test_query_form_project_page = createPageTest(tableName="projectcategories", queryEndpoint="projectCategoryPage")
 
-test_reference_projectcategories = create_resolve_reference_test(table_name='projectcategories', gqltype='ProjectCategoryGQLModel',
-                                                                 attribute_names=["id", "name", "nameEn", "lastchange"])
-
-test_query_form_project_by_id = create_by_id_test(table_name="projectcategories", query_endpoint="projectCategoryById")
-test_query_form_project_page = create_page_test(table_name="projectcategories", query_endpoint="projectCategoryPage")
-
-test_insert_project_category = create_frontend_query(
+test_insert_project_category = createFrontendQuery(
     query="""mutation ($id: UUID!, $name: String!, $name_en: String!) {
         result: projectCategoryInsert(project: {id: $id, name: $name, nameEn: $name_en}) {
             id
@@ -43,7 +34,7 @@ test_insert_project_category = create_frontend_query(
     }
 )
 
-test_update_project_category = create_update_query(
+test_update_project_category = createUpdateQuery(
     query="""mutation ($id: UUID!, $name: String, $lastchange: DateTime!) {
         result: projectCategoryUpdate(project: {id: $id, name: $name, lastchange: $lastchange}) {
             id
@@ -59,10 +50,10 @@ test_update_project_category = create_update_query(
         "id": "5c8c4c5a-df3b-44a9-ab90-396bdc84542b",
         "name": "nova kategorie1",
     },
-    table_name="projectcategories"
+    tableName="projectcategories"
 )
 
-test_project_category_delete = create_delete_query (
+test_project_category_delete = createUpdateQuery (
     query="""
         mutation($id: UUID!) {
             projectCategoryDelete(project: {id: $id}) {
@@ -74,5 +65,5 @@ test_project_category_delete = create_delete_query (
     variables={
          "id": "5c8c4c5a-df3b-44a9-ab90-396bdc84542b",
     },
-    table_name="projectcategories"
+    tableName="projectcategories"
 )

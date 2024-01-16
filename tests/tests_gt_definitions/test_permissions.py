@@ -5,25 +5,6 @@ import uuid
 def uuidstr():
     return f"{uuid.uuid1()}"
 
-from tests.gqlshared import create_frontend_query
-
-_test_request_permitted = create_frontend_query(
-    query="""query ($id: UUID!) {
-        requestById(id: $id) {
-            id
-            name
-            permitted
-            creator { id }
-            histories { id }
-        }
-    }""",
-    variables={"id": "13181566-afb0-11ed-9bd8-0242ac110002"}
-)
-
-# def test_raise(AccessToken):
-#     print(AccessToken)
-#     assert False
-
 import pytest
 
 @pytest.mark.asyncio
@@ -33,11 +14,14 @@ async def test_low_role_say_hello(DemoFalse, OAuthServer, ClientExecutorNoDemo, 
     DEMO = os.environ.get("DEMO", None)
     logging.info(f"test_low_role DEMO: {DEMO}")
     query = """
-    query($id: UUID!) { 
-        result: sayHelloEvents(id: $id)
+    query ($id: UUID!) {
+        projectById(id: $id) {
+            id
+            name
+        }
     }
     """
-    variable_values = {"id": "4dccf52f-4117-403c-932a-5691c0d020b1"}
+    variable_values = {"id": "43dd2ff1-5c17-42a5-ba36-8b30e2a243bb"}
     result = await ClientExecutorNoDemo(query=query, variable_values=variable_values)
     logging.info(f"test_low_role_say_hello: \n {result}")
     print(result)
@@ -54,13 +38,14 @@ async def test_demo_role(DemoFalse, ClientExecutorAdmin, FillDataViaGQL, Context
     DEMO = os.environ.get("DEMO", None)
     logging.info(f"test_low_role DEMO: {DEMO}")
     query = """
-    query($id: UUID!) { 
-        result: eventById(id: $id) { 
-            id           
+    query ($id: UUID!) {
+        result: projectById(id: $id) {
+            id
+            name
         }
     }
     """
-    variable_values = {"id": "4dccf52f-4117-403c-932a-5691c0d020b1"}
+    variable_values = {"id": "43dd2ff1-5c17-42a5-ba36-8b30e2a243bb"}
     result = await ClientExecutorAdmin(query=query, variable_values=variable_values)
     logging.info(f"test_demo_role result: \n {result}")
     print(result)
@@ -78,13 +63,14 @@ async def test_low_role(DemoFalse, ClientExecutorNoAdmin, FillDataViaGQL, Contex
     DEMO = os.environ.get("DEMO", None)
     logging.info(f"test_low_role DEMO: {DEMO}")
     query = """
-    query($id: UUID!) { 
-        result: eventById(id: $id) { 
-            id           
+    query ($id: UUID!) {
+        result: projectById(id: $id) {
+            id
+            name
         }
     }
     """
-    variable_values = {"id": "4dccf52f-4117-403c-932a-5691c0d020b1"}
+    variable_values = {"id": "43dd2ff1-5c17-42a5-ba36-8b30e2a243bb"}
     result = await ClientExecutorNoAdmin(query=query, variable_values=variable_values)
     logging.info(f"test_demo_role result: \n {result}")
     print(result)
@@ -102,13 +88,14 @@ async def test_low_role2(DemoFalse, ClientExecutorNoAdmin2, FillDataViaGQL, Cont
     DEMO = os.environ.get("DEMO", None)
     logging.info(f"test_low_role DEMO: {DEMO}")
     query = """
-    query($id: UUID!) { 
-        result: eventById(id: $id) { 
-            id          
+    query ($id: UUID!) {
+        result: projectById(id: $id) {
+            id
+            name
         }
     }
     """
-    variable_values = {"id": "4dccf52f-4117-403c-932a-5691c0d020b1"}
+    variable_values = {"id": "43dd2ff1-5c17-42a5-ba36-8b30e2a243bb"}
     result = await ClientExecutorNoAdmin2(query=query, variable_values=variable_values)
     logging.info(f"test_demo_role got for query \n {query} \n\t with variables \n {variable_values} \n\t the result: \n {result}")
     print(result)
@@ -118,3 +105,4 @@ async def test_low_role2(DemoFalse, ClientExecutorNoAdmin2, FillDataViaGQL, Cont
     assert data is not None, data
     assert data.get("result", None) is not None, data
     assert data["result"].get("id", None) == variable_values["id"], data
+        
