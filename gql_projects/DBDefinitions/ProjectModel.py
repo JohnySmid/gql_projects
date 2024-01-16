@@ -22,6 +22,8 @@ class ProjectModel(BaseModel):
      group_id = UUIDFKey(nullable=True)#Column(ForeignKey("groups.id"), index=True)
      #group = relationship("groupModel")
 
+     content_id = UUIDFKey(nullable=True)
+
      created = Column(DateTime, server_default=sqlalchemy.sql.func.now(), comment="Timestamp when the project was created")
      lastchange = Column(DateTime, server_default=sqlalchemy.sql.func.now(), comment="Timestamp of the last change to the project")
      createdby = UUIDFKey(nullable=True)#Column(ForeignKey("users.id"), index=True, nullable=True)

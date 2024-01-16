@@ -24,6 +24,7 @@ from gql_projects.GraphPermissions import RoleBasedPermission, OnlyForAuthentize
 
 ProjectTypeGQLModel = Annotated ["ProjectTypeGQLModel", strawberryA.lazy(".ProjectTypeGQLModel")]
 GroupGQLModel = Annotated["GroupGQLModel", strawberry.lazy(".externals")]
+ContentGQLModel = Annotated["ContentGQLModel", strawberry.lazy(".externals")]
 MilestoneGQLModel = Annotated ["MilestoneGQLModel",strawberryA.lazy(".MilestoneGQLModel")]
 FinanceGQLModel = Annotated ["FinanceGQLModel",strawberryA.lazy(".FinanceGQLModel")]
 
@@ -143,6 +144,20 @@ class ProjectGQLModel(BaseGQLModel):
         from .externals import GroupGQLModel
         return GroupGQLModel(id=self.group_id)
     
+
+    @strawberry.field(description="""Content, related to a project""")
+    def content(self) -> Optional["ContentGQLModel"]:
+        from .externals import ContentGQLModel
+        return ContentGQLModel(id=self.content_id)
+    
+    # @strawberryA.field(description="""Finance type of finance""")
+    # async def content(
+    #     self, info: strawberryA.types.Info
+    # ) -> List["ContentGQLModel"]:
+    #     from .externals import ContentGQLModel
+    #     result = ContentGQLModel(id = self.content_id)
+    #     return result
+    
 ###########################################################################################################################
 #
 # Query 
@@ -234,6 +249,7 @@ class ProjectInsertGQLModel:
     startdate: Optional[datetime.datetime] = strawberryA.field(description="Moment when the project starts (optional)", default_factory=lambda: datetime.datetime.now())
     enddate: Optional[datetime.datetime] = strawberryA.field(description="Moment when the project ends (optional)", default_factory=lambda: datetime.datetime.now())
     group_id: Optional[uuid.UUID] = strawberryA.field(description="The ID of the group associated with the project (optional)", default=None)
+    content_id: Optional[uuid.UUID] = strawberryA.field(description="The ID of the content associated with the project (optional)", default=None)
     createdby: strawberry.Private[uuid.UUID] = None 
 
 @strawberryA.input(description="Definition of a project used for update")

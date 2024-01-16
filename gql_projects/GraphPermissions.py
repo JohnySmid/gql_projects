@@ -52,7 +52,7 @@ class BasePermission(strawberry.permission.BasePermission):
 
 
 from functools import cache
-import aiohttp
+# import aiohttp
 
 
 rolelist = [
