@@ -7,17 +7,22 @@ import strawberry
 from gql_projects.utils.Dataloaders import getLoadersFromInfo, getUserFromInfo
 from .BaseGQLModel import BaseGQLModel
 
-from gql_projects.GraphTypeDefinitions.GraphResolvers import (
+from gql_projects.GraphTypeDefinitions._GraphResolvers import (
     resolve_id,
+    resolve_name,
+    resolve_name_en,
     resolve_user_id,
     resolve_accesslevel,
+    resolve_amount,
+    resolve_startdate,
+    resolve_enddate,
     resolve_created,
     resolve_lastchange,
     resolve_createdby,
     resolve_changedby,
     createRootResolver_by_id,
-    resolve_rbacobject,
     createRootResolver_by_page,
+    resolve_rbacobject
 )
 
 from gql_projects.GraphPermissions import RoleBasedPermission, OnlyForAuthentized
@@ -48,6 +53,10 @@ class ProjectGQLModel(BaseGQLModel):
         return getLoadersFromInfo(info).projects
 
     id = resolve_id
+    name = resolve_name
+    name_en = resolve_name_en
+    startdate = resolve_startdate
+    enddate = resolve_enddate
     accesslevel = resolve_accesslevel
     created = resolve_created
     lastchange = resolve_lastchange
@@ -56,7 +65,7 @@ class ProjectGQLModel(BaseGQLModel):
     rbacobject = resolve_rbacobject
 
     @strawberry.field(
-        description="""Form's validity""",
+        description="""Project's validity""",
         permission_classes=[OnlyForAuthentized()])
     def valid(self) -> bool: return self.valid
 
@@ -64,7 +73,7 @@ class ProjectGQLModel(BaseGQLModel):
     #     return self.valid
 
     @strawberry.field(
-        description="""Form's status""",
+        description="""Project's status""",
         permission_classes=[OnlyForAuthentized()])
     def status(self) -> typing.Optional[str]: return self.status
 
@@ -78,33 +87,33 @@ class ProjectGQLModel(BaseGQLModel):
     #         result._type_definition = cls._type_definition  # little hack :)
     #     return result
 
-    @strawberryA.field(description="""Primary key""")
-    def id(self) -> uuid.UUID:
-        return self.id
+    # @strawberryA.field(description="""Primary key""")
+    # def id(self) -> uuid.UUID:
+    #     return self.id
 
-    @strawberryA.field(description="""Name of the project""")
-    def name(self) -> str:
-        return self.name
+    # @strawberryA.field(description="""Name of the project""")
+    # def name(self) -> str:
+    #     return self.name
 
-    @strawberryA.field(description="""Start date""")
-    def startdate(self) -> datetime.date:
-        return self.startdate
+    # @strawberryA.field(description="""Start date""")
+    # def startdate(self) -> datetime.date:
+    #     return self.startdate
 
-    @strawberryA.field(description="""End date""")
-    def enddate(self) -> datetime.date:
-        return self.enddate
+    # @strawberryA.field(description="""End date""")
+    # def enddate(self) -> datetime.date:
+    #     return self.enddate
 
-    @strawberryA.field(description="""Last change""")
-    def lastchange(self) -> datetime.datetime:
-        return self.lastchange
+    # @strawberryA.field(description="""Last change""")
+    # def lastchange(self) -> datetime.datetime:
+    #     return self.lastchange
 
-    @strawberryA.field(description="""Project type of project""")
+    @strawberryA.field(description="""Project type of project""", permission_classes=[OnlyForAuthentized()])
     async def project_type(self, info: strawberryA.types.Info) -> Optional ["ProjectTypeGQLModel"]:
         from .ProjectTypeGQLModel import ProjectTypeGQLModel  # Import here to avoid circular dependency
         result = await ProjectTypeGQLModel.resolve_reference(info, self.projecttype_id)
         return result
 
-    @strawberryA.field(description="""List of finances, related to finance type""")
+    @strawberryA.field(description="""List of finances, related to finance type""", permission_classes=[OnlyForAuthentized()])
     async def finances(
         self, info: strawberryA.types.Info
     ) -> List["FinanceGQLModel"]:
@@ -115,7 +124,7 @@ class ProjectGQLModel(BaseGQLModel):
         #     result = await resolveFinancesForProject(session, self.id)
         #     return result
 
-    @strawberryA.field(description="""List of milestones, related to a project""")
+    @strawberryA.field(description="""List of milestones, related to a project""", permission_classes=[OnlyForAuthentized()])
     async def milestones(
         self, info: strawberryA.types.Info
     ) -> List["MilestoneGQLModel"]:
@@ -129,7 +138,7 @@ class ProjectGQLModel(BaseGQLModel):
     #     result = await loader.filter_by(id=self.group_id)
     #     return result
 
-    @strawberry.field(description="""Group, related to a project""")
+    @strawberry.field(description="""Group, related to a project""", permission_classes=[OnlyForAuthentized()])
     def group(self) -> Optional["GroupGQLModel"]:
         from .externals import GroupGQLModel
         return GroupGQLModel(id=self.group_id)
@@ -139,13 +148,13 @@ class ProjectGQLModel(BaseGQLModel):
     #     result = await GroupGQLModel.resolve_reference(self.group_id)
     #     return result
     
-    @strawberry.field(description="""Team, related to a project""")
+    @strawberry.field(description="""Team, related to a project""", permission_classes=[OnlyForAuthentized()])
     def team(self) -> Union["GroupGQLModel", None]:
         from .externals import GroupGQLModel
         return GroupGQLModel(id=self.group_id)
     
 
-    @strawberry.field(description="""Content, related to a project""")
+    @strawberry.field(description="""Content, related to a project""", permission_classes=[OnlyForAuthentized()])
     def content(self) -> Optional["ContentGQLModel"]:
         from .externals import ContentGQLModel
         return ContentGQLModel(id=self.content_id)
@@ -183,6 +192,7 @@ class ProjectWhereFilter:
     name: str
     type_id: uuid.UUID
     value: str
+    createdby: uuid.UUID
 
 
 @strawberryA.field(description="""Returns a list of projects""",

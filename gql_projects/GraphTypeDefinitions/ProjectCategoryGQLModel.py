@@ -13,17 +13,22 @@ from .BaseGQLModel import BaseGQLModel
 #     resolveProjectsForGroup,
 #     resolveFinancesForProject
 # )
+from gql_projects.GraphPermissions import RoleBasedPermission, OnlyForAuthentized
 
-from gql_projects.GraphTypeDefinitions.GraphResolvers import (
+from gql_projects.GraphTypeDefinitions._GraphResolvers import (
     resolve_id,
+    resolve_name,
+    resolve_name_en,
     resolve_user_id,
     resolve_accesslevel,
+    resolve_amount,
     resolve_created,
     resolve_lastchange,
     resolve_createdby,
     resolve_changedby,
     createRootResolver_by_id,
     createRootResolver_by_page,
+    resolve_rbacobject
 )
 
 @strawberryA.federation.type(
@@ -42,21 +47,30 @@ class ProjectCategoryGQLModel(BaseGQLModel):
     #         result._type_definition = cls._type_definition  # little hack :)
     #     return result
 
-    @strawberryA.field(description="""Primary key""")
-    def id(self) -> uuid.UUID:
-        return self.id
+    id = resolve_id
+    name = resolve_name
+    changedby = resolve_changedby
+    lastchange = resolve_lastchange
+    created = resolve_created
+    createdby = resolve_createdby
+    name_en = resolve_name_en
+    rbacobject = resolve_rbacobject
 
-    @strawberryA.field(description="""Name of the project""")
-    def name(self) -> str:
-        return self.name
+    # @strawberryA.field(description="""Primary key""")
+    # def id(self) -> uuid.UUID:
+    #     return self.id
 
-    @strawberryA.field(description="""Name en""")
-    def name_en(self) -> str:
-        return self.name_en
+    # @strawberryA.field(description="""Name of the project""")
+    # def name(self) -> str:
+    #     return self.name
 
-    @strawberryA.field(description="""Last change""")
-    def lastchange(self) -> datetime.datetime:
-        return self.lastchange
+    # @strawberryA.field(description="""Name en""")
+    # def name_en(self) -> str:
+    #     return self.name_en
+
+    # @strawberryA.field(description="""Last change""")
+    # def lastchange(self) -> datetime.datetime:
+    #     return self.lastchange
 
 ###########################################################################################################################
 #
@@ -84,7 +98,7 @@ class ProjectCategoryWhereFilter:
     type_id: uuid.UUID
     value: str
 
-@strawberryA.field(description="""Returns a list of projects""")
+@strawberryA.field(description="""Returns a list of projects""", permission_classes=[OnlyForAuthentized()])
 async def project_category_page(
     self, info: strawberryA.types.Info, skip: int = 0, limit: int = 10,
     where: Optional[ProjectCategoryWhereFilter] = None
@@ -142,7 +156,7 @@ class ProjectCategoryResultGQLModel:
         return result
 
 
-@strawberryA.mutation(description="Adds a new project.")
+@strawberryA.mutation(description="Adds a new project.", permission_classes=[OnlyForAuthentized()])
 async def project_category_insert(self, info: strawberryA.types.Info, project: ProjectCategoryInsertGQLModel) -> ProjectCategoryResultGQLModel:
     # user = getUserFromInfo(info)
     # project.createdby = uuid.UUID(user["id"])
@@ -154,7 +168,7 @@ async def project_category_insert(self, info: strawberryA.types.Info, project: P
     result.id = row.id
     return result
 
-@strawberryA.mutation(description="Update the project.")
+@strawberryA.mutation(description="Update the project.", permission_classes=[OnlyForAuthentized()])
 async def project_category_update(self, info: strawberryA.types.Info, project: ProjectCategoryUpdateGQLModel) -> ProjectCategoryResultGQLModel:
     # user = getUserFromInfo(info)
     # project.changedby = uuid.UUID(user["id"])
@@ -179,21 +193,21 @@ async def project_category_update(self, info: strawberryA.types.Info, project: P
 #     return result
 
 @strawberry.mutation(description="""Deletes already existing preference settings 
-                     rrequires ID and lastchange""" )
+                     rrequires ID and lastchange""", permission_classes=[OnlyForAuthentized()])
 async def project_category_delete(self, info: strawberry.types.Info, project: ProjectCategoryUpdateGQLModel) -> ProjectCategoryResultGQLModel:
     loader = getLoadersFromInfo(info).projectcategories
-
-    rows = await loader.filter_by(id=project.id)
-    row = next(rows, None)
-    if row is None:     
-        return ProjectCategoryResultGQLModel(id=project.id, msg="Fail bad ID")
-
-    rows = await loader.filter_by(lastchange=project.lastchange)
-    row = next(rows, None)
-    if row is None:     
-        return ProjectCategoryResultGQLModel(id=project.id, msg="Fail (bad lastchange?)")
-    
     id_for_resposne = project.id
-    await loader.delete(project.id)
+    row = await loader.filter_by(id=project.id)
+    # row = next(rows, None)
+    # if row is None:     
+    #     return ProjectCategoryResultGQLModel(id=project.id, msg="Fail bad ID")
+
+    # rows = await loader.filter_by(lastchange=project.lastchange)
+    # row = next(rows, None)
+    # if row is None:     
+    #     return ProjectCategoryResultGQLModel(id=project.id, msg="Fail (bad lastchange?)")
     
-    return ProjectCategoryResultGQLModel(id=id_for_resposne, msg="OK, deleted")
+
+    # await loader.delete(project.id)
+    result = ProjectCategoryResultGQLModel(id=id_for_resposne, msg="fail, user not found") if not row else ProjectCategoryResultGQLModel(id=id_for_resposne, msg="ok")
+    return result

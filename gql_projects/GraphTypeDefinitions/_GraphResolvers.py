@@ -7,27 +7,40 @@ import logging
 from inspect import signature
 import inspect 
 from functools import wraps
+from gql_projects.GraphPermissions import OnlyForAuthentized
 
 UserGQLModel = typing.Annotated["UserGQLModel", strawberry.lazy(".externals")]
 GroupGQLModel = typing.Annotated["GroupGQLModel", strawberry.lazy(".externals")]
 RoleTypeGQLModel = typing.Annotated["RoleTypeGQLModel", strawberry.lazy(".externals")]
 
-@strawberry.field(description="""Entity primary key""")
+@strawberry.field(description="""Entity primary key""", permission_classes=[OnlyForAuthentized()])
 def resolve_id(self) -> uuid.UUID:
     return self.id
 
-@strawberry.field(description="""Time of last update""")
+@strawberry.field(description="""Time of last update""", permission_classes=[OnlyForAuthentized()])
 def resolve_lastchange(self) -> datetime.datetime:
     return self.lastchange
 
-@strawberry.field(description="""Name """)
+@strawberry.field(description="""Name """, permission_classes=[OnlyForAuthentized()])
 def resolve_name(self) -> str:
     return self.name
 
-@strawberry.field(description="""English name""")
+@strawberry.field(description="""English name""", permission_classes=[OnlyForAuthentized()])
 def resolve_name_en(self) -> str:
     result = self.name_en if self.name_en else ""
     return result
+
+@strawberry.field(description="""Amount""")
+def resolve_amount(self) -> float:
+    return self.amount
+
+@strawberry.field(description="""Start date""")
+def resolve_startdate(self) -> datetime.date:
+    return self.startdate
+
+@strawberry.field(description="""End date""")
+def resolve_enddate(self) -> datetime.date:
+    return self.enddate
 
 
 async def resolve_group(group_id):
@@ -36,7 +49,7 @@ async def resolve_group(group_id):
     return result
 
 
-@strawberry.field(description="""Group ID""")
+@strawberry.field(description="""Group ID""", permission_classes=[OnlyForAuthentized()])
 async def resolve_group_id(self) -> typing.Optional["GroupGQLModel"]:
     return await resolve_group(self.group_id)
 
@@ -47,7 +60,7 @@ async def resolve_user(user_id):
     return result
 
 
-@strawberry.field(description="""User ID """)
+@strawberry.field(description="""User ID """, permission_classes=[OnlyForAuthentized()])
 async def resolve_user_id(self) -> typing.Optional["UserGQLModel"]:
     return await resolve_user(self.user_id)
 
@@ -57,33 +70,33 @@ async def resolve_roletype(roletype_id):
     result = None if roletype_id is None else await RoleTypeGQLModel.resolve_reference(roletype_id)
     return result
 
-@strawberry.field(description="""Role Type ID """)
+@strawberry.field(description="""Role Type ID """, permission_classes=[OnlyForAuthentized()])
 async def resolve_roletype_id(self) -> typing.Optional["RoleTypeGQLModel"]:
     return await resolve_roletype(self.roletype_id)
 
 
-@strawberry.field(description="""Level of authorization""")
+@strawberry.field(description="""Level of authorization""", permission_classes=[OnlyForAuthentized()])
 def resolve_accesslevel(self) -> int:
     return self.accesslevel
 
 
-@strawberry.field(description="""Time of entity introduction""")
+@strawberry.field(description="""Time of entity introduction""",permission_classes=[OnlyForAuthentized()])
 def resolve_created(self) -> typing.Optional[datetime.datetime]:
     return self.created
 
 
-@strawberry.field(description="""Who created entity""")
+@strawberry.field(description="""Who created entity""", permission_classes=[OnlyForAuthentized()])
 async def resolve_createdby(self) -> typing.Optional["UserGQLModel"]:
     return await resolve_user(self.created_by)
 
 
-@strawberry.field(description="""Who made last change""")
+@strawberry.field(description="""Who made last change""", permission_classes=[OnlyForAuthentized()])
 async def resolve_changedby(self) -> typing.Optional["UserGQLModel"]:
     return await resolve_user(self.changedby)
 
 
 RBACObjectGQLModel = typing.Annotated["RBACObjectGQLModel", strawberry.lazy(".externals")]
-@strawberry.field(description="""Who made last change""")
+@strawberry.field(description="""Who made last change""", permission_classes=[OnlyForAuthentized()])
 async def resolve_rbacobject(self, info: strawberry.types.Info) -> typing.Optional[RBACObjectGQLModel]:
     from .externals import RBACObjectGQLModel
     result = None if self.rbacobject is None else await RBACObjectGQLModel.resolve_reference(info, self.rbacobject)
@@ -158,10 +171,10 @@ def createAttributeVectorResolver(
     return foreignkeyVector
 
 
-def createRootResolver_by_id(scalarType: None, description="Retrieves item by its id", permission_classes= []):
+def createRootResolver_by_id(scalarType: None, description="Retrieves item by its id"):
     assert scalarType is not None
 
-    @strawberry.field(description=description, permission_classes=permission_classes)
+    @strawberry.field(description=description, permission_classes=[OnlyForAuthentized()])
     async def by_id(
             self, info: strawberry.types.Info, id: uuid.UUID
     ) -> typing.Optional[scalarType]:

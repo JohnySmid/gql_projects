@@ -7,17 +7,24 @@ import uuid
 #     resolveProjectById,
 #     resolveMilestoneAll
 # )
+from gql_projects.GraphPermissions import RoleBasedPermission, OnlyForAuthentized
 
-from gql_projects.GraphTypeDefinitions.GraphResolvers import (
+from gql_projects.GraphTypeDefinitions._GraphResolvers import (
     resolve_id,
+    resolve_name,
+    resolve_name_en,
     resolve_user_id,
     resolve_accesslevel,
+    resolve_amount,
+    resolve_startdate,
+    resolve_enddate,
     resolve_created,
     resolve_lastchange,
     resolve_createdby,
     resolve_changedby,
     createRootResolver_by_id,
     createRootResolver_by_page,
+    resolve_rbacobject
 )
 from contextlib import asynccontextmanager
 from .ProjectGQLModel import ProjectResultGQLModel
@@ -55,27 +62,38 @@ class MilestoneGQLModel(BaseGQLModel):
     #         result._type_definition = cls._type_definition  # little hack :)
     #     return result
 
-    @strawberryA.field(description="""Primary key""")
-    def id(self) -> uuid.UUID:
-        return self.id
+    id = resolve_id
+    name = resolve_name
+    startdate = resolve_startdate
+    enddate = resolve_enddate
+    changedby = resolve_changedby
+    lastchange = resolve_lastchange
+    created = resolve_created
+    createdby = resolve_createdby
+    name_en = resolve_name_en
+    rbacobject = resolve_rbacobject
 
-    @strawberryA.field(description="""Name""")
-    def name(self) -> str:
-        return self.name
+    # @strawberryA.field(description="""Primary key""")
+    # def id(self) -> uuid.UUID:
+    #     return self.id
 
-    @strawberryA.field(description="""Start date""")
-    def startdate(self) -> datetime.date:
-        return self.startdate
+    # @strawberryA.field(description="""Name""")
+    # def name(self) -> str:
+    #     return self.name
 
-    @strawberryA.field(description="""End date""")
-    def enddate(self) -> datetime.date:
-        return self.enddate
+    # @strawberryA.field(description="""Start date""")
+    # def startdate(self) -> datetime.date:
+    #     return self.startdate
 
-    @strawberryA.field(description="""Last change""")
-    def lastchange(self) -> datetime.datetime:
-        return self.lastchange
+    # @strawberryA.field(description="""End date""")
+    # def enddate(self) -> datetime.date:
+    #     return self.enddate
 
-    @strawberryA.field(description="""Project of milestone""")
+    # @strawberryA.field(description="""Last change""")
+    # def lastchange(self) -> datetime.datetime:
+    #     return self.lastchange
+
+    @strawberryA.field(description="""Project of milestone""", permission_classes=[OnlyForAuthentized()])
     async def project(self, info: strawberryA.types.Info) -> Optional ["ProjectGQLModel"]:
         loader = getLoadersFromInfo(info).projects
         result = await loader.load(self.project_id)
@@ -84,7 +102,7 @@ class MilestoneGQLModel(BaseGQLModel):
         #     result = await resolveProjectById(session, self.project_id)
         #     return result
 
-    @strawberryA.field(description="""Milestones which has this one as follower""")
+    @strawberryA.field(description="""Milestones which has this one as follower""", permission_classes=[OnlyForAuthentized()])
     async def previous(self, info: strawberryA.types.Info) -> List["MilestoneGQLModel"]:
         # async with withInfo(info) as session:
         #     result = await resolveProjectById(session, self.project_id)
@@ -94,7 +112,7 @@ class MilestoneGQLModel(BaseGQLModel):
         awaitable = (MilestoneGQLModel.resolve_reference(info, row.previous_id) for row in rows)
         return await asyncio.gather(*awaitable)
 
-    @strawberryA.field(description="""Milestone which follow this milestone""")
+    @strawberryA.field(description="""Milestone which follow this milestone""", permission_classes=[OnlyForAuthentized()])
     async def nexts(self, info: strawberryA.types.Info) -> List["MilestoneGQLModel"]:
         # async with withInfo(info) as session:
         #     result = await resolveProjectById(session, self.project_id)
@@ -119,7 +137,7 @@ class MilestoneWhereFilter:
     type_id: uuid.UUID
     value: str
 
-@strawberryA.field(description="""Returns a list of milestones""")
+@strawberryA.field(description="""Returns a list of milestones""", permission_classes=[OnlyForAuthentized()])
 async def milestone_page(
     self, info: strawberryA.types.Info, skip: int = 0, limit: int = 10,
     where: Optional[MilestoneWhereFilter] = None
@@ -170,7 +188,7 @@ class MilestoneResultGQLModel:
     id: uuid.UUID = strawberryA.field(description="The ID of the milestone", default=None)
     msg: str = strawberryA.field(description="Result of the operation (OK/Fail)", default=None)
 
-    @strawberryA.field(description="Returns the milestone")
+    @strawberryA.field(description="Returns the milestone", permission_classes=[OnlyForAuthentized()])
     async def milestone(self, info: strawberryA.types.Info) -> Union[MilestoneGQLModel, None]:
         result = await MilestoneGQLModel.resolve_reference(info, self.id)
         return result
@@ -180,7 +198,7 @@ class MilestoneLinkAddGQLModel:
     previous_id: Optional[uuid.UUID] = strawberryA.field(description="The ID of the previous milestone")
     next_id: Optional[uuid.UUID]  = strawberryA.field(description="The ID of the next milestone")
 
-@strawberryA.mutation(description="Adds a new milestones link.")
+@strawberryA.mutation(description="Adds a new milestones link.", permission_classes=[OnlyForAuthentized()])
 async def milestones_link_add(self, info: strawberryA.types.Info, link: MilestoneLinkAddGQLModel) -> MilestoneResultGQLModel:
     loader = getLoadersFromInfo(info).milestonelinks
     rows = await loader.filter_by(previous_id=link.previous_id, next_id=link.next_id)
@@ -208,7 +226,7 @@ async def milestones_link_add(self, info: strawberryA.types.Info, link: Mileston
 #     result.id = link.previous_id
 #     return result
 
-@strawberryA.mutation(description="Adds a new milestone.")
+@strawberryA.mutation(description="Adds a new milestone.", permission_classes=[OnlyForAuthentized()])
 async def milestone_insert(self, info: strawberryA.types.Info, milestone: MilestoneInsertGQLModel) -> MilestoneResultGQLModel:
     loader = getLoadersFromInfo(info).milestones
     row = await loader.insert(milestone)
@@ -217,7 +235,7 @@ async def milestone_insert(self, info: strawberryA.types.Info, milestone: Milest
     result.id = row.id
     return result
 
-@strawberryA.mutation(description="Update the milestone.")
+@strawberryA.mutation(description="Update the milestone.", permission_classes=[OnlyForAuthentized()])
 async def milestone_update(self, info: strawberryA.types.Info, milestone: MilestoneUpdateGQLModel) -> MilestoneResultGQLModel:
     loader = getLoadersFromInfo(info).milestones
     row = await loader.update(milestone)
@@ -240,21 +258,18 @@ async def milestone_update(self, info: strawberryA.types.Info, milestone: Milest
 #     return result
 
 @strawberry.mutation(description="""Deletes already existing preference settings 
-                     rrequires ID and lastchange""" )
+                     rrequires ID and lastchange""" , permission_classes=[OnlyForAuthentized()])
 async def milestone_delete(self, info: strawberry.types.Info, milestone: MilestoneUpdateGQLModel) -> MilestoneResultGQLModel:
     loader = getLoadersFromInfo(info).milestones
-
-    rows = await loader.filter_by(id=milestone.id)
-    row = next(rows, None)
-    if row is None:     
-        return MilestoneResultGQLModel(id=milestone.id, msg="Fail bad ID")
-
-    rows = await loader.filter_by(lastchange=milestone.lastchange)
-    row = next(rows, None)
-    if row is None:     
-        return MilestoneResultGQLModel(id=milestone.id, msg="Fail (bad lastchange?)")
-    
     id_for_resposne = milestone.id
-    await loader.delete(milestone.id)
-    
-    return MilestoneResultGQLModel(id=id_for_resposne, msg="OK, deleted")
+    row = await loader.filter_by(id=milestone.id)
+    # row = next(rows, None)
+    # if row is None:     
+    #     return MilestoneResultGQLModel(id=milestone.id, msg="Fail bad ID")
+    # rows = await loader.filter_by(lastchange=milestone.lastchange)
+    # row = next(rows, None)
+    # if row is None:     
+    #     return MilestoneResultGQLModel(id=milestone.id, msg="Fail (bad lastchange?)")
+    # await loader.delete(milestone.id)
+    result = MilestoneResultGQLModel(id=id_for_resposne, msg="fail, user not found") if not row else MilestoneResultGQLModel(id=id_for_resposne, msg="ok")
+    return result
