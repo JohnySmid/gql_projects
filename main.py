@@ -1,135 +1,8 @@
-# from typing import List
-# import typing
-
-# import asyncio
-
-# from fastapi import FastAPI
-# import strawberry
-# from strawberry.fastapi import GraphQLRouter
-
-# ## Definice GraphQL typu (pomoci strawberry https://strawberry.rocks/)
-# ## Strawberry zvoleno kvuli moznosti mit federovane GraphQL API (https://strawberry.rocks/docs/guides/federation, https://www.apollographql.com/docs/federation/)
-# # from .gql_projects.GraphTypeDefinitions import Query
-
-# ## Definice DB typu (pomoci SQLAlchemy https://www.sqlalchemy.org/)
-# ## SQLAlchemy zvoleno kvuli moznost komunikovat s DB asynchronne
-# ## https://docs.sqlalchemy.org/en/14/core/future.html?highlight=select#sqlalchemy.future.select
-# from gql_projects.DBDefinitions import startEngine, ComposeConnectionString
-
-# ## Zabezpecuje prvotni inicializaci DB a definovani Nahodne struktury pro "Univerzity"
-# # from gql_workflow.DBFeeder import createSystemDataStructureRoleTypes, createSystemDataStructureGroupTypes
-
-# connectionString = ComposeConnectionString()
-
-
-# def singleCall(asyncFunc):
-#     """Dekorator, ktery dovoli, aby dekorovana funkce byla volana (vycislena) jen jednou. Navratova hodnota je zapamatovana a pri dalsich volanich vracena.
-#     Dekorovana funkce je asynchronni.
-#     """
-#     resultCache = {}
-
-#     async def result():
-#         if resultCache.get("result", None) is None:
-#             resultCache["result"] = await asyncFunc()
-#         return resultCache["result"]
-
-#     return result
-
-# from gql_projects.utils.DBFeeder import initDB
-
-# @singleCall
-# async def RunOnceAndReturnSessionMaker():
-#     """Provadi inicializaci asynchronniho db engine, inicializaci databaze a vraci asynchronni SessionMaker.
-#     Protoze je dekorovana, volani teto funkce se provede jen jednou a vystup se zapamatuje a vraci se pri dalsich volanich.
-#     """
-#     print(f'starting engine for "{connectionString}"')
-
-#     import os
-#     #makedrop musel byt na tvrdo
-#     makeDrop = os.environ.get("DEMO", "") == "true"
-#     makeDrop = True
-#     result = await startEngine(
-#         connectionstring=connectionString, makeDrop=makeDrop, makeUp=True
-#     )
-
-#     print(f"initializing system structures")
-
-#     ###########################################################################################################################
-#     #
-#     # zde definujte do funkce asyncio.gather
-#     # vlozte asynchronni funkce, ktere maji data uvest do prvotniho konzistentniho stavu
-#     await initDB(result)
-#     # await asyncio.gather( # concurency running :)
-#     # sem lze dat vsechny funkce, ktere maji nejak inicializovat databazi
-#     # musi byt asynchronniho typu (async def ...)
-#     # createSystemDataStructureRoleTypes(result),
-#     # createSystemDataStructureGroupTypes(result)
-#     # )
-
-#     ###########################################################################################################################
-#     print(f"all done")
-#     return result
-
-
-# from strawberry.asgi import GraphQL
-
-# from gql_projects.utils.Dataloaders import createLoaders
-# class MyGraphQL(GraphQL):
-#     """Rozsirena trida zabezpecujici praci se session"""
-
-#     async def __call__(self, scope, receive, send):
-#         asyncSessionMaker = await RunOnceAndReturnSessionMaker()
-#         async with asyncSessionMaker() as session:
-#             self._session = session
-#             self._user = {"id": "?"}
-#             return await GraphQL.__call__(self, scope, receive, send)
-
-#     async def get_context(self, request, response):
-#         parentResult = await GraphQL.get_context(self, request, response)
-#         asyncSessionMaker = await RunOnceAndReturnSessionMaker()
-#         return {
-#             **parentResult,
-#             "session": self._session,
-#             "asyncSessionMaker": asyncSessionMaker,
-#             "user": self._user,
-#             "loaders": createLoaders(asyncSessionMaker)
-#         }
-
-
-# from gql_projects.GraphTypeDefinitions import schema
-
-# ## ASGI app, kterou "moutneme"
-# graphql_app = MyGraphQL(schema, graphiql=True, allow_queries_via_get=True)
-
-# app = FastAPI()
-# app.mount("/gql", graphql_app)
-
-
-# @app.on_event("startup")
-# async def startup_event():
-#     initizalizedEngine = await RunOnceAndReturnSessionMaker()
-#     return None
-
-
-# print("All initialization is done")
-
-# # @app.get('/hello')
-# # def hello():
-# #    return {'hello': 'world'}
-
-# ###########################################################################################################################
-# #
-# # pokud jste pripraveni testovat GQL funkcionalitu, rozsirte apollo/server.js
-# #
-# ###########################################################################################################################
-
-from typing import Any, List
-import logging
+from typing import List
+import typing
 import os
 from pydantic import BaseModel
-
-from dotenv import load_dotenv
-
+import asyncio
 
 import logging
 import logging.handlers
@@ -150,26 +23,34 @@ if SYSLOGHOST is not None:
     my_logger.addHandler(handler)
 
 
-
-from fastapi import FastAPI, Request, Depends
+from fastapi import FastAPI, Request
+import strawberry
 from strawberry.fastapi import GraphQLRouter
-from contextlib import asynccontextmanager
 
-from gql_projects.DBDefinitions import ComposeConnectionString, startEngine
-from gql_projects.utils.DBFeeder import initDB
+## Definice GraphQL typu (pomoci strawberry https://strawberry.rocks/)
+## Strawberry zvoleno kvuli moznosti mit federovane GraphQL API (https://strawberry.rocks/docs/guides/federation, https://www.apollographql.com/docs/federation/)
+
+## Definice DB typu (pomoci SQLAlchemy https://www.sqlalchemy.org/)
+## SQLAlchemy zvoleno kvuli moznost komunikovat s DB asynchronne
+## https://docs.sqlalchemy.org/en/14/core/future.html?highlight=select#sqlalchemy.future.select
+from gql_projects.DBDefinitions import startEngine, ComposeConnectionString
 
 ## Zabezpecuje prvotni inicializaci DB a definovani Nahodne struktury pro "Univerzity"
 # from gql_workflow.DBFeeder import createSystemDataStructureRoleTypes, createSystemDataStructureGroupTypes
-
 connectionString = ComposeConnectionString()
 
+from strawberry.asgi import GraphQL
+import logging
 appcontext = {}
+
+from contextlib import asynccontextmanager
 @asynccontextmanager
 async def initEngine(app: FastAPI):
 
+    from gql_projects.DBDefinitions import startEngine, ComposeConnectionString
+
     connectionstring = ComposeConnectionString()
     makeDrop = os.getenv("DEMO", None) == "True"
-    print("MAKEDROP:", makeDrop)
     asyncSessionMaker = await startEngine(
         connectionstring=connectionstring,
         makeDrop=makeDrop,
@@ -178,8 +59,10 @@ async def initEngine(app: FastAPI):
 
     appcontext["asyncSessionMaker"] = asyncSessionMaker
 
+
     logging.info("engine started")
 
+    from gql_projects.utils.DBFeeder import initDB
     await initDB(asyncSessionMaker)
 
     logging.info("data (if any) imported")
@@ -187,8 +70,8 @@ async def initEngine(app: FastAPI):
 
 
 from gql_projects.GraphTypeDefinitions import schema
-from gql_projects.utils.Dataloaders import createLoadersContext, createUgConnectionContext 
 from gql_projects.utils.sentinel import sentinel
+
 
 async def get_context(request: Request):
     asyncSessionMaker = appcontext.get("asyncSessionMaker", None)
@@ -196,6 +79,7 @@ async def get_context(request: Request):
         async with initEngine(app) as cntx:
             pass
         
+    from gql_projects.utils.Dataloaders import createLoadersContext, createUgConnectionContext
     context = createLoadersContext(appcontext["asyncSessionMaker"])
     i = Item(query = "")
     # i.query = ""
@@ -208,12 +92,12 @@ async def get_context(request: Request):
     result["request"] = request
     result["user"] = request.scope.get("user", None)
     logging.info(f"context created {result}")
-    return result
+    return context
 
 app = FastAPI(lifespan=initEngine)
 
-""" from doc import attachVoyager
-attachVoyager(app, path="/gql/doc") """
+from doc import attachVoyager
+attachVoyager(app, path="/gql/doc")
 
 print("All initialization is done")
 @app.get('/hello')
@@ -222,7 +106,6 @@ def hello(request: Request):
     auth = request.auth
     user = request.scope["user"]
     return {'hello': 'world', 'headers': {**headers}, 'auth': f"{auth}", 'user': user}
-
 
 graphql_app = GraphQLRouter(
     schema,
@@ -234,12 +117,14 @@ class Item(BaseModel):
     variables: dict = {}
     operationName: str = None
 
-app.include_router(graphql_app, prefix="/gql2")
+app.include_router(graphql_app, prefix="/gql")
+
+#from doc import attachVoyager
+#attachVoyager(app, path="/gql/doc")
 
 @app.get("/gql")
 async def graphiql(request: Request):
     return await graphql_app.render_graphql_ide(request)
-
 
 
 @app.post("/gql")
@@ -277,9 +162,8 @@ async def apollo_gql(request: Request, item: Item):
 #         JWTRESOLVEUSERPATH = JWTRESOLVEUSERPATH
 # ))
 
-load_dotenv("environment.env")
-
-DEMO = os.getenv('DEMO', None)
+import os
+DEMO = os.getenv("DEMO", None)
 assert DEMO is not None, "DEMO environment variable must be explicitly defined"
 assert (DEMO == "True") or (DEMO == "False"), "DEMO environment variable can have only `True` or `False` values"
 DEMO = DEMO == "True"

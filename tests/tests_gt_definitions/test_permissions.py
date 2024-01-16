@@ -2,10 +2,13 @@ import logging
 import os
 import uuid
 
+from .gt_utils import createFrontendQuery
+
 def uuidstr():
     return f"{uuid.uuid1()}"
 
-from .gt_utils import createFrontendQuery
+
+
 _test_request_permitted = createFrontendQuery(
     query="""query ($id: UUID!) {
         projectById(id: $id) {
