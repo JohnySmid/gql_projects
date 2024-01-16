@@ -40,4 +40,6 @@ pytest --cov-report term-missing --cov=gql_projects tests
 pip install -r requirements-dev.txt --force
 uvicorn main:app --reload
 
+uvicorn main:app --env-file environment.txt --reload
+
 pytest --cov-report term-missing --cov=DBDefinitions --cov=GraphTypeDefinitions --cov=utils
