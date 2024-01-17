@@ -119,6 +119,7 @@ class FinanceTypeUpdateGQLModel:
 @strawberry.input(description="Input structure - D operation")
 class FinanceTypeDeleteGQLModel:
     id: uuid.UUID = strawberry.field(description="primary key (UUID), identifies object of operation")
+    lastchange: datetime.datetime = strawberry.field(description="timestamp of last change = TOKEN")
 
 @strawberryA.type(description="Result of a mutation over Project")
 class FinanceTypeResultGQLModel:

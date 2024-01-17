@@ -137,7 +137,7 @@ class MilestoneInsertGQLModel:
     enddate: Optional[datetime.datetime] = strawberryA.field(description="End date of the milestone (optional)", default=datetime.datetime.now() + datetime.timedelta(days=30))
     id: Optional[uuid.UUID] = strawberryA.field(description="The ID of the milestone (optional)",default=None)
     rbacobject: strawberry.Private[uuid.UUID] = None 
-    
+
 @strawberryA.input(description="Definition of a milestone used for update")
 class MilestoneUpdateGQLModel:
     lastchange: datetime.datetime = strawberryA.field(description="Timestamp of the last change")
@@ -149,7 +149,8 @@ class MilestoneUpdateGQLModel:
 @strawberry.input(description="Input structure - D operation")
 class MilestoneDeleteGQLModel:
     id: uuid.UUID = strawberry.field(description="primary key (UUID), identifies object of operation")
-    
+    lastchange: datetime.datetime = strawberry.field(description="timestamp of last change = TOKEN")
+
 @strawberryA.type(description="Result of a user operation on a milestone")
 class MilestoneResultGQLModel:
     id: uuid.UUID = strawberryA.field(description="The ID of the milestone", default=None)

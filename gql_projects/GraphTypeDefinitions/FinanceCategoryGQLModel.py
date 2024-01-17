@@ -113,7 +113,6 @@ class FinanceCategoryUpdateGQLModel:
 @strawberry.input(description="Input structure - D operation")
 class FinanceCategoryDeleteGQLModel:
     id: uuid.UUID = strawberry.field(description="primary key (UUID), identifies object of operation")
-    # name: str = strawberryA.field(description="Name/label of the project")
     lastchange: datetime.datetime = strawberry.field(description="timestamp of last change = TOKEN")
 
 
@@ -168,17 +167,19 @@ async def finance_category_update(self, info: strawberryA.types.Info, finance: F
 
 @strawberry.mutation(description="""Deletes already existing preference settings 
                      rrequires ID and lastchange""", permission_classes=[OnlyForAuthentized()] )
-async def finance_category_delete(self, info: strawberry.types.Info, finance: FinanceCategoryUpdateGQLModel) -> FinanceCategoryResultGQLModel:
+async def finance_category_delete(self, info: strawberry.types.Info, finance: FinanceCategoryDeleteGQLModel) -> FinanceCategoryResultGQLModel:
+
     loader = getLoadersFromInfo(info).financecategory
-    id_for_resposne = finance.id
-    row = await loader.filter_by(id=finance.id)
-    # row = next(rows, None)
-    # if row is None:     
-    #     return FinanceCategoryResultGQLModel(id=finance.id, msg="Fail bad ID")
-    # rows = await loader.filter_by(lastchange=finance.lastchange)
-    # row = next(rows, None)
-    # if row is None:     
-    #     return FinanceCategoryResultGQLModel(id=finance.id, msg="Fail (bad lastchange?)")
-    #await loader.delete(finance.id)
-    result = FinanceCategoryResultGQLModel(id=id_for_resposne, msg="fail, user not found") if not row else FinanceCategoryResultGQLModel(id=id_for_resposne, msg="ok")
-    return result
+
+    rows = await loader.filter_by(id=finance.id)
+    row = next(rows, None)
+    if row is None:     
+        return FinanceCategoryResultGQLModel(id=finance.id, msg="Fail bad ID")
+
+    rows = await loader.filter_by(lastchange=finance.lastchange)
+    row = next(rows, None)
+    if row is None:     
+        return FinanceCategoryResultGQLModel(id=finance.id, msg="Fail (bad lastchange?)")
+    
+    await loader.delete(finance.id)
+    return FinanceCategoryResultGQLModel(id=finance.id, msg="OK, deleted")

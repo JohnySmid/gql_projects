@@ -61,7 +61,7 @@ test_update_finance_category = createUpdateQuery(
 test_finance_delete = createUpdateQuery (
     query="""
         mutation($id: UUID!, $lastchange: DateTime!) {
-            financeCategoryDelete(finance: {id: $id, lastchange: $lastchange}) {
+            result: financeCategoryDelete(finance: {id: $id, lastchange: $lastchange}) {
                 id
                 msg
                 project {
@@ -74,4 +74,30 @@ test_finance_delete = createUpdateQuery (
          "id": "5a15450e-67e6-42a8-923a-aa7ed555b008",
     },
     tableName="projectfinancecategories"
+)
+
+test_update_preference_settings_for_user_bad_id = createFrontendQuery( 
+    query="""
+            mutation MyMutation {
+            financeCategoryDelete(
+                finance: {lastchange: "2024-01-12T01:25:17.956667", id: "ffab3d50-b45f-4c3d-a6c7-5db99204cf88"}
+            ) {
+                id
+                msg
+            }
+        }
+""",
+)
+
+test_update_preference_settings_for_user_bad_lastchange = createFrontendQuery( 
+    query="""
+            mutation MyMutation {
+            financeCategoryDelete(
+                finance: {lastchange: "2024-01-12T01:25:17.956667", id: "5a15450e-67e6-42a8-923a-aa7ed555b008"}
+            ) {
+                id
+                msg
+            }
+        }
+""",
 )
