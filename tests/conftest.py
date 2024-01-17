@@ -110,7 +110,7 @@ def Context(AdminUser, SQLite, LoadersContext, Request):
         "user": AdminUser,
         "x": "",
         "ug_connection": get_ug_connection
-    } 
+    }
 
 @pytest.fixture
 def Request():
@@ -502,7 +502,7 @@ def FastAPIClient3():
             headers = AuthorizationHeaders
             logging.debug(f"query client for {query} with {variable_values} and headers {headers}")
 
-            response = client.post("/gql2/", headers=headers, json=json)
+            response = client.post("/gql/", headers=headers, json=json)
             assert response.status_code == 200, f"Got no 200 response {response}"
             return response.json()       
         return Execute
