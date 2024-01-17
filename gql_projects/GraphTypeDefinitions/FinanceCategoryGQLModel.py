@@ -32,35 +32,14 @@ class FinanceCategoryGQLModel(BaseGQLModel):
     @classmethod
     def getLoader(cls, info):
         return getLoadersFromInfo(info).financecategory
-    # async def resolve_reference(cls, info: strawberryA.types.Info, id: uuid.UUID):
-    #     loader = getLoadersFromInfo(info).financecategory
-    #     result = await loader.load(id)
-    #     if result is not None:
-    #         result._type_definition = cls._type_definition  # little hack :)
-    #     return result
-
-    # @strawberryA.field(description="""Primary key""")
-    # def id(self) -> uuid.UUID:
-    #     return self.id
-
-    # @strawberryA.field(description="""Time stamp""")
-    # def lastchange(self) -> uuid.UUID:
-    #     return self.lastchange
-
-    # @strawberryA.field(description="""Name""")
-    # def name(self) -> str:
-    #     return self.name
     
-    # @strawberryA.field(description="""Name en""")
-    # def name_en(self) -> str:
-    #     return self.name_en
     id = resolve_id
     name = resolve_name
+    name_en = resolve_name_en
     changedby = resolve_changedby
     lastchange = resolve_lastchange
     created = resolve_created
     createdby = resolve_createdby
-    name_en = resolve_name_en
     rbacobject = resolve_rbacobject
 
 ###########################################################################################################################
@@ -120,6 +99,7 @@ class FinanceCategoryInsertGQLModel:
     name_en: str = strawberryA.field(description="", default=None)
     id: Optional[uuid.UUID] = strawberryA.field(description="Primary key (UUID), could be client-generated", default=None)
     createdby: strawberry.Private[uuid.UUID] = None 
+    rbacobject: strawberry.Private[uuid.UUID] = None 
 
 @strawberryA.input(description="Definition of a project used for update")
 class FinanceCategoryUpdateGQLModel:

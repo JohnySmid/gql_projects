@@ -28,3 +28,4 @@ class ProjectModel(BaseModel):
      lastchange = Column(DateTime, server_default=sqlalchemy.sql.func.now(), comment="Timestamp of the last change to the project")
      createdby = UUIDFKey(nullable=True)#Column(ForeignKey("users.id"), index=True, nullable=True)
      changedby = UUIDFKey(nullable=True)#Column(ForeignKey("users.id"), index=True, nullable=True)
+     rbacobject = UUIDFKey(nullable=True, comment="user or group id, determines access")

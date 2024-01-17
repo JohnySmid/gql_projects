@@ -126,11 +126,9 @@ class Mutation:
     from .ProjectCategoryGQLModel import (
         project_category_insert,
         project_category_update,
-        project_category_delete
     )
     project_category_insert = project_category_insert
     project_category_update = project_category_update
-    project_category_delete = project_category_delete
 
     from .ProjectGQLModel import (
         project_insert,

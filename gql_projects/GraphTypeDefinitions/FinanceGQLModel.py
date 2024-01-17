@@ -7,11 +7,6 @@ from .BaseGQLModel import BaseGQLModel
 import strawberry
 from gql_projects.utils.Dataloaders import getLoadersFromInfo, getUserFromInfo
 
-# from gql_projects.GraphResolvers import (
-#     resolveFinanceTypeById,
-#     resolveProjectById,
-#     resolveFinanceAll
-# )
 
 from gql_projects.GraphPermissions import RoleBasedPermission, OnlyForAuthentized
 
@@ -44,12 +39,6 @@ class FinanceGQLModel(BaseGQLModel):
 
     def getLoader(cls, info):
         return getLoadersFromInfo(info).finances
-    # async def resolve_reference(cls, info: strawberryA.types.Info, id: uuid.UUID):
-    #     loader = getLoadersFromInfo(info).finances
-    #     result = await loader.load(id)
-    #     if result is not None:
-    #         result._type_definition = cls._type_definition  # little hack :)
-    #     return result
 
     id = resolve_id
     name = resolve_name
@@ -58,40 +47,14 @@ class FinanceGQLModel(BaseGQLModel):
     lastchange = resolve_lastchange
     created = resolve_created
     createdby = resolve_createdby
-    name_en = resolve_name_en
+    # name_en = resolve_name_en
     rbacobject = resolve_rbacobject
-
-    # @strawberryA.field(description="""Primary key""")
-    # def id(self) -> uuid.UUID:
-    #     return self.id
-
-    # @strawberryA.field(description="""Name""")
-    # def name(self) -> str:
-    #     return self.name
-
-    # @strawberryA.field(description="""Amount""")
-    # def amount(self) -> float:
-    #     return self.amount
-
-    # @strawberryA.field(description="""Last change""")
-    # def lastchange(self) -> datetime.datetime:
-    #     return self.lastchange
 
     @strawberryA.field(description="""Project of finance""", permission_classes=[OnlyForAuthentized()])
     async def project(self, info: strawberryA.types.Info) -> Optional ["ProjectGQLModel"]:
         loader = getLoadersFromInfo(info).projects
         result = await loader.load(self.project_id)
         return result
-        # async with withInfo(info) as session:
-        #     result = await resolveProjectById(session, self.project_id)
-        #     return result
-
-    # @strawberryA.field(description="""Finance type of finance""")
-    # async def financeType(self, info: strawberryA.types.Info) -> Optional ["FinanceTypeGQLModel"]:
-    #     loader = getLoadersFromInfo(info).finances
-    #     # result = await loader.load(self.financetype_id)
-    #     result = await loader.filter_by(financetype_id = self.id)
-    #     return result
     
     @strawberryA.field(description="""Finance type of finance""", permission_classes=[OnlyForAuthentized()])
     async def financeType(
@@ -100,9 +63,7 @@ class FinanceGQLModel(BaseGQLModel):
         loader = getLoadersFromInfo(info).financetypes
         result = await loader.filter_by(id = self.financetype_id)
         return result
-        # async with withInfo(info) as session:
-        #     result = await resolveFinanceTypeById(session, self.financetype_id)
-        #     return result
+
 ###########################################################################################################################
 #
 # Query 
@@ -159,7 +120,8 @@ class FinanceInsertGQLModel:
 
     id: Optional[uuid.UUID] = strawberryA.field(description="The ID of the financial data (optional)",default=None)
     amount: Optional[float] = strawberryA.field(description="The amount of financial data (optional)", default=0.0)
-    createdby: strawberry.Private[uuid.UUID] = None 
+    createdby: strawberry.Private[uuid.UUID] = None
+    rbacobject: strawberry.Private[uuid.UUID] = None  
 
 @strawberryA.input(description="Definition of financial data used for update")
 class FinanceUpdateGQLModel:
@@ -187,9 +149,8 @@ class FinanceResultGQLModel:
 
 @strawberryA.mutation(description="Adds a new finance record.", permission_classes=[OnlyForAuthentized()])
 async def finance_insert(self, info: strawberryA.types.Info, finance: FinanceInsertGQLModel) -> FinanceResultGQLModel:
-    user = getUserFromInfo(info)
-    print(user)
-    finance.createdby = uuid.UUID(user["id"])
+    # user = getUserFromInfo(info)
+    # finance.changedby = uuid.UUID(user["id"])
     loader = getLoadersFromInfo(info).finances
     row = await loader.insert(finance)
     result = FinanceResultGQLModel()
@@ -199,16 +160,14 @@ async def finance_insert(self, info: strawberryA.types.Info, finance: FinanceIns
 
 @strawberryA.mutation(description="Update the finance record.", permission_classes=[OnlyForAuthentized()])
 async def finance_update(self, info: strawberryA.types.Info, finance: FinanceUpdateGQLModel) -> FinanceResultGQLModel:
-    user = getUserFromInfo(info)
-    finance.changedby = uuid.UUID(user["id"])
+    # user = getUserFromInfo(info)
+    # finance.changedby = uuid.UUID(user["id"])
     loader = getLoadersFromInfo(info).finances
     row = await loader.update(finance)
     result = FinanceResultGQLModel()
     result.msg = "ok"
     result.id = finance.id
     result.msg = "ok" if (row is not None) else "fail"
-    # if row is None:
-    #     result.msg = "fail"  
     return result
 
 # @strawberry.mutation(description="Delete the authorization user")
@@ -224,16 +183,10 @@ async def finance_update(self, info: strawberryA.types.Info, finance: FinanceUpd
 @strawberry.mutation(description="""Deletes already existing preference settings 
                      rrequires ID and lastchange""" , permission_classes=[OnlyForAuthentized()])
 async def finance_delete(self, info: strawberry.types.Info, finance: FinanceUpdateGQLModel) -> FinanceResultGQLModel:
+    # user = getUserFromInfo(info)
+    # finance.changedby = uuid.UUID(user["id"])
     loader = getLoadersFromInfo(info).finances
     id_for_resposne = finance.id
-    row = await loader.filter_by(id=finance.id)
-    # row = next(rows, None)
-    # if row is None:     
-    #     return FinanceResultGQLModel(id=finance.id, msg="Fail bad ID")
-    # rows = await loader.filter_by(lastchange=finance.lastchange)
-    # row = next(rows, None)
-    # if row is None:     
-    #     return FinanceResultGQLModel(id=finance.id, msg="Fail (bad lastchange?)")
-    # await loader.delete(finance.id)
+    row = await loader.delete(id_for_resposne)
     result = FinanceResultGQLModel(id=id_for_resposne, msg="fail, user not found") if not row else FinanceResultGQLModel(id=id_for_resposne, msg="ok")
     return result

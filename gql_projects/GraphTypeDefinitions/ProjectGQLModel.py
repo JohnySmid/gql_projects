@@ -33,15 +33,6 @@ ContentGQLModel = Annotated["ContentGQLModel", strawberry.lazy(".externals")]
 MilestoneGQLModel = Annotated ["MilestoneGQLModel",strawberryA.lazy(".MilestoneGQLModel")]
 FinanceGQLModel = Annotated ["FinanceGQLModel",strawberryA.lazy(".FinanceGQLModel")]
 
-# def AsyncSessionFromInfo(info):
-#     print(
-#         "obsolete function used AsyncSessionFromInfo, use withInfo context manager instead"
-#     )
-#     return info.context["session"]
-
-
-
-
 
 @strawberryA.federation.type(
     keys=["id"], 
@@ -54,58 +45,29 @@ class ProjectGQLModel(BaseGQLModel):
 
     id = resolve_id
     name = resolve_name
-    name_en = resolve_name_en
     startdate = resolve_startdate
     enddate = resolve_enddate
-    accesslevel = resolve_accesslevel
     created = resolve_created
     lastchange = resolve_lastchange
     createdby = resolve_createdby
     changedby = resolve_changedby
     rbacobject = resolve_rbacobject
 
-    @strawberry.field(
-        description="""Project's validity""",
-        permission_classes=[OnlyForAuthentized()])
-    def valid(self) -> bool: return self.valid
+    # name_en = resolve_name_en
+    # accesslevel = resolve_accesslevel
+    # @strawberry.field(
+    #     description="""Project's validity""",
+    #     permission_classes=[OnlyForAuthentized()])
+    # def valid(self) -> bool: return self.valid
 
     # def valid(self) -> bool:
     #     return self.valid
 
-    @strawberry.field(
-        description="""Project's status""",
-        permission_classes=[OnlyForAuthentized()])
-    def status(self) -> typing.Optional[str]: return self.status
+    # @strawberry.field(
+    #     description="""Project's status""",
+    #     permission_classes=[OnlyForAuthentized()])
+    # def status(self) -> typing.Optional[str]: return self.status
 
-    # def status(self) -> typing.Optional[str]:
-    #     return self.status
-
-    # async def resolve_reference(cls, info: strawberryA.types.Info, id: uuid.UUID):
-    #     loader = getLoadersFromInfo(info).projects
-    #     result = await loader.load(id)
-    #     if result is not None:
-    #         result._type_definition = cls._type_definition  # little hack :)
-    #     return result
-
-    # @strawberryA.field(description="""Primary key""")
-    # def id(self) -> uuid.UUID:
-    #     return self.id
-
-    # @strawberryA.field(description="""Name of the project""")
-    # def name(self) -> str:
-    #     return self.name
-
-    # @strawberryA.field(description="""Start date""")
-    # def startdate(self) -> datetime.date:
-    #     return self.startdate
-
-    # @strawberryA.field(description="""End date""")
-    # def enddate(self) -> datetime.date:
-    #     return self.enddate
-
-    # @strawberryA.field(description="""Last change""")
-    # def lastchange(self) -> datetime.datetime:
-    #     return self.lastchange
 
     @strawberryA.field(description="""Project type of project""", permission_classes=[OnlyForAuthentized()])
     async def project_type(self, info: strawberryA.types.Info) -> Optional ["ProjectTypeGQLModel"]:
@@ -120,9 +82,6 @@ class ProjectGQLModel(BaseGQLModel):
         loader = getLoadersFromInfo(info).finances
         result = await loader.filter_by(project_id=self.id)
         return result
-        # async with withInfo(info) as session:
-        #     result = await resolveFinancesForProject(session, self.id)
-        #     return result
 
     @strawberryA.field(description="""List of milestones, related to a project""", permission_classes=[OnlyForAuthentized()])
     async def milestones(
@@ -132,21 +91,11 @@ class ProjectGQLModel(BaseGQLModel):
         result = await loader.filter_by(project_id=self.id)
         return result
 
-    # @strawberryA.field(description="""Group, related to a project""")
-    # async def group(self, info: strawberryA.types.Info) -> Optional ["GroupGQLModel"]:
-    #     loader = getLoadersFromInfo(info).projects
-    #     result = await loader.filter_by(id=self.group_id)
-    #     return result
-
     @strawberry.field(description="""Group, related to a project""", permission_classes=[OnlyForAuthentized()])
     def group(self) -> Optional["GroupGQLModel"]:
         from .externals import GroupGQLModel
         return GroupGQLModel(id=self.group_id)
     
-     # @strawberryA.field(description="""Team related to the project""")
-    # async def team(self) -> Union["GroupGQLModel", None]:
-    #     result = await GroupGQLModel.resolve_reference(self.group_id)
-    #     return result
     
     @strawberry.field(description="""Team, related to a project""", permission_classes=[OnlyForAuthentized()])
     def team(self) -> Union["GroupGQLModel", None]:
@@ -159,13 +108,6 @@ class ProjectGQLModel(BaseGQLModel):
         from .externals import ContentGQLModel
         return ContentGQLModel(id=self.content_id)
     
-    # @strawberryA.field(description="""Finance type of finance""")
-    # async def content(
-    #     self, info: strawberryA.types.Info
-    # ) -> List["ContentGQLModel"]:
-    #     from .externals import ContentGQLModel
-    #     result = ContentGQLModel(id = self.content_id)
-    #     return result
     
 ###########################################################################################################################
 #
@@ -174,15 +116,6 @@ class ProjectGQLModel(BaseGQLModel):
 ###########################################################################################################################
 
 from contextlib import asynccontextmanager
-
-# @asynccontextmanager
-# async def withInfo(info):
-#      asyncSessionMaker = info.context["asyncSessionMaker"]
-#      async with asyncSessionMaker() as session:
-#         try:
-#             yield session
-#         finally:
-#             pass
 
 from dataclasses import dataclass
 from .utils import createInputs
@@ -201,44 +134,14 @@ async def project_page(
     self, info: strawberryA.types.Info, skip: int = 0, limit: int = 10,
     where: Optional[ProjectWhereFilter] = None
 ) -> List[ProjectGQLModel]:
-    # otazka: musi tady byt async? 
-    # async with withInfo(info) as session:
     loader = getLoadersFromInfo(info).projects
     wf = None if where is None else strawberry.asdict(where)
-    #result = await resolveProjectAll(session, skip, limit)
     result = await loader.page(skip, limit, where = wf)
     return result
-    
-    
-# @strawberryA.field(description="""Returns project by its id""")
-# async def project_by_id(
-#     self, info: strawberryA.types.Info, id: uuid.UUID
-# ) -> Union[ProjectGQLModel, None]:
-#     print(id)
-#     async with withInfo(info) as session:
-#         result = await resolveProjectById(session, id)
-#         return result
 
 
 project_by_id = createRootResolver_by_id(ProjectGQLModel, description="Returns project by its id")
-#project_by_id = createRootResolver_by_id(ProjectGQLModel, description="Returns project by its id", permission_classes=[OnlyForAuthentized()])
-    
 
-# @strawberryA.field(description="""Returns a list of projects for group""")
-# async def project_by_group(
-#     self, info: strawberryA.types.Info, id: uuid.UUID
-# ) -> List[ProjectGQLModel]:
-#     async with withInfo(info) as session:
-#         result = await resolveProjectsForGroup(session, id)
-#         return result
-
-# @strawberryA.field(description="""Random publications""")
-# async def randomProject(
-#     self, info: strawberryA.types.Info
-# ) -> Union[ProjectGQLModel, None]:
-#     async with withInfo(info) as session:
-#         result = await randomDataStructure(AsyncSessionFromInfo(info))
-#         return result
 
 ###########################################################################################################################
 #
@@ -248,7 +151,7 @@ project_by_id = createRootResolver_by_id(ProjectGQLModel, description="Returns p
 #
 ###########################################################################################################################
 from typing import Optional
-# viz. forms - formMOdel
+
 @strawberryA.input(description="Definition of a project used for creation")
 class ProjectInsertGQLModel:
     projecttype_id: uuid.UUID = strawberryA.field(description="The ID of the project type")
@@ -260,8 +163,9 @@ class ProjectInsertGQLModel:
     enddate: Optional[datetime.datetime] = strawberryA.field(description="Moment when the project ends (optional)", default_factory=lambda: datetime.datetime.now())
     group_id: Optional[uuid.UUID] = strawberryA.field(description="The ID of the group associated with the project (optional)", default=None)
     content_id: Optional[uuid.UUID] = strawberryA.field(description="The ID of the content associated with the project (optional)", default=None)
-    createdby: strawberry.Private[uuid.UUID] = None 
-
+    createdby: strawberry.Private[uuid.UUID] = None
+    rbacobject: strawberry.Private[uuid.UUID] = None 
+    
 @strawberryA.input(description="Definition of a project used for update")
 class ProjectUpdateGQLModel:
     id: uuid.UUID = strawberryA.field(description="The ID of the project")
@@ -277,8 +181,6 @@ class ProjectUpdateGQLModel:
 @strawberry.input(description="Input structure - D operation")
 class ProjectDeleteGQLModel:
     id: uuid.UUID = strawberry.field(description="primary key (UUID), identifies object of operation")
-    # name: str = strawberryA.field(description="Name/label of the project")
-    # lastchange: datetime.datetime = strawberry.field(description="timestamp of last change = TOKEN")
 
 @strawberryA.type(description="Result of a mutation over Project")
 class ProjectResultGQLModel:
@@ -290,14 +192,12 @@ class ProjectResultGQLModel:
         result = await ProjectGQLModel.resolve_reference(info, self.id)
         return result
 
-# changeby? createby?....
 
 @strawberryA.mutation(description="Adds a new project.",
                       permission_classes=[OnlyForAuthentized()])
 async def project_insert(self, info: strawberryA.types.Info, project: ProjectInsertGQLModel) -> ProjectResultGQLModel:
-    # user = getUserFromInfo(info)
-    # project.createdby = uuid.UUID(user["id"])
-
+    user = getUserFromInfo(info)
+    project.createdby = uuid.UUID(user["id"])
     loader = getLoadersFromInfo(info).projects
     row = await loader.insert(project)
     result = ProjectResultGQLModel()
@@ -316,16 +216,4 @@ async def project_update(self, info: strawberryA.types.Info, project: ProjectUpd
     result.msg = "ok"
     result.id = project.id
     result.msg = "ok" if (row is not None) else "fail"
-    # if row is None:
-    #     result.msg = "fail"
     return result
-
-# @strawberry.mutation(description="Delete the authorization user")
-# async def project_delete(
-#         self, info: strawberry.types.Info, project: ProjectDeleteGQLModel
-# ) -> ProjectResultGQLModel:
-#     project_id_to_delete = project.id
-#     loader = getLoadersFromInfo(info).projects
-#     row = await loader.delete(project_id_to_delete)
-#     result = ProjectResultGQLModel(id=project_id_to_delete, msg="fail, user not found") if not row else ProjectResultGQLModel(id=project_id_to_delete, msg="ok")
-#     return result
