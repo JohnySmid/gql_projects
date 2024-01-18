@@ -4,12 +4,13 @@ PROJECTS (2 studenti) Šmíd, Špáník
     Entity (FinanceGQLModel, FinanceTypeGQLModel, FinanceCategoryGQLModel)
     
     rozšiřte datové struktury (tabulky) o možnost ukládat výkazy práce (výkaz práce je pole entit s počátkem a koncem činnosti a stručným popisem – EventGQLModel?) a zápisy ze schůzek (ContentGQLModel), uvažte využití EVENTS, PRESENCES
+    (spojit s events nový model N:M) start co se stalo?
    
     Modely v databázi pomocí SQLAlchemy, API endpoint typu GraphQL s pomocí knihovny Strawberry.
     
     Přístup k databázi řešte důsledně přes AioDataloder, resp. (https://github.com/hrbolek/uoishelpers/blob/main/uoishelpers/dataloaders.py).
 
-    bezpečte kompletní CRUD operace nad entitami ExternalIdModel, ExternalIdTypeModel, ExternalIdCategoryModel
+    bezpečte kompletní CRUD operace nad entitami
     
     UD operace jako návratový typ nejméně se třemi prvky id, msg a „entityresult“ (pojmenujte adekvátně podle dotčené entity), vhodné přidat možnost nadřízené entity, speciálně pro operaci D.
     

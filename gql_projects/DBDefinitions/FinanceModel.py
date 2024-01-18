@@ -7,6 +7,7 @@ from sqlalchemy.orm import relationship
 class FinanceModel(BaseModel):
     """
     Represents financial information related to projects in the system.
+    udělat atrr valid pro nesys. (FinanceModel, ProjectModel, MilestoneModel) -> FAKE DELETE nastavi valid na false
     """
     __tablename__ = "projectfinances"
 
