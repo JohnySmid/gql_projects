@@ -63,10 +63,11 @@ class FinanceTypeGQLModel(BaseGQLModel):
         from .FinanceCategoryGQLModel import FinanceCategoryGQLModel  # Import here to avoid circular dependency
         result = await FinanceCategoryGQLModel.resolve_reference(info, self.category_id)
         return result
+    
 ###########################################################################################################################
-#
-# Query 
-#
+#                                                                                                                         #
+#                                                       Query                                                             #
+#                                                                                                                         #
 ###########################################################################################################################
 
 from dataclasses import dataclass
@@ -91,11 +92,9 @@ async def finance_type_page(
 finance_type_by_id = createRootResolver_by_id(FinanceTypeGQLModel, description="Returns finance type by its id")
 
 ###########################################################################################################################
-#
-#
-# Mutations
-#
-#
+#                                                                                                                         #
+#                                                       Models                                                            #
+#                                                                                                                         #
 ###########################################################################################################################
 
 @strawberryA.input(description="Definition of a project used for creation")
@@ -121,7 +120,7 @@ class FinanceTypeDeleteGQLModel:
     id: uuid.UUID = strawberry.field(description="primary key (UUID), identifies object of operation")
     lastchange: datetime.datetime = strawberry.field(description="timestamp of last change = TOKEN")
 
-@strawberryA.type(description="Result of a mutation over Project")
+@strawberryA.type(description="Result of a mutation result of Finance type")
 class FinanceTypeResultGQLModel:
     id: uuid.UUID = strawberryA.field(description="The ID of the project", default=None)
     msg: str = strawberryA.field(description="Result of the operation (OK/Fail)", default=None)
@@ -131,7 +130,13 @@ class FinanceTypeResultGQLModel:
         result = await FinanceTypeGQLModel.resolve_reference(info, self.id)
         return result
 
-@strawberryA.mutation(description="Adds a new project.", permission_classes=[OnlyForAuthentized()])
+###########################################################################################################################
+#                                                                                                                         #
+#                                                       Mutations                                                         #
+#                                                                                                                         #
+###########################################################################################################################
+
+@strawberryA.mutation(description="Adds a new finance type.", permission_classes=[OnlyForAuthentized()])
 async def finance_type_insert(self, info: strawberryA.types.Info, finance: FinanceTypeInsertGQLModel) -> FinanceTypeResultGQLModel:
     # user = getUserFromInfo(info)
     # finance.createdby = uuid.UUID(user["id"])
@@ -142,7 +147,7 @@ async def finance_type_insert(self, info: strawberryA.types.Info, finance: Finan
     result.id = row.id
     return result
 
-@strawberryA.mutation(description="Update the finance record.", permission_classes=[OnlyForAuthentized()])
+@strawberryA.mutation(description="Update the finance type record.", permission_classes=[OnlyForAuthentized()])
 async def finance_type_update(self, info: strawberryA.types.Info, finance: FinanceTypeUpdateGQLModel) -> FinanceTypeResultGQLModel:
     # user = getUserFromInfo(info)
     # finance.createdby = uuid.UUID(user["id"])

@@ -66,9 +66,9 @@ class ProjectTypeGQLModel(BaseGQLModel):
     # accesslevel = resolve_accesslevel
 
 ###########################################################################################################################
-#
-# Query 
-#
+#                                                                                                                         #
+#                                                       Query                                                             #
+#                                                                                                                         #
 ###########################################################################################################################
 
 from dataclasses import dataclass
@@ -93,11 +93,9 @@ async def project_type_page(
 project_type_by_id = createRootResolver_by_id(ProjectTypeGQLModel, description="Returns project type by its id")
 
 ###########################################################################################################################
-#
-#
-# Mutations
-#
-#
+#                                                                                                                         #
+#                                                       Models                                                            #
+#                                                                                                                         #
 ###########################################################################################################################
 
 @strawberryA.input(description="Definition of a project used for creation")
@@ -135,6 +133,12 @@ class ProjectTypeResultGQLModel:
     async def project(self, info: strawberryA.types.Info) -> Union[ProjectTypeGQLModel, None]:
         result = await ProjectTypeGQLModel.resolve_reference(info, self.id)
         return result
+
+###########################################################################################################################
+#                                                                                                                         #
+#                                                       Mutations                                                         #
+#                                                                                                                         #
+###########################################################################################################################
 
 @strawberryA.mutation(description="Adds a new project.", permission_classes=[OnlyForAuthentized()])
 async def project_type_insert(self, info: strawberryA.types.Info, project: ProjectTypeInsertGQLModel) -> ProjectTypeResultGQLModel:

@@ -33,14 +33,6 @@ from .BaseGQLModel import BaseGQLModel
 import strawberry
 from gql_projects.utils.Dataloaders import getLoadersFromInfo, getUserFromInfo
 
-# @asynccontextmanager
-# async def withInfo(info):
-#     asyncSessionMaker = info.context["asyncSessionMaker"]
-#     async with asyncSessionMaker() as session:
-#         try:
-#             yield session
-#         finally:
-#             pass
 
 ProjectGQLModel = Annotated["ProjectGQLModel",strawberryA.lazy(".ProjectGQLModel")]
 
@@ -54,13 +46,6 @@ class MilestoneGQLModel(BaseGQLModel):
     @classmethod
     def getLoader(cls, info):
         return getLoadersFromInfo(info).milestones
-    
-    # async def resolve_reference(cls, info: strawberryA.types.Info, id: uuid.UUID):
-    #     loader = getLoadersFromInfo(info).milestones
-    #     result = await loader.load(id)
-    #     if result is not None:
-    #         result._type_definition = cls._type_definition  # little hack :)
-    #     return result
 
     id = resolve_id
     name = resolve_name
@@ -94,9 +79,9 @@ class MilestoneGQLModel(BaseGQLModel):
         return await asyncio.gather(*awaitable)
     
 ###########################################################################################################################
-#
-# Query 
-#
+#                                                                                                                         #
+#                                                       Query                                                             #
+#                                                                                                                         #
 ###########################################################################################################################
 
 from dataclasses import dataclass
@@ -121,11 +106,9 @@ async def milestone_page(
 milestone_by_id = createRootResolver_by_id(MilestoneGQLModel, description="Returns milestone by its id")
 
 ###########################################################################################################################
-#
-#
-# Mutations
-#
-#
+#                                                                                                                         #
+#                                                       Models                                                            #
+#                                                                                                                         #
 ###########################################################################################################################
 
 @strawberryA.input(description="Definition of a milestone used for insertion")
@@ -165,6 +148,12 @@ class MilestoneResultGQLModel:
 class MilestoneLinkAddGQLModel:
     previous_id: Optional[uuid.UUID] = strawberryA.field(description="The ID of the previous milestone")
     next_id: Optional[uuid.UUID]  = strawberryA.field(description="The ID of the next milestone")
+
+###########################################################################################################################
+#                                                                                                                         #
+#                                                       Mutations                                                         #
+#                                                                                                                         #
+###########################################################################################################################
 
 @strawberryA.mutation(description="Adds a new milestones link.", permission_classes=[OnlyForAuthentized()])
 async def milestones_link_add(self, info: strawberryA.types.Info, link: MilestoneLinkAddGQLModel) -> MilestoneResultGQLModel:

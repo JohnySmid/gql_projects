@@ -43,21 +43,10 @@ class FinanceCategoryGQLModel(BaseGQLModel):
     rbacobject = resolve_rbacobject
 
 ###########################################################################################################################
-#
-# Query 
-#
+#                                                                                                                         #
+#                                                       Query                                                             #
+#                                                                                                                         #
 ###########################################################################################################################
-
-#from contextlib import asynccontextmanager
-
-# @asynccontextmanager
-# async def withInfo(info):
-#     asyncSessionMaker = info.context["asyncSessionMaker"]
-#     async with asyncSessionMaker() as session:
-#         try:
-#             yield session
-#         finally:
-#             pass
 
 from dataclasses import dataclass
 from .utils import createInputs
@@ -68,7 +57,7 @@ class FinanceCategoryWhereFilter:
     type_id: uuid.UUID
     value: str
 
-@strawberryA.field(description="""Returns a list of projects""", permission_classes=[OnlyForAuthentized()])
+@strawberryA.field(description="""Returns a list of finance categories""", permission_classes=[OnlyForAuthentized()])
 async def finance_category_page(
     self, info: strawberryA.types.Info, skip: int = 0, limit: int = 10,
     where: Optional[FinanceCategoryWhereFilter] = None
@@ -83,25 +72,24 @@ async def finance_category_page(
 
 finance_category_by_id = createRootResolver_by_id(FinanceCategoryGQLModel, description="Returns finance category by its id")
 
-###########################################################################################################################
-#
-#
-# Mutations
-#
-#
-###########################################################################################################################
-from typing import Optional
 
+###########################################################################################################################
+#                                                                                                                         #
+#                                                       Models                                                            #
+#                                                                                                                         #
+###########################################################################################################################
+
+from typing import Optional
 @strawberryA.input(description="Definition of a project used for creation")
 class FinanceCategoryInsertGQLModel:
-    name: str = strawberryA.field(description="Name/label of the project")
+    name: str = strawberryA.field(description="Name/label of the finance category")
 
     name_en: str = strawberryA.field(description="", default=None)
     id: Optional[uuid.UUID] = strawberryA.field(description="Primary key (UUID), could be client-generated", default=None)
     createdby: strawberry.Private[uuid.UUID] = None 
     rbacobject: strawberry.Private[uuid.UUID] = None 
 
-@strawberryA.input(description="Definition of a project used for update")
+@strawberryA.input(description="Definition of a finance category used for update")
 class FinanceCategoryUpdateGQLModel:
     id: uuid.UUID = strawberryA.field(description="The ID of the project")
     lastchange: datetime.datetime = strawberry.field(description="timestamp of last change = TOKEN")
@@ -116,7 +104,7 @@ class FinanceCategoryDeleteGQLModel:
     lastchange: datetime.datetime = strawberry.field(description="timestamp of last change = TOKEN")
 
 
-@strawberryA.type(description="Result of a mutation over Project")
+@strawberryA.type(description="Result of a mutation result of Finance category")
 class FinanceCategoryResultGQLModel:
     id: uuid.UUID = strawberryA.field(description="The ID of the project", default=None)
     msg: str = strawberryA.field(description="Result of the operation (OK/Fail)", default=None)
@@ -126,8 +114,13 @@ class FinanceCategoryResultGQLModel:
         result = await FinanceCategoryGQLModel.resolve_reference(info, self.id)
         return result
 
+###########################################################################################################################
+#                                                                                                                         #
+#                                                       Mutations                                                         #
+#                                                                                                                         #
+###########################################################################################################################
 
-@strawberryA.mutation(description="Adds a new project.", permission_classes=[OnlyForAuthentized()])
+@strawberryA.mutation(description="Adds a new finance category.", permission_classes=[OnlyForAuthentized()])
 async def finance_category_insert(self, info: strawberryA.types.Info, finance: FinanceCategoryInsertGQLModel) -> FinanceCategoryResultGQLModel:
     # user = getUserFromInfo(info)
     # project.createdby = uuid.UUID(user["id"])
@@ -139,7 +132,7 @@ async def finance_category_insert(self, info: strawberryA.types.Info, finance: F
     result.id = row.id
     return result
 
-@strawberryA.mutation(description="Update the project.", permission_classes=[OnlyForAuthentized()])
+@strawberryA.mutation(description="Update the finance category.", permission_classes=[OnlyForAuthentized()])
 async def finance_category_update(self, info: strawberryA.types.Info, finance: FinanceCategoryUpdateGQLModel) -> FinanceCategoryResultGQLModel:
     # user = getUserFromInfo(info)
     # project.changedby = uuid.UUID(user["id"])

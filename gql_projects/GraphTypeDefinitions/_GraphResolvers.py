@@ -21,24 +21,24 @@ def resolve_id(self) -> uuid.UUID:
 def resolve_lastchange(self) -> datetime.datetime:
     return self.lastchange
 
-@strawberry.field(description="""Name """, permission_classes=[OnlyForAuthentized()])
+@strawberry.field(description="""Entity name """, permission_classes=[OnlyForAuthentized()])
 def resolve_name(self) -> str:
     return self.name
 
-@strawberry.field(description="""English name""", permission_classes=[OnlyForAuthentized()])
+@strawberry.field(description="""Entity english name""", permission_classes=[OnlyForAuthentized()])
 def resolve_name_en(self) -> str:
     result = self.name_en if self.name_en else ""
     return result
 
-@strawberry.field(description="""Amount""")
+@strawberry.field(description="""Entity amount""")
 def resolve_amount(self) -> float:
     return self.amount
 
-@strawberry.field(description="""Start date""")
+@strawberry.field(description="""Entity start date""")
 def resolve_startdate(self) -> datetime.date:
     return self.startdate
 
-@strawberry.field(description="""End date""")
+@strawberry.field(description="""Entity end date""")
 def resolve_enddate(self) -> datetime.date:
     return self.enddate
 

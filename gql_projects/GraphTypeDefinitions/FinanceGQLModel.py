@@ -65,21 +65,11 @@ class FinanceGQLModel(BaseGQLModel):
         return result
 
 ###########################################################################################################################
-#
-# Query 
-#
+#                                                                                                                         #
+#                                                       Query                                                             #
+#                                                                                                                         #
 ###########################################################################################################################
-#from contextlib import asynccontextmanager
-
-# @asynccontextmanager
-# async def withInfo(info):
-#     asyncSessionMaker = info.context["asyncSessionMaker"]
-#     async with asyncSessionMaker() as session:
-#         try:
-#             yield session
-#         finally:
-#             pass
-
+    
 from dataclasses import dataclass
 from .utils import createInputs
 @createInputs
@@ -105,11 +95,9 @@ async def finance_page(
 finance_by_id = createRootResolver_by_id(FinanceGQLModel, description="Returns finance by its id")
 
 ###########################################################################################################################
-#
-#
-# Mutations
-#
-#
+#                                                                                                                         #
+#                                                       Models                                                            #
+#                                                                                                                         #
 ###########################################################################################################################
 
 @strawberryA.input(description="Definition of financial data used for insertion")
@@ -147,6 +135,13 @@ class FinanceResultGQLModel:
     async def finance(self, info: strawberryA.types.Info) -> Union[FinanceGQLModel, None]:
         result = await FinanceGQLModel.resolve_reference(info, self.id)
         return result
+
+###########################################################################################################################
+#                                                                                                                         #
+#                                                       Mutations                                                         #
+#                                                                                                                         #
+###########################################################################################################################
+    
 
 @strawberryA.mutation(description="Adds a new finance record.", permission_classes=[OnlyForAuthentized()])
 async def finance_insert(self, info: strawberryA.types.Info, finance: FinanceInsertGQLModel) -> FinanceResultGQLModel:

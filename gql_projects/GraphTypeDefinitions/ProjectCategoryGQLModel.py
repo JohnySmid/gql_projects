@@ -45,9 +45,9 @@ class ProjectCategoryGQLModel(BaseGQLModel):
     rbacobject = resolve_rbacobject
 
 ###########################################################################################################################
-#
-# Query 
-#
+#                                                                                                                         #
+#                                                       Query                                                             #
+#                                                                                                                         #
 ###########################################################################################################################
 
 from contextlib import asynccontextmanager
@@ -73,12 +73,11 @@ async def project_category_page(
 project_category_by_id = createRootResolver_by_id(ProjectCategoryGQLModel, description="Returns project category by its id")
 
 ###########################################################################################################################
-#
-#
-# Mutations
-#
-#
+#                                                                                                                         #
+#                                                       Models                                                            #
+#                                                                                                                         #
 ###########################################################################################################################
+
 from typing import Optional
 
 @strawberryA.input(description="Definition of a project used for creation")
@@ -114,6 +113,11 @@ class ProjectCategoryResultGQLModel:
         result = await ProjectCategoryGQLModel.resolve_reference(info, self.id)
         return result
 
+###########################################################################################################################
+#                                                                                                                         #
+#                                                       Mutations                                                         #
+#                                                                                                                         #
+###########################################################################################################################
 
 @strawberryA.mutation(description="Adds a new project.", permission_classes=[OnlyForAuthentized()])
 async def project_category_insert(self, info: strawberryA.types.Info, project: ProjectCategoryInsertGQLModel) -> ProjectCategoryResultGQLModel:
