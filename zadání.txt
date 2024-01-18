@@ -1,0 +1,22 @@
+PROJECTS (2 studenti) Šmíd, Špáník
+    Entity (ProjectGQLModel, ProjectTypeGQLModel, ProjectCategoryGQLModel)
+    
+    Entity (FinanceGQLModel, FinanceTypeGQLModel, FinanceCategoryGQLModel)
+    
+    rozšiřte datové struktury (tabulky) o možnost ukládat výkazy práce (výkaz práce je pole entit s počátkem a koncem činnosti a stručným popisem – EventGQLModel?) a zápisy ze schůzek (ContentGQLModel), uvažte využití EVENTS, PRESENCES
+   
+    Modely v databázi pomocí SQLAlchemy, API endpoint typu GraphQL s pomocí knihovny Strawberry.
+    
+    Přístup k databázi řešte důsledně přes AioDataloder, resp. (https://github.com/hrbolek/uoishelpers/blob/main/uoishelpers/dataloaders.py).
+
+    bezpečte kompletní CRUD operace nad entitami ExternalIdModel, ExternalIdTypeModel, ExternalIdCategoryModel
+    
+    UD operace jako návratový typ nejméně se třemi prvky id, msg a „entityresult“ (pojmenujte adekvátně podle dotčené entity), vhodné přidat možnost nadřízené entity, speciálně pro operaci D.
+    
+    Řešte autorizaci operací (permission classes).
+    
+    Kompletní CRUD dotazy na GQL v souboru externalids_queries.json (dictionary), jméno klíče nechť vhodně identifikuje operaci, hodnota je dictionary s klíči query (obsahuje parametrický dotaz) nebo mutation (obsahuje parametrické mutation) a variables (obsahuje dictionary jako testovací hodnoty).
+    
+    Kompletní popisy API v kódu (description u GQLModelů) a popisy DB vrstvy (comment u DBModelů).
+    
+    Zabezpečte více jak 90% code test coverage (standard pytest).
