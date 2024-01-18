@@ -34,6 +34,9 @@ test_insert_finance_category = createFrontendQuery(query="""
                 rbacobject {
                  id
                 }
+                userId {
+                 id
+                }
             }
         }
     }
