@@ -61,20 +61,20 @@ test_update_project_type = createUpdateQuery(
     tableName="projecttypes"
 )
 
-test_project_type_delete = createUpdateQuery (
-    query="""
-        mutation($id: UUID!, $lastchange: DateTime!) {
-            projectTypeDelete(project: {id: $id, lastchange: $lastchange}) {
-                id
-                msg
-                project {
-                    	id
-                        }
-            }
-        }
-    """,
-    variables={
-         "id": "a825d8e1-2e60-4884-afdb-25642db581d8",
-    },
-    tableName="projecttypes"
-)
+# test_project_type_delete = createUpdateQuery (
+#     query="""
+#         mutation($id: UUID!, $lastchange: DateTime!) {
+#             projectTypeDelete(project: {id: $id, lastchange: $lastchange}) {
+#                 id
+#                 msg
+#                 project {
+#                     	id
+#                         }
+#             }
+#         }
+#     """,
+#     variables={
+#          "id": "a825d8e1-2e60-4884-afdb-25642db581d8",
+#     },
+#     tableName="projecttypes"
+# )

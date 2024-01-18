@@ -223,11 +223,11 @@ async def milestone_update(self, info: strawberryA.types.Info, milestone: Milest
 #     result = MilestoneResultGQLModel(id=milestone_id_to_delete, msg="fail, user not found") if not row else MilestoneResultGQLModel(id=milestone_id_to_delete, msg="ok")
 #     return result
 
-@strawberry.mutation(description="""Deletes already existing preference settings 
-                     rrequires ID and lastchange""" , permission_classes=[OnlyForAuthentized()])
-async def milestone_delete(self, info: strawberry.types.Info, milestone: MilestoneDeleteGQLModel) -> MilestoneResultGQLModel:
-    loader = getLoadersFromInfo(info).milestones
-    id_for_resposne = milestone.id
-    row = await loader.delete(id_for_resposne)
-    result = MilestoneResultGQLModel(id=id_for_resposne, msg="fail, user not found") if not row else MilestoneResultGQLModel(id=id_for_resposne, msg="ok")
-    return result
+# @strawberry.mutation(description="""Deletes already existing preference settings 
+#                      rrequires ID and lastchange""" , permission_classes=[OnlyForAuthentized()])
+# async def milestone_delete(self, info: strawberry.types.Info, milestone: MilestoneDeleteGQLModel) -> MilestoneResultGQLModel:
+#     loader = getLoadersFromInfo(info).milestones
+#     id_for_resposne = milestone.id
+#     row = await loader.delete(id_for_resposne)
+#     result = MilestoneResultGQLModel(id=id_for_resposne, msg="fail, user not found") if not row else MilestoneResultGQLModel(id=id_for_resposne, msg="ok")
+#     return result

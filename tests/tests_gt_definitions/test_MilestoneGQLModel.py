@@ -70,23 +70,23 @@ test_update_milestone = createUpdateQuery(
     tableName="projectmilestones"
 )
 
-test_milestone_delete = createUpdateQuery (
-    query="""
-        mutation($id: UUID!, $lastchange: DateTime!) {
-            milestoneDelete(milestone: {id: $id, lastchange: $lastchange}) {
-                id
-                msg
-                milestone {
-                id
-                }
-            }
-        }
-    """,
-    variables={
-         "id": "d7266936-17c1-4810-88d2-079ebb864d2e",
-    },
-    tableName="projectmilestones"
-)
+# test_milestone_delete = createUpdateQuery (
+#     query="""
+#         mutation($id: UUID!, $lastchange: DateTime!) {
+#             milestoneDelete(milestone: {id: $id, lastchange: $lastchange}) {
+#                 id
+#                 msg
+#                 milestone {
+#                 id
+#                 }
+#             }
+#         }
+#     """,
+#     variables={
+#          "id": "d7266936-17c1-4810-88d2-079ebb864d2e",
+#     },
+#     tableName="projectmilestones"
+# )
 
 
 test_milestone_add_link=createFrontendQuery(

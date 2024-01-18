@@ -53,20 +53,20 @@ test_update_project_category = createUpdateQuery(
     tableName="projectcategories"
 )
 
-test_project_category_delete = createUpdateQuery (
-    query="""
-        mutation($id: UUID!, $lastchange: DateTime!) {
-            projectCategoryDelete(project: {id: $id, lastchange: $lastchange}) {
-                id
-                msg
-                project {
-                id
-                }
-            }
-        }
-    """,
-    variables={
-         "id": "5c8c4c5a-df3b-44a9-ab90-396bdc84542b",
-    },
-    tableName="projectcategories"
-)
+# test_project_category_delete = createUpdateQuery (
+#     query="""
+#         mutation($id: UUID!, $lastchange: DateTime!) {
+#             projectCategoryDelete(project: {id: $id, lastchange: $lastchange}) {
+#                 id
+#                 msg
+#                 project {
+#                 id
+#                 }
+#             }
+#         }
+#     """,
+#     variables={
+#          "id": "5c8c4c5a-df3b-44a9-ab90-396bdc84542b",
+#     },
+#     tableName="projectcategories"
+# )

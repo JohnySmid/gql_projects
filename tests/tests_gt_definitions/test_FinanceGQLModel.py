@@ -63,20 +63,20 @@ test_finance_update = createUpdateQuery(
     tableName="projectfinances"
 )
 
-test_finance_delete = createUpdateQuery (
-    query="""
-        mutation($id: UUID!, $lastchange: DateTime!) {
-            financeDelete(finance: {id: $id, lastchange: $lastchange}) {
-                id
-                msg
-                finance {
-                    id
-                    }
-            }
-        }
-    """,
-    variables={
-         "id": "f911230f-7e1f-4e9b-90a9-b921996ceb87",
-    },
-    tableName="projectfinances"
-)
+# test_finance_delete = createUpdateQuery (
+#     query="""
+#         mutation($id: UUID!, $lastchange: DateTime!) {
+#             financeDelete(finance: {id: $id, lastchange: $lastchange}) {
+#                 id
+#                 msg
+#                 finance {
+#                     id
+#                     }
+#             }
+#         }
+#     """,
+#     variables={
+#          "id": "f911230f-7e1f-4e9b-90a9-b921996ceb87",
+#     },
+#     tableName="projectfinances"
+# )

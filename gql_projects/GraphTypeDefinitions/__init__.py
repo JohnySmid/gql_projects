@@ -90,38 +90,39 @@ class Mutation:
     from .FinanceCategoryGQLModel import (
         finance_category_insert,
         finance_category_update,
-        finance_category_delete
+        # finance_category_delete
     )
     finance_category_insert = finance_category_insert
     finance_category_update = finance_category_update
-    finance_category_delete = finance_category_delete
+    # finance_category_delete = finance_category_delete
 
     from .FinanceGQLModel import (
         finance_insert,
         finance_update,
-        finance_delete
+        # finance_delete
     )
     finance_insert = finance_insert
     finance_update = finance_update
-    finance_delete = finance_delete
+    # finance_delete = finance_delete
 
     from .FinanceTypeGQLModel import (
         finance_type_insert,
         finance_type_update,
-        finance_type_delete
+        # finance_type_delete
     )
     finance_type_insert = finance_type_insert
     finance_type_update = finance_type_update
+    # finance_type_delete = finance_type_delete
 
     from .MilestoneGQLModel import (
         milestone_insert,
         milestone_update,
-        milestone_delete,
+        # milestone_delete,
         milestones_link_add
     )
     milestone_insert = milestone_insert
     milestone_update = milestone_update
-    milestone_delete = milestone_delete
+    # milestone_delete = milestone_delete
 
     from .ProjectCategoryGQLModel import (
         project_category_insert,
@@ -142,11 +143,11 @@ class Mutation:
     from .ProjectTypeGQLModel import (
         project_type_insert,
         project_type_update,
-        project_type_delete
+        # project_type_delete
     )
     project_type_insert = project_type_insert
     project_type_update = project_type_update
-    project_type_delete = project_type_delete
+    # project_type_delete = project_type_delete
 
 # @strawberry.type(description="""Type for mutation root""")
 # class Mutation:

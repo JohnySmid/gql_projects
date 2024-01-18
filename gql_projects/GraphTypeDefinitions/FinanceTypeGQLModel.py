@@ -164,13 +164,13 @@ async def finance_type_update(self, info: strawberryA.types.Info, finance: Finan
 #     result = FinanceTypeResultGQLModel(id=finance_type_id_to_delete, msg="fail, user not found") if not row else FinanceTypeResultGQLModel(id=finance_type_id_to_delete, msg="ok")
 #     return result
 
-@strawberry.mutation(description="""Deletes already existing preference settings 
-                     rrequires ID and lastchange""", permission_classes=[OnlyForAuthentized()] )
-async def finance_type_delete(self, info: strawberry.types.Info, finance: FinanceTypeDeleteGQLModel) -> FinanceTypeResultGQLModel:
-    # user = getUserFromInfo(info)
-    # finance.createdby = uuid.UUID(user["id"])
-    loader = getLoadersFromInfo(info).financetypes
-    id_for_resposne = finance.id
-    row = await loader.delete(id_for_resposne)
-    result = FinanceTypeResultGQLModel(id=id_for_resposne, msg="fail, user not found") if not row else FinanceTypeResultGQLModel(id=id_for_resposne, msg="ok")
-    return result
+# @strawberry.mutation(description="""Deletes already existing preference settings 
+#                      rrequires ID and lastchange""", permission_classes=[OnlyForAuthentized()] )
+# async def finance_type_delete(self, info: strawberry.types.Info, finance: FinanceTypeDeleteGQLModel) -> FinanceTypeResultGQLModel:
+#     # user = getUserFromInfo(info)
+#     # finance.createdby = uuid.UUID(user["id"])
+#     loader = getLoadersFromInfo(info).financetypes
+#     id_for_resposne = finance.id
+#     row = await loader.delete(id_for_resposne)
+#     result = FinanceTypeResultGQLModel(id=id_for_resposne, msg="fail, user not found") if not row else FinanceTypeResultGQLModel(id=id_for_resposne, msg="ok")
+#     return result

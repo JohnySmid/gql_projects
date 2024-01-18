@@ -63,20 +63,20 @@ test_update_finance_type = createUpdateQuery(
     tableName="projectfinancetypes"
 )
 
-test_finance_type_delete = createUpdateQuery (
-    query="""
-        mutation($id: UUID!, $lastchange: DateTime!) {
-            financeTypeDelete(finance: {id: $id, lastchange: $lastchange}) {
-                id
-                msg
-                finance {
-                id 
-                }
-            }
-        }
-    """,
-    variables={
-         "id": "9e37059c-de2c-4112-9009-559c8b0396f1",
-    },
-    tableName="projectfinancetypes"
-)
+# test_finance_type_delete = createUpdateQuery (
+#     query="""
+#         mutation($id: UUID!, $lastchange: DateTime!) {
+#             financeTypeDelete(finance: {id: $id, lastchange: $lastchange}) {
+#                 id
+#                 msg
+#                 finance {
+#                 id 
+#                 }
+#             }
+#         }
+#     """,
+#     variables={
+#          "id": "9e37059c-de2c-4112-9009-559c8b0396f1",
+#     },
+#     tableName="projectfinancetypes"
+# )

@@ -165,21 +165,21 @@ async def finance_category_update(self, info: strawberryA.types.Info, finance: F
 #     return result
 
 
-@strawberry.mutation(description="""Deletes already existing preference settings 
-                     rrequires ID and lastchange""", permission_classes=[OnlyForAuthentized()] )
-async def finance_category_delete(self, info: strawberry.types.Info, finance: FinanceCategoryDeleteGQLModel) -> FinanceCategoryResultGQLModel:
+# @strawberry.mutation(description="""Deletes already existing preference settings 
+#                      rrequires ID and lastchange""", permission_classes=[OnlyForAuthentized()] )
+# async def finance_category_delete(self, info: strawberry.types.Info, finance: FinanceCategoryDeleteGQLModel) -> FinanceCategoryResultGQLModel:
 
-    loader = getLoadersFromInfo(info).financecategory
+#     loader = getLoadersFromInfo(info).financecategory
 
-    rows = await loader.filter_by(id=finance.id)
-    row = next(rows, None)
-    if row is None:     
-        return FinanceCategoryResultGQLModel(id=finance.id, msg="Fail bad ID")
+#     rows = await loader.filter_by(id=finance.id)
+#     row = next(rows, None)
+#     if row is None:     
+#         return FinanceCategoryResultGQLModel(id=finance.id, msg="Fail bad ID")
 
-    rows = await loader.filter_by(lastchange=finance.lastchange)
-    row = next(rows, None)
-    if row is None:     
-        return FinanceCategoryResultGQLModel(id=finance.id, msg="Fail (bad lastchange?)")
+#     rows = await loader.filter_by(lastchange=finance.lastchange)
+#     row = next(rows, None)
+#     if row is None:     
+#         return FinanceCategoryResultGQLModel(id=finance.id, msg="Fail (bad lastchange?)")
     
-    await loader.delete(finance.id)
-    return FinanceCategoryResultGQLModel(id=finance.id, msg="OK, deleted")
+#     await loader.delete(finance.id)
+#     return FinanceCategoryResultGQLModel(id=finance.id, msg="OK, deleted")

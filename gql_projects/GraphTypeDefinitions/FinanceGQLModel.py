@@ -181,19 +181,19 @@ async def finance_update(self, info: strawberryA.types.Info, finance: FinanceUpd
 #     result = FinanceResultGQLModel(id=finance_id_to_delete, msg="fail, user not found") if not row else FinanceResultGQLModel(id=finance_id_to_delete, msg="ok")
 #     return result
 
-@strawberry.mutation(description="""Deletes already existing preference settings 
-                     rrequires ID and lastchange""" , permission_classes=[OnlyForAuthentized()])
-async def finance_delete(self, info: strawberry.types.Info, finance: FinanceDeleteGQLModel) -> FinanceResultGQLModel:
-    # user = getUserFromInfo(info)
-    # finance.changedby = uuid.UUID(user["id"])
-    loader = getLoadersFromInfo(info).finances
-    rows = await loader.filter_by(id=finance.id)
-    row = next(rows, None)
-    if row is None:     
-        return FinanceResultGQLModel(id=finance.id, msg="Fail bad ID")
-    rows = await loader.filter_by(lastchange=finance.lastchange)
-    row = next(rows, None)
-    if row is None:     
-        return FinanceResultGQLModel(id=finance.id, msg="Fail (bad lastchange?)")
-    await loader.delete(finance.id)
-    return FinanceResultGQLModel(id=finance.id, msg="OK, deleted")
+# @strawberry.mutation(description="""Deletes already existing preference settings 
+#                      rrequires ID and lastchange""" , permission_classes=[OnlyForAuthentized()])
+# async def finance_delete(self, info: strawberry.types.Info, finance: FinanceDeleteGQLModel) -> FinanceResultGQLModel:
+#     # user = getUserFromInfo(info)
+#     # finance.changedby = uuid.UUID(user["id"])
+#     loader = getLoadersFromInfo(info).finances
+#     rows = await loader.filter_by(id=finance.id)
+#     row = next(rows, None)
+#     if row is None:     
+#         return FinanceResultGQLModel(id=finance.id, msg="Fail bad ID")
+#     rows = await loader.filter_by(lastchange=finance.lastchange)
+#     row = next(rows, None)
+#     if row is None:     
+#         return FinanceResultGQLModel(id=finance.id, msg="Fail (bad lastchange?)")
+#     await loader.delete(finance.id)
+#     return FinanceResultGQLModel(id=finance.id, msg="OK, deleted")
