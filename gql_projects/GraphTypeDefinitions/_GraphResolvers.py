@@ -75,9 +75,9 @@ async def resolve_user_id(self) -> typing.Optional["UserGQLModel"]:
 #     return await resolve_roletype(self.roletype_id)
 
 
-@strawberry.field(description="""Level of authorization""", permission_classes=[OnlyForAuthentized()])
-def resolve_accesslevel(self) -> int:
-    return self.accesslevel
+# @strawberry.field(description="""Level of authorization""", permission_classes=[OnlyForAuthentized()])
+# def resolve_accesslevel(self) -> int:
+#     return self.accesslevel
 
 
 @strawberry.field(description="""Time of entity introduction""",permission_classes=[OnlyForAuthentized()])
@@ -184,17 +184,17 @@ def createRootResolver_by_id(scalarType: None, description="Retrieves item by it
     return by_id
 
 
-def createRootResolver_by_page(
-        scalarType: None,
-        whereFilterType: None,
-        loaderLambda=lambda info: None,
-        description="Retrieves items paged",
-        skip: int = 0,
-        limit: int = 10,
-        order_by: typing.Optional[str] = None,
-        desc: typing.Optional[bool] = None):
-        assert scalarType is not None
-        assert whereFilterType is not None
+# def createRootResolver_by_page(
+#         scalarType: None,
+#         whereFilterType: None,
+#         loaderLambda=lambda info: None,
+#         description="Retrieves items paged",
+#         skip: int = 0,
+#         limit: int = 10,
+#         order_by: typing.Optional[str] = None,
+#         desc: typing.Optional[bool] = None):
+#         assert scalarType is not None
+#         assert whereFilterType is not None
 
     # @strawberry.field(description=description)
     # async def paged(

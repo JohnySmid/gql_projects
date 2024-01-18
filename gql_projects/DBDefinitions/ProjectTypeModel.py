@@ -22,3 +22,4 @@ class ProjectTypeModel(BaseModel):
     createdby = UUIDFKey(nullable=True)#Column(ForeignKey("users.id"), index=True, nullable=True)
     changedby = UUIDFKey(nullable=True)#Column(ForeignKey("users.id"), index=True, nullable=True)
     rbacobject = UUIDFKey(nullable=True, comment="user or group id, determines access")
+    user_id = UUIDFKey(nullable=True, comment="user id")

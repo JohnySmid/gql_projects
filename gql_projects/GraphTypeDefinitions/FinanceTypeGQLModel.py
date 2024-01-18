@@ -12,15 +12,11 @@ from gql_projects.GraphTypeDefinitions._GraphResolvers import (
     resolve_id,
     resolve_name,
     resolve_name_en,
-    resolve_user_id,
-    resolve_accesslevel,
-    resolve_amount,
     resolve_created,
     resolve_lastchange,
     resolve_createdby,
     resolve_changedby,
     createRootResolver_by_id,
-    createRootResolver_by_page,
     resolve_rbacobject
 )
 import strawberry
