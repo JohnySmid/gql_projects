@@ -50,9 +50,6 @@ test_update_statementofwork_type = createUpdateQuery(
                 statementofwork {
                     lastchange
                     id
-                    event {
-                        id
-                    }
                 }
             }
         }
