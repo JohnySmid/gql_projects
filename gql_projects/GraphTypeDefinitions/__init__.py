@@ -13,6 +13,8 @@ from .ProjectCategoryGQLModel import ProjectCategoryGQLModel
 from .ProjectGQLModel import ProjectGQLModel
 from .ProjectTypeGQLModel import ProjectTypeGQLModel
 
+from .StatementOfWorkGQLModel import StatementOfWorkGQLModel
+
 from gql_projects.GraphPermissions import RoleBasedPermission
 
 from .externals import UserGQLModel
@@ -76,6 +78,13 @@ class Query:
     )
     project_type_by_id = project_type_by_id
     project_type_page = project_type_page
+
+    from .StatementOfWorkGQLModel import (
+       statement_of_work_by_id,
+       statement_of_work_page
+    )
+    statement_of_work_by_id = statement_of_work_by_id
+    statement_of_work_page = statement_of_work_page
 
 ######################################################################################################################
 #
@@ -149,6 +158,14 @@ class Mutation:
     project_type_update = project_type_update
     # project_type_delete = project_type_delete
 
+    from .StatementOfWorkGQLModel import (
+        statement_of_work_insert,
+        statement_of_work_update,
+        # finance_category_delete
+    )
+    statement_of_work_insert = statement_of_work_insert
+    statement_of_work_update = statement_of_work_update
+
 # @strawberry.type(description="""Type for mutation root""")
 # class Mutation:
 #     from .ProjectGQLModel import project_insert
@@ -209,6 +226,6 @@ class Mutation:
 # )
 schema = strawberry.federation.Schema(Query, types=(UserGQLModel, FinanceCategoryGQLModel, FinanceGQLModel, FinanceTypeGQLModel, 
                                                     MilestoneGQLModel, 
-                                                    ProjectGQLModel, ProjectCategoryGQLModel, ProjectTypeGQLModel),
+                                                    ProjectGQLModel, ProjectCategoryGQLModel, ProjectTypeGQLModel, StatementOfWorkGQLModel),
                                       mutation=Mutation)
 # schema = strawberryA.federation.Schema(Query, types=(ProjectGQLModel,), mutation=Mutation)

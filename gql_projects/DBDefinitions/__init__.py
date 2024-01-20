@@ -6,6 +6,7 @@ from .MilestoneModel import MilestoneModel
 from .ProjectCategoryModel import ProjectCategoryModel
 from .ProjectTypeModel import ProjectTypeModel
 from .ProjectModel import ProjectModel
+from .StatementOfWorkModel import StatementOfWorkModel
 from .BaseModel import BaseModel
 import sqlalchemy
 
@@ -51,7 +52,8 @@ def ComposeConnectionString():
     user = os.environ.get("POSTGRES_USER", "postgres")
     password = os.environ.get("POSTGRES_PASSWORD", "example")
     database = os.environ.get("POSTGRES_DB", "data")
-    hostWithPort = os.environ.get("POSTGRES_HOST", "localhost:5432")
+    # hostWithPort = os.environ.get("POSTGRES_HOST", "localhost:5432")
+    hostWithPort = os.environ.get("POSTGRES_HOST", "host.docker.internal:5432")
 
     driver = "postgresql+asyncpg"  # "postgresql+psycopg2"
     connectionstring = f"{driver}://{user}:{password}@{hostWithPort}/{database}"

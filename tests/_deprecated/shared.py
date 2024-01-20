@@ -14,6 +14,7 @@ from gql_projects.DBDefinitions.FinanceTypeModel import FinanceTypeModel
 from gql_projects.DBDefinitions.FinanceCategory import FinanceCategory
 from gql_projects.DBDefinitions.MilestoneLinkModel import MilestoneLinkModel
 from gql_projects.DBDefinitions.MilestoneModel import MilestoneModel
+from gql_projects.DBDefinitions.StatementOfWorkModel import StatementOfWorkModel
 
 async def prepare_in_memory_sqllite():
     from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
@@ -45,7 +46,7 @@ async def prepare_demodata(async_session_maker):
         [
             ProjectModel, ProjectTypeModel, ProjectCategoryModel,
             FinanceModel, FinanceTypeModel, FinanceCategory,
-            MilestoneModel, MilestoneLinkModel
+            MilestoneModel, MilestoneLinkModel, StatementOfWorkModel
         ],
         data,
     )

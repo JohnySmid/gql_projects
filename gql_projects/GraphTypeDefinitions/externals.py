@@ -33,10 +33,10 @@ class GroupGQLModel:
 
 
 @strawberry.federation.type(extend=True, keys=["id"])
-class ContentGQLModel:
+class EventGQLModel:
     id: uuid.UUID = strawberry.federation.field(external=True)
-    # detaled_des: str = strawberry.federation.field(external=True)
     resolve_reference = resolve_reference
+
 
 @strawberry.federation.type(extend=True, keys=["id"])
 class RBACObjectGQLModel:

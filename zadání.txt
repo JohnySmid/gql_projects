@@ -1,23 +1,32 @@
 PROJECTS (2 studenti) Šmíd, Špáník
-    Entity (ProjectGQLModel, ProjectTypeGQLModel, ProjectCategoryGQLModel)
+   ✓ Entity (ProjectGQLModel, ProjectTypeGQLModel, ProjectCategoryGQLModel)
     
-    Entity (FinanceGQLModel, FinanceTypeGQLModel, FinanceCategoryGQLModel)
+   ✓ Entity (FinanceGQLModel, FinanceTypeGQLModel, FinanceCategoryGQLModel)
     
-    rozšiřte datové struktury (tabulky) o možnost ukládat výkazy práce (výkaz práce je pole entit s počátkem a koncem činnosti a stručným popisem – EventGQLModel?) a zápisy ze schůzek (ContentGQLModel), uvažte využití EVENTS, PRESENCES
-    (spojit s events nový model N:M) start co se stalo?
+   ✓ rozšiřte datové struktury (tabulky) o možnost ukládat výkazy práce (výkaz práce je pole entit s počátkem a koncem činnosti a stručným popisem – EventGQLModel?) a zápisy ze schůzek (ContentGQLModel), uvažte využití EVENTS, PRESENCES
+    (spojit s events nový model N:M) start co se stalo? (Na konzultaci byl vytvořen model, který se schválil)
    
-    Modely v databázi pomocí SQLAlchemy, API endpoint typu GraphQL s pomocí knihovny Strawberry.
+   ✓ Modely v databázi pomocí SQLAlchemy, API endpoint typu GraphQL s pomocí knihovny Strawberry.
     
-    Přístup k databázi řešte důsledně přes AioDataloder, resp. (https://github.com/hrbolek/uoishelpers/blob/main/uoishelpers/dataloaders.py).
+   ✓ Přístup k databázi řešte důsledně přes AioDataloder, resp. (https://github.com/hrbolek/uoishelpers/blob/main/uoishelpers/dataloaders.py).
 
-    bezpečte kompletní CRUD operace nad entitami
+   X bezpečte kompletní CRUD operace nad entitami
     
-    UD operace jako návratový typ nejméně se třemi prvky id, msg a „entityresult“ (pojmenujte adekvátně podle dotčené entity), vhodné přidat možnost nadřízené entity, speciálně pro operaci D.
+   ✓ UD operace jako návratový typ nejméně se třemi prvky id, msg a „entityresult“ (pojmenujte adekvátně podle dotčené entity), vhodné přidat možnost nadřízené entity, speciálně pro operaci D.
     
-    Řešte autorizaci operací (permission classes).
+   ✓ Řešte autorizaci operací (permission classes).
     
-    Kompletní CRUD dotazy na GQL v souboru externalids_queries.json (dictionary), jméno klíče nechť vhodně identifikuje operaci, hodnota je dictionary s klíči query (obsahuje parametrický dotaz) nebo mutation (obsahuje parametrické mutation) a variables (obsahuje dictionary jako testovací hodnoty).
+   X Kompletní CRUD dotazy na GQL v souboru externalids_queries.json (dictionary), jméno klíče nechť vhodně identifikuje operaci, hodnota je dictionary s klíči query (obsahuje parametrický dotaz) nebo mutation (obsahuje parametrické mutation) a variables (obsahuje dictionary jako testovací hodnoty).
     
-    Kompletní popisy API v kódu (description u GQLModelů) a popisy DB vrstvy (comment u DBModelů).
+   X Kompletní popisy API v kódu (description u GQLModelů) a popisy DB vrstvy (comment u DBModelů).
     
-    Zabezpečte více jak 90% code test coverage (standard pytest).
+   ✓ Zabezpečte více jak 90% code test coverage (standard pytest).
+
+
+
+    TODO:
+    - udělat atrr valid pro nesys. (FinanceModel, ProjectModel, MilestoneModel) -> FAKE DELETE nastavi valid na false
+    - dodělat testy pro nový model (5/6 DONE) - chybí delete
+    - dodělat celkově delete testy (tj. znovu implementovat, testovat lze na vytvořených modelech s práznými foreign keys [aby to šlo smazat])
+    - CRUD dotazy na GQL v souboru externalids_queries.json (dictionary)
+    - description u GQL, comment u DB + komentáře v kódu

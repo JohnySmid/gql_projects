@@ -4,18 +4,16 @@ from .BaseModel import BaseModel
 import sqlalchemy
 from sqlalchemy.orm import relationship
 
-class StatementOfWork(BaseModel):
+class StatementOfWorkModel(BaseModel):
     """
     Represents a SOW in the system. 
     
-    nová entita GQL model, mapovat na základě tabulky, mít přímo events id
-
-    Dodělat tabulku projects_events s těmito parametry
     """
     __tablename__ = "projects_events"
 
     id = UUIDColumn()
     lastchange = Column(DateTime, server_default=sqlalchemy.sql.func.now(), comment="Timestamp of the last change to the SOW")
+    #name = Column(String, comment="Name of the sow")
 
     startdate = Column(DateTime, comment="Start date of the milestone")
     enddate = Column(DateTime, comment="End date of the milestone")

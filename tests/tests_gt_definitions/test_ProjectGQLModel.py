@@ -14,8 +14,8 @@ test_query_project_by_id = createByIdTest(tableName="projects", queryEndpoint="p
 test_query_project_page = createPageTest(tableName="projects", queryEndpoint="projectPage")
 
 test_project_insert = createFrontendQuery(query="""
-    mutation ($id: UUID!, $projecttype_id: UUID!, $name: String!, $group_id: UUID, $content_id: UUID) {
-        result: projectInsert(project: {id: $id, projecttypeId: $projecttype_id, name: $name, groupId: $group_id, contentId: $content_id}) {
+    mutation ($id: UUID!, $projecttype_id: UUID!, $name: String!, $group_id: UUID) {
+        result: projectInsert(project: {id: $id, projecttypeId: $projecttype_id, name: $name, groupId: $group_id}) {
             id
             msg
             project {
@@ -25,9 +25,6 @@ test_project_insert = createFrontendQuery(query="""
             enddate
             group { 
               id 
-            }
-            content{
-              id
             }
             team {
               id
@@ -53,7 +50,6 @@ test_project_insert = createFrontendQuery(query="""
         "name": "new project", 
         "projecttype_id": "6abcd26b-4f9b-4b49-8a5d-8ec9880acf3e",
         "group_id": "2d9dcd22-a4a2-11ed-b9df-0242ac120003",
-        "content_id": "2d9dcd22-a4a2-11ed-b9df-0242ac120123"
 },
     asserts=[]
 )

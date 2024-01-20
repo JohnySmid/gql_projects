@@ -619,8 +619,7 @@
             "name_en": "Nuclear fusion for buildings",
             "startdate": "2023-01-01T17:27:12",
             "enddate": "2025-12-31T17:27:12",
-            "group_id": "2d9dcd22-a4a2-11ed-b9df-0242ac120003",
-            "content_id": "3eb467f0-97ce-4cdc-a3f2-257074038bd4"
+            "group_id": "2d9dcd22-a4a2-11ed-b9df-0242ac120003"
         }
     ],
     "projecttypes": [
@@ -703,6 +702,15 @@
             "id": "ae492131-917e-4634-9158-7341392b94ab",
             "previous_id": "d7266936-17c1-4810-88d2-079ebb864d2e",
             "next_id": "53633106-3a84-4c2f-8f9f-7ec359ba8584"
+        }
+    ],
+    "projects_events": [
+        {
+            "id": "72fa0f04-0a6c-44e0-99e0-15ec08a7443c",
+            "project_id": "43dd2ff1-5c17-42a5-ba36-8b30e2a243bb",
+            "event_id": "45b2df80-ae0f-11ed-9bd8-0242ac110002",
+            "startdate": "2023-01-01T17:27:12",
+            "enddate": "2023-12-31T17:27:12"
         }
     ],
 

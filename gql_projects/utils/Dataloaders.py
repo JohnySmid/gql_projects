@@ -10,8 +10,7 @@ import os
 
 from aiodataloader import DataLoader
 
-from gql_projects.DBDefinitions import ProjectCategoryModel, ProjectTypeModel, ProjectModel, MilestoneModel, MilestoneLinkModel, FinanceCategory, FinanceTypeModel, FinanceModel
-
+from gql_projects.DBDefinitions import ProjectCategoryModel, ProjectTypeModel, ProjectModel, MilestoneModel, MilestoneLinkModel, FinanceCategory, FinanceTypeModel, FinanceModel, StatementOfWorkModel
 from uoishelpers.dataloaders import createIdLoader
 from uoishelpers.dataloaders import createIdLoader as createLoader
 
@@ -23,7 +22,8 @@ dbmodels = {
      "milestonelinks": MilestoneLinkModel,
      "financecategory": FinanceCategory,
      "financetypes": FinanceTypeModel,
-     "finances": FinanceModel
+     "finances": FinanceModel,
+     "statementofwork": StatementOfWorkModel,
 }
 
 
@@ -175,6 +175,11 @@ def createLoaders(asyncSessionMaker):
         @cache
         def milestonelinks(self):
             return createLoader(asyncSessionMaker, MilestoneLinkModel)
+        
+        @property
+        @cache
+        def statementofwork(self):
+            return createLoader(asyncSessionMaker, StatementOfWorkModel)
         
         @property
         @cache

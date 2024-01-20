@@ -26,7 +26,8 @@ def DBModels():
         FinanceTypeModel,
         FinanceCategory,
         MilestoneLinkModel,
-        MilestoneModel
+        MilestoneModel,
+        StatementOfWorkModel
     )
     ##
     # order is important!
@@ -39,7 +40,8 @@ def DBModels():
             FinanceTypeModel,
             FinanceCategory,
             MilestoneLinkModel,
-            MilestoneModel
+            MilestoneModel,
+            StatementOfWorkModel
         ]
 
 

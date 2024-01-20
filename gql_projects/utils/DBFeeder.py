@@ -9,8 +9,17 @@
 #     MilestoneLinkModel
 # )
 
-from gql_projects.DBDefinitions import ProjectCategoryModel, ProjectTypeModel, ProjectModel, MilestoneModel, MilestoneLinkModel, FinanceCategory, FinanceTypeModel, FinanceModel
-
+from gql_projects.DBDefinitions import (
+    ProjectCategoryModel,
+    ProjectTypeModel,
+    ProjectModel,
+    MilestoneModel,
+    MilestoneLinkModel,
+    FinanceCategory,
+    FinanceTypeModel,
+    FinanceModel,
+    StatementOfWorkModel
+)
 # import uuid
 # import random
 # import itertools
@@ -381,7 +390,8 @@ async def initDB(asyncSessionMaker):
             FinanceTypeModel,
             FinanceModel,
             MilestoneModel,
-            MilestoneLinkModel
+            MilestoneLinkModel,
+            StatementOfWorkModel
 
         ]
     else:
@@ -393,7 +403,8 @@ async def initDB(asyncSessionMaker):
             FinanceTypeModel,
             FinanceModel,
             MilestoneModel,
-            MilestoneLinkModel
+            MilestoneLinkModel,
+            StatementOfWorkModel
         ]
         
     jsonData = get_demodata()
