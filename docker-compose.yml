@@ -12,7 +12,7 @@ services:
       - POSTGRES_PASSWORD=example
       - POSTGRES_HOST=postgres:5432
       - POSTGRES_DB=data
-      - DEMO=true
+      - DEMO=True
     healthcheck:
       # definice, umoznujici provest test, zda je kontejner v poradku
       test: "curl -f -H 'Content-Type: application/json' -X POST -d '{\"query\":\"query{__schema{types{name}}}\"}' http://localhost:8000/gql/ || exit 1"
