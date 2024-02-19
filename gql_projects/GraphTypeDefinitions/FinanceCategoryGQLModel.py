@@ -100,7 +100,6 @@ class FinanceCategoryUpdateGQLModel:
 @strawberry.input(description="Input structure - D operation")
 class FinanceCategoryDeleteGQLModel:
     id: uuid.UUID = strawberry.field(description="primary key (UUID), identifies object of operation")
-    lastchange: datetime.datetime = strawberry.field(description="timestamp of last change = TOKEN")
 
 
 @strawberryA.type(description="Result of a mutation result of Finance category")
@@ -150,9 +149,8 @@ async def finance_category_update(self, info: strawberryA.types.Info, finance: F
 async def finance_category_delete(self, info: strawberryA.types.Info, id: uuid.UUID) -> FinanceCategoryResultGQLModel:
     loader = getLoadersFromInfo(info).financecategory
     row = await loader.delete(id=id)
-    result = FinanceCategoryResultGQLModel()
-    result.msg = "ok" if (row is not None) else "fail"
-    result.id = id
+    result = FinanceCategoryResultGQLModel(id=id, msg="ok")
+    result.msg = "fail" if row is None else "ok"
     return result
 
 

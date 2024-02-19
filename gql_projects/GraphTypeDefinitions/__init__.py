@@ -99,11 +99,11 @@ class Mutation:
     from .FinanceCategoryGQLModel import (
         finance_category_insert,
         finance_category_update,
-        # finance_category_delete
+        finance_category_delete
     )
     finance_category_insert = finance_category_insert
     finance_category_update = finance_category_update
-    # finance_category_delete = finance_category_delete
+    finance_category_delete = finance_category_delete
 
     from .FinanceGQLModel import (
         finance_insert,
@@ -136,9 +136,11 @@ class Mutation:
     from .ProjectCategoryGQLModel import (
         project_category_insert,
         project_category_update,
+        project_category_delete
     )
     project_category_insert = project_category_insert
     project_category_update = project_category_update
+    project_category_delete = project_category_delete
 
     from .ProjectGQLModel import (
         project_insert,
