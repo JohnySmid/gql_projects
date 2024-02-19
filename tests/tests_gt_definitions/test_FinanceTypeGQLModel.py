@@ -5,7 +5,8 @@ from .gt_utils import (
     createPageTest, 
     createResolveReferenceTest, 
     createFrontendQuery, 
-    createUpdateQuery
+    createUpdateQuery,
+    createDeleteQuery
 )
 
 test_reference_financetypes = createResolveReferenceTest(tableName='projectfinancetypes', gqltype='FinanceTypeGQLModel',
@@ -20,7 +21,8 @@ test_insert_finance_type = createFrontendQuery(query="""
             id
             msg
             finance {
-                id 
+                id
+                valid 
                 name 
                 nameEn 
                 lastchange
@@ -62,6 +64,9 @@ test_update_finance_type = createUpdateQuery(
         },
     tableName="projectfinancetypes"
 )
+
+test_delete_finance_type = createDeleteQuery(tableName="projectfinancetypes", queryBase="financeType", attributeNames=["id"], 
+                                        id="9e37059c-de2c-4112-9009-559c8b0396f1")
 
 # test_finance_type_delete = createUpdateQuery (
 #     query="""

@@ -19,7 +19,8 @@ from gql_projects.GraphTypeDefinitions._GraphResolvers import (
     resolve_createdby,
     resolve_changedby,
     createRootResolver_by_id,
-    resolve_rbacobject
+    resolve_rbacobject,
+    resolve_valid
 )
 from contextlib import asynccontextmanager
 from .ProjectGQLModel import ProjectResultGQLModel
@@ -51,6 +52,7 @@ class MilestoneGQLModel(BaseGQLModel):
     created = resolve_created
     createdby = resolve_createdby
     rbacobject = resolve_rbacobject
+    valid = resolve_valid
     # name_en = resolve_name_en
     
     @strawberryA.field(description="""Project of milestone""", permission_classes=[OnlyForAuthentized()])

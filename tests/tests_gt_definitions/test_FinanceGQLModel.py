@@ -5,7 +5,8 @@ from .gt_utils import (
     createPageTest, 
     createResolveReferenceTest, 
     createFrontendQuery, 
-    createUpdateQuery
+    createUpdateQuery,
+    createDeleteQuery
 )
 test_reference_finances = createResolveReferenceTest(tableName='projectfinances', gqltype='FinanceGQLModel', 
                                                          attributeNames=["id", "name"])
@@ -15,11 +16,12 @@ test_query_finance_page = createPageTest(tableName="projectfinances", queryEndpo
 
 test_finance_insert = createFrontendQuery(query="""
     mutation ($id: UUID, $name: String!, $amount: Float, $financetype_id: UUID!, $project_id: UUID!) {
-         result: financeInsert(finance: {id: $id, name: $name, amount: $amount, financetypeId: $financetype_id, projectId: $project_id}) {
+         result: financeInsert(finance: {id: $id, name: $name, amount: $amount, financetypeId: $financetype_id, projectId: $project_id, valid: true}) {
              id
              msg
              finance {
                  id
+                 valid
                  lastchange
                  name
                  amount
@@ -35,7 +37,11 @@ test_finance_insert = createFrontendQuery(query="""
          }
      }
      """, 
-     variables={"id": "ee40b3bf-ac51-4dbb-8f73-d5da30bf8017", "name": "new finance", "financetype_id": "9e37059c-de2c-4112-9009-559c8b0396f1", "project_id": "43dd2ff1-5c17-42a5-ba36-8b30e2a243bb"},
+     variables={"id": "ee40b3bf-ac51-4dbb-8f73-d5da30bf8017", 
+                "name": "new finance", 
+                "financetype_id": "9e37059c-de2c-4112-9009-559c8b0396f1", 
+                "project_id": "43dd2ff1-5c17-42a5-ba36-8b30e2a243bb"
+                },
      asserts=[]
  )
 
@@ -62,6 +68,9 @@ test_finance_update = createUpdateQuery(
         "lastchange": "2024-01-12T19:17:59.613945"},
     tableName="projectfinances"
 )
+
+test_finance_delete = createDeleteQuery(tableName="projectfinances", queryBase="finance", attributeNames=["id"], 
+                                        id="f911230f-7e1f-4e9b-90a9-b921996ceb87")
 
 # test_finance_delete = createUpdateQuery (
 #     query="""

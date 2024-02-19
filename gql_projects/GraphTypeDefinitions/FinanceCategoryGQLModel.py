@@ -145,6 +145,16 @@ async def finance_category_update(self, info: strawberryA.types.Info, finance: F
     #     result.msg = "fail"
     return result
 
+@strawberry.mutation(description="D operation",
+        permission_classes=[OnlyForAuthentized()])
+async def finance_category_delete(self, info: strawberryA.types.Info, id: uuid.UUID) -> FinanceCategoryResultGQLModel:
+    loader = getLoadersFromInfo(info).financecategory
+    row = await loader.delete(id=id)
+    result = FinanceCategoryResultGQLModel()
+    result.msg = "ok" if (row is not None) else "fail"
+    result.id = id
+    return result
+
 
 # @strawberry.mutation(description="Delete the authorization user")
 # async def finance_category_delete(

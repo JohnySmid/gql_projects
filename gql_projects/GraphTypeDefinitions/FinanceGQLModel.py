@@ -21,7 +21,8 @@ from gql_projects.GraphTypeDefinitions._GraphResolvers import (
     resolve_createdby,
     resolve_changedby,
     createRootResolver_by_id,
-    resolve_rbacobject
+    resolve_rbacobject,
+    resolve_valid
 )
 
 ProjectGQLModel = Annotated["ProjectGQLModel",strawberryA.lazy(".ProjectGQLModel")]
@@ -47,7 +48,8 @@ class FinanceGQLModel(BaseGQLModel):
     createdby = resolve_createdby
     # name_en = resolve_name_en
     rbacobject = resolve_rbacobject
-
+    valid = resolve_valid
+    
     @strawberryA.field(description="""Project of finance""", permission_classes=[OnlyForAuthentized()])
     async def project(self, info: strawberryA.types.Info) -> Optional ["ProjectGQLModel"]:
         loader = getLoadersFromInfo(info).projects
@@ -76,6 +78,7 @@ class FinanceWhereFilter:
     name: str
     type_id: uuid.UUID
     value: str
+    valid: bool
 
 @strawberryA.field(description="""Returns a list of finances""", permission_classes=[OnlyForAuthentized()])
 async def finance_page(
@@ -104,6 +107,7 @@ class FinanceInsertGQLModel:
     financetype_id: uuid.UUID = strawberryA.field(description="The ID of the financial data type")
     project_id: uuid.UUID = strawberryA.field(description="The ID of the associated project")
 
+    valid: Optional[bool] = True
     id: Optional[uuid.UUID] = strawberryA.field(description="The ID of the financial data (optional)",default=None)
     amount: Optional[float] = strawberryA.field(description="The amount of financial data (optional)", default=0.0)
     createdby: strawberry.Private[uuid.UUID] = None
@@ -114,15 +118,16 @@ class FinanceUpdateGQLModel:
     id: uuid.UUID = strawberryA.field(description="The ID of the financial data")
     lastchange: datetime.datetime = strawberry.field(description="timestamp of last change = TOKEN")
 
+    valid: Optional[bool] = None
     name: Optional[str] = strawberryA.field(description="The name of the financial data (optional)",default=None)
     financetype_id: Optional[uuid.UUID] = strawberryA.field(description="The ID of the financial data type (optional)",default=None)
     amount: Optional[float] = strawberryA.field(description="The amount of financial data (optional)", default=None)
     changedby: strawberry.Private[uuid.UUID] = None
 
-@strawberry.input(description="Input structure - D operation")
-class FinanceDeleteGQLModel:
-    id: uuid.UUID = strawberry.field(description="primary key (UUID), identifies object of operation")
-    lastchange: datetime.datetime = strawberry.field(description="timestamp of last change = TOKEN")
+# @strawberry.input(description="Input structure - D operation")
+# class FinanceDeleteGQLModel:
+#     id: uuid.UUID = strawberry.field(description="primary key (UUID), identifies object of operation")
+#     lastchange: datetime.datetime = strawberry.field(description="timestamp of last change = TOKEN")
 
 @strawberryA.type(description="Result of a financial data operation")
 class FinanceResultGQLModel:

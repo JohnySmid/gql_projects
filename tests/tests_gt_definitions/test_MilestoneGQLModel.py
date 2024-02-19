@@ -24,6 +24,7 @@ test_insert_milestone = createFrontendQuery(
             {
                 id
                 name
+                valid
                 startdate
                 enddate
                 lastchange

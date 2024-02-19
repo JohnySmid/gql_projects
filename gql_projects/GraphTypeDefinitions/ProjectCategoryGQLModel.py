@@ -137,3 +137,13 @@ async def project_category_update(self, info: strawberryA.types.Info, project: P
     result.id = project.id
     result.msg = "ok" if (row is not None) else "fail"
     return result
+
+@strawberry.mutation(
+    description="D operation",
+        permission_classes=[OnlyForAuthentized()])
+async def project_category_delete(self, info: strawberryA.types.Info, id: uuid.UUID) -> ProjectCategoryResultGQLModel:
+    loader = getLoadersFromInfo(info).projectcategories
+    row = await loader.delete(id=id)
+    result = ProjectCategoryResultGQLModel(id=id, msg="ok")
+    result.msg = "fail" if row is None else "ok"
+    return result

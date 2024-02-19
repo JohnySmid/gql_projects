@@ -20,7 +20,8 @@ from gql_projects.GraphTypeDefinitions._GraphResolvers import (
     resolve_createdby,
     resolve_changedby,
     createRootResolver_by_id,
-    resolve_rbacobject
+    resolve_rbacobject,
+    resolve_valid
 )
 
 ProjectGQLModel = Annotated["ProjectGQLModel",strawberryA.lazy(".ProjectGQLModel")]
@@ -44,7 +45,8 @@ class StatementOfWorkGQLModel(BaseGQLModel):
     createdby = resolve_createdby
     changedby = resolve_changedby
     rbacobject = resolve_rbacobject
-   
+    valid = resolve_valid
+    
    #project_id
     @strawberryA.field(description="""Project of milestone""", permission_classes=[OnlyForAuthentized()])
     async def project(self, info: strawberryA.types.Info) -> Optional ["ProjectGQLModel"]:
@@ -73,6 +75,7 @@ class StatementOfWorkWhereFilter:
     #name: str
     id: uuid.UUID
     value: str
+    valid: bool
 
 @strawberryA.field(description="""Returns a list of project types""", permission_classes=[OnlyForAuthentized()])
 async def statement_of_work_page(
@@ -100,7 +103,8 @@ class StatementOfWorkInsertGQLModel:
     #name: Optional[str] = strawberryA.field(description="The name of the SOW (optional)", default=None)
     startdate: Optional[datetime.datetime] = strawberryA.field(description="Start date of the milestone (optional)", default=datetime.datetime.now())
     enddate: Optional[datetime.datetime] = strawberryA.field(description="End date of the milestone (optional)", default=datetime.datetime.now() + datetime.timedelta(days=30))
- 
+    
+    valid: Optional[bool] = True
     id: Optional[uuid.UUID] = strawberryA.field(description="Primary key (UUID), could be client-generated", default=None)
     createdby: strawberry.Private[uuid.UUID] = None 
     rbacobject: strawberry.Private[uuid.UUID] = None 
@@ -110,6 +114,7 @@ class StatementOfWorkUpdateGQLModel:
     id: uuid.UUID = strawberryA.field(description="The ID of the project")
     lastchange: datetime.datetime = strawberry.field(description="timestamp of last change = TOKEN")
 
+    valid: Optional[bool] = None
     #name: Optional[str] = strawberryA.field(description="The name of the SOW (optional)", default=None)
     project_id: Optional[uuid.UUID] = strawberryA.field(description="The ID of the project type (optional)",default=None)
     startdate: Optional[datetime.datetime] = strawberryA.field(description="Start date of the milestone (optional)",default=None)

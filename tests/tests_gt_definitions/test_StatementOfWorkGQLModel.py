@@ -5,7 +5,8 @@ from .gt_utils import (
     createPageTest, 
     createResolveReferenceTest, 
     createFrontendQuery, 
-    createUpdateQuery
+    createUpdateQuery,
+    createDeleteQuery
 )
 
 test_reference_statementofwork = createResolveReferenceTest(tableName='projects_events', gqltype='StatementOfWorkGQLModel', 
@@ -23,6 +24,7 @@ test_insert_statementofwork_type = createFrontendQuery(
                     created
                     enddate
                     id
+                    valid
                     lastchange
                     startdate
                     project {
@@ -30,6 +32,9 @@ test_insert_statementofwork_type = createFrontendQuery(
                     }
                     rbacobject {
                         id
+                    }
+                    event { 
+                        id 
                     }
                 }
         }
@@ -60,3 +65,6 @@ test_update_statementofwork_type = createUpdateQuery(
         },
     tableName="projects_events"
 )
+
+test_delete_statementofwork_type = createDeleteQuery(tableName="projects_events", queryBase="statementOfWork", attributeNames=["id"], 
+                                        id="72fa0f04-0a6c-44e0-99e0-15ec08a7443c")

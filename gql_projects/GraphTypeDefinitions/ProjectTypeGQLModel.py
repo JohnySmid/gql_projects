@@ -18,7 +18,8 @@ from gql_projects.GraphTypeDefinitions._GraphResolvers import (
     resolve_createdby,
     resolve_changedby,
     createRootResolver_by_id,
-    resolve_rbacobject
+    resolve_rbacobject,
+    resolve_valid
 )
 
 ProjectGQLModel = Annotated["ProjectGQLModel",strawberryA.lazy(".ProjectGQLModel")]
@@ -42,7 +43,8 @@ class ProjectTypeGQLModel(BaseGQLModel):
     createdby = resolve_createdby
     changedby = resolve_changedby
     rbacobject = resolve_rbacobject
-   
+    valid = resolve_valid
+    
     @strawberryA.field(description="""List of projects, related to project type""", permission_classes=[OnlyForAuthentized()])
     async def projects(self, info: strawberryA.types.Info) -> List["ProjectGQLModel"]:
         loader = getLoadersFromInfo(info).projecttypes
@@ -73,6 +75,7 @@ class ProjectTypeWhereFilter:
     name: str
     type_id: uuid.UUID
     value: str
+    valid: bool
 
 @strawberryA.field(description="""Returns a list of project types""", permission_classes=[OnlyForAuthentized()])
 async def project_type_page(
@@ -97,6 +100,7 @@ class ProjectTypeInsertGQLModel:
     category_id: uuid.UUID = strawberryA.field(description="")
     name: str = strawberryA.field(description="")
 
+    valid: Optional[bool] = True
     name_en: str = strawberryA.field(description="", default=None)
     id: Optional[uuid.UUID] = strawberryA.field(description="Primary key (UUID), could be client-generated", default=None)
     createdby: strawberry.Private[uuid.UUID] = None 
@@ -107,15 +111,16 @@ class ProjectTypeUpdateGQLModel:
     id: uuid.UUID = strawberryA.field(description="The ID of the project")
     lastchange: datetime.datetime = strawberry.field(description="timestamp of last change = TOKEN")
 
+    valid: Optional[bool] = None
     name: Optional[str] = strawberryA.field(description="The name of the project (optional)", default=None)
     name_en: Optional[str] = strawberryA.field(description="The name of the project (optional)", default=None)
     changedby: strawberry.Private[uuid.UUID] = None
 
 
-@strawberry.input(description="Input structure - D operation")
-class ProjectTypeDeleteGQLModel:
-    id: uuid.UUID = strawberry.field(description="primary key (UUID), identifies object of operation")
-    lastchange: datetime.datetime = strawberry.field(description="timestamp of last change = TOKEN")
+# @strawberry.input(description="Input structure - D operation")
+# class ProjectTypeDeleteGQLModel:
+#     id: uuid.UUID = strawberry.field(description="primary key (UUID), identifies object of operation")
+#     lastchange: datetime.datetime = strawberry.field(description="timestamp of last change = TOKEN")
 
 
 @strawberryA.type(description="Result of a mutation over Project")

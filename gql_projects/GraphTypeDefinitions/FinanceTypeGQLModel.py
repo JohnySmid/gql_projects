@@ -17,7 +17,8 @@ from gql_projects.GraphTypeDefinitions._GraphResolvers import (
     resolve_createdby,
     resolve_changedby,
     createRootResolver_by_id,
-    resolve_rbacobject
+    resolve_rbacobject,
+    resolve_valid
 )
 import strawberry
 from gql_projects.utils.Dataloaders import getLoadersFromInfo, getUserFromInfo
@@ -43,7 +44,7 @@ class FinanceTypeGQLModel(BaseGQLModel):
     created = resolve_created
     createdby = resolve_createdby
     rbacobject = resolve_rbacobject
-
+    valid = resolve_valid
     
     @strawberryA.field(description="""List of finances, related to finance type""", permission_classes=[OnlyForAuthentized()])
     async def finances(
@@ -74,6 +75,7 @@ class FinanceTypeWhereFilter:
     name: str
     type_id: uuid.UUID
     value: str
+    valid: bool
 
 @strawberryA.field(description="""Returns a list of finance types""", permission_classes=[OnlyForAuthentized()])
 async def finance_type_page(
@@ -98,6 +100,7 @@ class FinanceTypeInsertGQLModel:
     name: str = strawberryA.field(description="")
 
     name_en: Optional[str] = strawberryA.field(description="The name of the financial data (optional)",default=None)
+    valid: Optional[bool] = True
     id: Optional[uuid.UUID] = strawberryA.field(description="Primary key (UUID), could be client-generated", default=None)
     createdby: strawberry.Private[uuid.UUID] = None
     rbacobject: strawberry.Private[uuid.UUID] = None  
@@ -107,14 +110,15 @@ class FinanceTypeUpdateGQLModel:
     id: uuid.UUID = strawberryA.field(description="The ID of the financial data")
     lastchange: datetime.datetime = strawberry.field(description="timestamp of last change = TOKEN")
 
+    valid: Optional[bool] = None
     name: Optional[str] = strawberryA.field(description="The name of the financial data (optional)",default=None)
     name_en: Optional[str] = strawberryA.field(description="The name of the financial data (optional)",default=None)
     changedby: strawberry.Private[uuid.UUID] = None
 
-@strawberry.input(description="Input structure - D operation")
-class FinanceTypeDeleteGQLModel:
-    id: uuid.UUID = strawberry.field(description="primary key (UUID), identifies object of operation")
-    lastchange: datetime.datetime = strawberry.field(description="timestamp of last change = TOKEN")
+# @strawberry.input(description="Input structure - D operation")
+# class FinanceTypeDeleteGQLModel:
+#     id: uuid.UUID = strawberry.field(description="primary key (UUID), identifies object of operation")
+#     lastchange: datetime.datetime = strawberry.field(description="timestamp of last change = TOKEN")
 
 @strawberryA.type(description="Result of a mutation result of Finance type")
 class FinanceTypeResultGQLModel:

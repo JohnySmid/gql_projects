@@ -5,7 +5,8 @@ from .gt_utils import (
     createPageTest, 
     createResolveReferenceTest, 
     createFrontendQuery, 
-    createUpdateQuery
+    createUpdateQuery,
+    createDeleteQuery
 )
 
 
@@ -70,9 +71,11 @@ test_update_finance_category = createUpdateQuery(
         },
     tableName="projectfinancecategories"
 )
+test_delete_finance_category = createDeleteQuery(tableName="projectfinancecategories", 
+        queryBase="financeCategory", attributeNames=["id"], id="5a15450e-67e6-42a8-923a-aa7ed555b008")
 
 # test_finance_delete = createUpdateQuery (
-#     query="""
+#     query=""" 
 #         mutation($id: UUID!, $lastchange: DateTime!) {
 #             result: financeCategoryDelete(finance: {id: $id, lastchange: $lastchange}) {
 #                 id

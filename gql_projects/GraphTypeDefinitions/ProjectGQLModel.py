@@ -17,7 +17,8 @@ from gql_projects.GraphTypeDefinitions._GraphResolvers import (
     resolve_createdby,
     resolve_changedby,
     createRootResolver_by_id,
-    resolve_rbacobject
+    resolve_rbacobject,
+    resolve_valid
 )
 
 from gql_projects.GraphPermissions import RoleBasedPermission, OnlyForAuthentized
@@ -46,6 +47,7 @@ class ProjectGQLModel(BaseGQLModel):
     createdby = resolve_createdby
     changedby = resolve_changedby
     rbacobject = resolve_rbacobject
+    valid = resolve_valid
 
     # name_en = resolve_name_en
     # accesslevel = resolve_accesslevel
@@ -61,7 +63,6 @@ class ProjectGQLModel(BaseGQLModel):
     #     description="""Project's status""",
     #     permission_classes=[OnlyForAuthentized()])
     # def status(self) -> typing.Optional[str]: return self.status
-
 
     @strawberryA.field(description="""Project type of project""", permission_classes=[OnlyForAuthentized()])
     async def project_type(self, info: strawberryA.types.Info) -> Optional ["ProjectTypeGQLModel"]:
@@ -115,6 +116,7 @@ class ProjectWhereFilter:
     type_id: uuid.UUID
     value: str
     createdby: uuid.UUID
+    valid: bool
 
 
 @strawberryA.field(description="""Returns a list of projects""",
@@ -144,7 +146,7 @@ class ProjectInsertGQLModel:
     projecttype_id: uuid.UUID = strawberryA.field(description="The ID of the project type")
     name: str = strawberryA.field(description="Name/label of the project")
     
-    
+    valid: Optional[bool] = True
     id: Optional[uuid.UUID] = strawberryA.field(description="Primary key (UUID), could be client-generated", default=None)
     startdate: Optional[datetime.datetime] = strawberryA.field(description="Moment when the project starts (optional)", default_factory=lambda: datetime.datetime.now())
     enddate: Optional[datetime.datetime] = strawberryA.field(description="Moment when the project ends (optional)", default_factory=lambda: datetime.datetime.now())
@@ -158,6 +160,7 @@ class ProjectUpdateGQLModel:
     id: uuid.UUID = strawberryA.field(description="The ID of the project")
     lastchange: datetime.datetime = strawberry.field(description="timestamp of last change = TOKEN")
 
+    valid: Optional[bool] = None
     name: Optional[str] = strawberryA.field(description="The name of the project (optional)", default=None)
     projecttype_id: Optional[uuid.UUID] = strawberryA.field(description="The ID of the project type (optional)",default=None)
     startdate: Optional[datetime.datetime] = strawberryA.field(description="Moment when the project starts (optional)", default_factory=lambda: datetime.datetime.now())
@@ -165,9 +168,9 @@ class ProjectUpdateGQLModel:
     group_id: Optional[uuid.UUID] = strawberryA.field(description="The ID of the group associated with the project (optional)", default=None)
     changedby: strawberry.Private[uuid.UUID] = None
 
-@strawberry.input(description="Input structure - D operation")
-class ProjectDeleteGQLModel:
-    id: uuid.UUID = strawberry.field(description="primary key (UUID), identifies object of operation")
+# @strawberry.input(description="Input structure - D operation")
+# class ProjectDeleteGQLModel:
+#     id: uuid.UUID = strawberry.field(description="primary key (UUID), identifies object of operation")
 
 @strawberryA.type(description="Result of a mutation over Project")
 class ProjectResultGQLModel:

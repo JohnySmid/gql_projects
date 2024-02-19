@@ -1,5 +1,5 @@
 from .UUIDColumn import UUIDColumn, UUIDFKey
-from sqlalchemy import Column, DateTime, String, ForeignKey
+from sqlalchemy import Column, DateTime, String, ForeignKey, Boolean
 from .BaseModel import BaseModel
 import sqlalchemy
 
@@ -14,7 +14,7 @@ class MilestoneModel(BaseModel):
     name = Column(String, comment="Name of the milestone")
     startdate = Column(DateTime, comment="Start date of the milestone")
     enddate = Column(DateTime, comment="End date of the milestone")
-
+    valid = Column(Boolean, default=True, comment="if this entity is valid or invalid")
     project_id = Column(ForeignKey("projects.id"), index=True, comment="Foreign key referencing the associated project")
 
     created = Column(DateTime, server_default=sqlalchemy.sql.func.now(), comment="Timestamp when the milestone was created")

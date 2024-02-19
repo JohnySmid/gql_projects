@@ -5,7 +5,8 @@ from .gt_utils import (
     createPageTest, 
     createResolveReferenceTest, 
     createFrontendQuery, 
-    createUpdateQuery
+    createUpdateQuery,
+    createDeleteQuery
 )
 
 test_reference_projecttypes = createResolveReferenceTest(tableName='projecttypes', gqltype='ProjectTypeGQLModel',
@@ -21,6 +22,7 @@ test_insert_project_type = createFrontendQuery(
             msg
             project {
                 id
+                valid
                 name
                 nameEn
                 category { id }
@@ -60,6 +62,9 @@ test_update_project_type = createUpdateQuery(
         },
     tableName="projecttypes"
 )
+# help
+# test_delete_project_type = createDeleteQuery(tableName="projecttypes", queryBase="projectType", attributeNames=["id"], 
+#                                                   id="a825d8e1-2e60-4884-afdb-25642db581d8")
 
 # test_project_type_delete = createUpdateQuery (
 #     query="""

@@ -42,6 +42,10 @@ def resolve_startdate(self) -> datetime.date:
 def resolve_enddate(self) -> datetime.date:
     return self.enddate
 
+@strawberry.field(description="""Validity of event""", permission_classes=[OnlyForAuthentized()])
+def resolve_valid(self) -> bool:
+    return self.valid
+
 
 # async def resolve_group(group_id):
 #     from .externals import GroupGQLModel
