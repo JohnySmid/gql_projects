@@ -16,8 +16,8 @@ test_query_finance_type_by_id = createByIdTest(tableName="projectfinancetypes", 
 test_query_finance_type_page = createPageTest(tableName="projectfinancetypes", queryEndpoint="financeTypePage")
 
 test_insert_finance_type = createFrontendQuery(query="""
-   mutation ($id: UUID!, $name: String!, $name_en: String, ) {
-        result: financeTypeInsert(finance: {id: $id, name: $name, nameEn: $name_en}) {
+   mutation ($id: UUID!, $name: String!, $name_en: String, $category_id: UUID! ) {
+        result: financeTypeInsert(finance: {id: $id, name: $name, nameEn: $name_en, categoryId: $category_id}) {
             id
             msg
             finance {
@@ -38,7 +38,8 @@ test_insert_finance_type = createFrontendQuery(query="""
     variables={
         "id": "ee50b3bf-ac51-4dbb-8f73-d5da30bf8017", 
         "name": "nove finance", 
-        "name_en": "new en Finance"
+        "name_en": "new en Finance",
+        "category_id":"5a15450e-67e6-42a8-923a-aa7ed555b008"
     },
     asserts=[]
 )

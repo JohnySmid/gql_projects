@@ -53,7 +53,6 @@ class MilestoneGQLModel(BaseGQLModel):
     createdby = resolve_createdby
     rbacobject = resolve_rbacobject
     valid = resolve_valid
-    # name_en = resolve_name_en
     
     @strawberryA.field(description="""Project of milestone""", permission_classes=[OnlyForAuthentized()])
     async def project(self, info: strawberryA.types.Info) -> Optional ["ProjectGQLModel"]:
@@ -154,8 +153,8 @@ class MilestoneLinkAddGQLModel:
 
 @strawberryA.mutation(description="Adds a new milestones link.", permission_classes=[OnlyForAuthentized()])
 async def milestones_link_add(self, info: strawberryA.types.Info, link: MilestoneLinkAddGQLModel) -> MilestoneResultGQLModel:
-    user = getUserFromInfo(info)
-    link.createdby = uuid.UUID(user["id"])
+    # user = getUserFromInfo(info)
+    # link.createdby = uuid.UUID(user["id"])
     loader = getLoadersFromInfo(info).milestonelinks
     rows = await loader.filter_by(previous_id=link.previous_id, next_id=link.next_id)
     row = next(rows, None)
@@ -168,24 +167,10 @@ async def milestones_link_add(self, info: strawberryA.types.Info, link: Mileston
     result.id = link.previous_id
     return result
 
-# @strawberryA.mutation(description="Removes the milestones link.")
-# async def milestones_link_remove(self, info: strawberryA.types.Info, link: MilestoneLinkAddGQLModel) -> MilestoneResultGQLModel:
-#     loader = getLoadersFromInfo(info).milestonelinks
-#     rows = await loader.filter_by(previous_id=link.previous_id, next_id=link.next_id)
-#     row = next(rows, None)
-#     result = MilestoneResultGQLModel()
-#     if row is None:
-#         result.msg = "fail"
-#     else:
-#         await loader.delete(row.id)
-#         result.msg = "ok"
-#     result.id = link.previous_id
-#     return result
-
 @strawberryA.mutation(description="Adds a new milestone.", permission_classes=[OnlyForAuthentized()])
 async def milestone_insert(self, info: strawberryA.types.Info, milestone: MilestoneInsertGQLModel) -> MilestoneResultGQLModel:
-    user = getUserFromInfo(info)
-    milestone.createdby = uuid.UUID(user["id"])
+    # user = getUserFromInfo(info)
+    # milestone.createdby = uuid.UUID(user["id"])
     loader = getLoadersFromInfo(info).milestones
     row = await loader.insert(milestone)
     result = MilestoneResultGQLModel()
@@ -195,8 +180,8 @@ async def milestone_insert(self, info: strawberryA.types.Info, milestone: Milest
 
 @strawberryA.mutation(description="Update the milestone.", permission_classes=[OnlyForAuthentized()])
 async def milestone_update(self, info: strawberryA.types.Info, milestone: MilestoneUpdateGQLModel) -> MilestoneResultGQLModel:
-    user = getUserFromInfo(info)
-    milestone.createdby = uuid.UUID(user["id"])
+    # user = getUserFromInfo(info)
+    # milestone.createdby = uuid.UUID(user["id"])
     loader = getLoadersFromInfo(info).milestones
     row = await loader.update(milestone)
     result = MilestoneResultGQLModel()
@@ -204,22 +189,3 @@ async def milestone_update(self, info: strawberryA.types.Info, milestone: Milest
     result.id = milestone.id
     result.msg = "ok" if (row is not None) else "fail"
     return result
-
-# @strawberry.mutation(description="Delete the authorization user")
-# async def milestone_delete(
-#         self, info: strawberry.types.Info, project: MilestoneDeleteGQLModel
-# ) -> MilestoneResultGQLModel:
-#     milestone_id_to_delete = project.id
-#     loader = getLoadersFromInfo(info).milestones
-#     row = await loader.delete(milestone_id_to_delete)
-#     result = MilestoneResultGQLModel(id=milestone_id_to_delete, msg="fail, user not found") if not row else MilestoneResultGQLModel(id=milestone_id_to_delete, msg="ok")
-#     return result
-
-# @strawberry.mutation(description="""Deletes already existing preference settings 
-#                      rrequires ID and lastchange""" , permission_classes=[OnlyForAuthentized()])
-# async def milestone_delete(self, info: strawberry.types.Info, milestone: MilestoneDeleteGQLModel) -> MilestoneResultGQLModel:
-#     loader = getLoadersFromInfo(info).milestones
-#     id_for_resposne = milestone.id
-#     row = await loader.delete(id_for_resposne)
-#     result = MilestoneResultGQLModel(id=id_for_resposne, msg="fail, user not found") if not row else MilestoneResultGQLModel(id=id_for_resposne, msg="ok")
-#     return result

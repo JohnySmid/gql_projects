@@ -82,9 +82,6 @@ async def finance_page(
     self, info: strawberryA.types.Info, skip: int = 0, limit: int = 10,
     where: Optional[FinanceWhereFilter] = None
 ) -> List[FinanceGQLModel]:
-    # async with withInfo(info) as session:
-    #     result = await resolveFinanceAll(session, skip, limit)
-    #     return result
     loader = getLoadersFromInfo(info).finances
     wf = None if where is None else strawberry.asdict(where)
     result = await loader.page(skip, limit, where = wf)
@@ -121,10 +118,6 @@ class FinanceUpdateGQLModel:
     amount: Optional[float] = strawberryA.field(description="Updated the amount of financial", default=None)
     changedby: strawberry.Private[uuid.UUID] = None
 
-# @strawberry.input(description="Input structure - D operation")
-# class FinanceDeleteGQLModel:
-#     id: uuid.UUID = strawberry.field(description="primary key (UUID), identifies object of operation")
-#     lastchange: datetime.datetime = strawberry.field(description="timestamp of last change = TOKEN")
 
 @strawberryA.type(description="Result of a financial data operation")
 class FinanceResultGQLModel:
@@ -145,8 +138,8 @@ class FinanceResultGQLModel:
 
 @strawberryA.mutation(description="Adds a new finance.", permission_classes=[OnlyForAuthentized()])
 async def finance_insert(self, info: strawberryA.types.Info, finance: FinanceInsertGQLModel) -> FinanceResultGQLModel:
-    user = getUserFromInfo(info)
-    finance.changedby = uuid.UUID(user["id"])
+    # user = getUserFromInfo(info)
+    # finance.changedby = uuid.UUID(user["id"])
     loader = getLoadersFromInfo(info).finances
     row = await loader.insert(finance)
     result = FinanceResultGQLModel()
@@ -156,8 +149,8 @@ async def finance_insert(self, info: strawberryA.types.Info, finance: FinanceIns
 
 @strawberryA.mutation(description="Update the finance.", permission_classes=[OnlyForAuthentized()])
 async def finance_update(self, info: strawberryA.types.Info, finance: FinanceUpdateGQLModel) -> FinanceResultGQLModel:
-    user = getUserFromInfo(info)
-    finance.changedby = uuid.UUID(user["id"])
+    # user = getUserFromInfo(info)
+    # finance.changedby = uuid.UUID(user["id"])
     loader = getLoadersFromInfo(info).finances
     row = await loader.update(finance)
     result = FinanceResultGQLModel()
@@ -165,30 +158,3 @@ async def finance_update(self, info: strawberryA.types.Info, finance: FinanceUpd
     result.id = finance.id
     result.msg = "ok" if (row is not None) else "fail"
     return result
-
-# @strawberry.mutation(description="Delete the authorization user")
-# async def finance_delete(
-#         self, info: strawberry.types.Info, finance: FinanceDeleteGQLModel
-# ) -> FinanceResultGQLModel:
-#     finance_id_to_delete = finance.id
-#     loader = getLoadersFromInfo(info).finances
-#     row = await loader.delete(finance_id_to_delete)
-#     result = FinanceResultGQLModel(id=finance_id_to_delete, msg="fail, user not found") if not row else FinanceResultGQLModel(id=finance_id_to_delete, msg="ok")
-#     return result
-
-# @strawberry.mutation(description="""Deletes already existing preference settings 
-#                      rrequires ID and lastchange""" , permission_classes=[OnlyForAuthentized()])
-# async def finance_delete(self, info: strawberry.types.Info, finance: FinanceDeleteGQLModel) -> FinanceResultGQLModel:
-#     # user = getUserFromInfo(info)
-#     # finance.changedby = uuid.UUID(user["id"])
-#     loader = getLoadersFromInfo(info).finances
-#     rows = await loader.filter_by(id=finance.id)
-#     row = next(rows, None)
-#     if row is None:     
-#         return FinanceResultGQLModel(id=finance.id, msg="Fail bad ID")
-#     rows = await loader.filter_by(lastchange=finance.lastchange)
-#     row = next(rows, None)
-#     if row is None:     
-#         return FinanceResultGQLModel(id=finance.id, msg="Fail (bad lastchange?)")
-#     await loader.delete(finance.id)
-#     return FinanceResultGQLModel(id=finance.id, msg="OK, deleted")

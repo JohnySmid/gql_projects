@@ -49,21 +49,6 @@ class ProjectGQLModel(BaseGQLModel):
     rbacobject = resolve_rbacobject
     valid = resolve_valid
 
-    # name_en = resolve_name_en
-    # accesslevel = resolve_accesslevel
-    # @strawberry.field(
-    #     description="""Project's validity""",
-    #     permission_classes=[OnlyForAuthentized()])
-    # def valid(self) -> bool: return self.valid
-
-    # def valid(self) -> bool:
-    #     return self.valid
-
-    # @strawberry.field(
-    #     description="""Project's status""",
-    #     permission_classes=[OnlyForAuthentized()])
-    # def status(self) -> typing.Optional[str]: return self.status
-
     @strawberryA.field(description="""Project type of project""", permission_classes=[OnlyForAuthentized()])
     async def project_type(self, info: strawberryA.types.Info) -> Optional ["ProjectTypeGQLModel"]:
         from .ProjectTypeGQLModel import ProjectTypeGQLModel  # Import here to avoid circular dependency
@@ -168,10 +153,6 @@ class ProjectUpdateGQLModel:
     group_id: Optional[uuid.UUID] = strawberryA.field(description="The ID of the group associated with the project", default=None)
     changedby: strawberry.Private[uuid.UUID] = None
 
-# @strawberry.input(description="Input structure - D operation")
-# class ProjectDeleteGQLModel:
-#     id: uuid.UUID = strawberry.field(description="primary key (UUID), identifies object of operation")
-
 @strawberryA.type(description="Result of a mutation for a project")
 class ProjectResultGQLModel:
     id: uuid.UUID = strawberryA.field(description="The ID of the project", default=None)
@@ -192,8 +173,8 @@ class ProjectResultGQLModel:
 @strawberryA.mutation(description="Adds a new project.",
                       permission_classes=[OnlyForAuthentized()])
 async def project_insert(self, info: strawberryA.types.Info, project: ProjectInsertGQLModel) -> ProjectResultGQLModel:
-    user = getUserFromInfo(info)
-    project.createdby = uuid.UUID(user["id"])
+    # user = getUserFromInfo(info)
+    # project.createdby = uuid.UUID(user["id"])
     loader = getLoadersFromInfo(info).projects
     row = await loader.insert(project)
     result = ProjectResultGQLModel()
@@ -204,8 +185,8 @@ async def project_insert(self, info: strawberryA.types.Info, project: ProjectIns
 @strawberryA.mutation(description="Update the project.",
                       permission_classes=[OnlyForAuthentized()])
 async def project_update(self, info: strawberryA.types.Info, project: ProjectUpdateGQLModel) -> ProjectResultGQLModel:
-    user = getUserFromInfo(info)
-    project.changedby = uuid.UUID(user["id"])
+    # user = getUserFromInfo(info)
+    # project.changedby = uuid.UUID(user["id"])
     loader = getLoadersFromInfo(info).projects
     row = await loader.update(project)
     result = ProjectResultGQLModel()

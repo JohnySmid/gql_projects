@@ -116,13 +116,6 @@ class ProjectTypeUpdateGQLModel:
     name_en: Optional[str] = strawberryA.field(description="Updated name/label of the project in English", default=None)
     changedby: strawberry.Private[uuid.UUID] = None
 
-
-# @strawberry.input(description="Input structure - D operation")
-# class ProjectTypeDeleteGQLModel:
-#     id: uuid.UUID = strawberry.field(description="primary key (UUID), identifies object of operation")
-#     lastchange: datetime.datetime = strawberry.field(description="timestamp of last change = TOKEN")
-
-
 @strawberryA.type(description="Result of a mutation for project type")
 class ProjectTypeResultGQLModel:
     id: uuid.UUID = strawberryA.field(description="The ID of the project type", default=None)
@@ -141,8 +134,8 @@ class ProjectTypeResultGQLModel:
 
 @strawberryA.mutation(description="Adds a new project type.", permission_classes=[OnlyForAuthentized()])
 async def project_type_insert(self, info: strawberryA.types.Info, project: ProjectTypeInsertGQLModel) -> ProjectTypeResultGQLModel:
-    user = getUserFromInfo(info)
-    project.createdby = uuid.UUID(user["id"])
+    # user = getUserFromInfo(info)
+    # project.createdby = uuid.UUID(user["id"])
     loader = getLoadersFromInfo(info).projecttypes
     row = await loader.insert(project)
     result = ProjectTypeResultGQLModel()
@@ -152,8 +145,8 @@ async def project_type_insert(self, info: strawberryA.types.Info, project: Proje
 
 @strawberryA.mutation(description="Update the project type.", permission_classes=[OnlyForAuthentized()])
 async def project_type_update(self, info: strawberryA.types.Info, project: ProjectTypeUpdateGQLModel) -> ProjectTypeResultGQLModel:
-    user = getUserFromInfo(info)
-    project.changedby = uuid.UUID(user["id"])
+    # user = getUserFromInfo(info)
+    # project.changedby = uuid.UUID(user["id"])
     loader = getLoadersFromInfo(info).projecttypes
     row = await loader.update(project)
     result = ProjectTypeResultGQLModel()
@@ -161,15 +154,3 @@ async def project_type_update(self, info: strawberryA.types.Info, project: Proje
     result.id = project.id
     result.msg = "ok" if (row is not None) else "fail"
     return result
-
-
-# @strawberry.mutation(description="""Deletes already existing preference settings 
-#                      rrequires ID and lastchange""", permission_classes=[OnlyForAuthentized()])
-# async def project_type_delete(self, info: strawberry.types.Info, project: ProjectTypeDeleteGQLModel) -> ProjectTypeResultGQLModel:
-#     loader = getLoadersFromInfo(info).projecttypes
-#     user = getUserFromInfo(info)
-#     project.changedby = uuid.UUID(user["id"])
-#     id_for_resposne = project.id
-#     row = await loader.delete(id_for_resposne)
-#     result = ProjectTypeResultGQLModel(id=id_for_resposne, msg="fail, user not found") if not row else ProjectTypeResultGQLModel(id=id_for_resposne, msg="ok")
-#     return result

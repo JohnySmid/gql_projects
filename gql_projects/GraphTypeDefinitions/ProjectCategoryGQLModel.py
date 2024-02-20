@@ -94,10 +94,6 @@ class ProjectCategoryUpdateGQLModel:
     name_en: Optional[str] = strawberryA.field(description="Updated name/label of the project category in English", default=None)
     changedby: strawberry.Private[uuid.UUID] = None
 
-@strawberry.input(description="Input structure for deleting a project category")
-class ProjectCategoryDeleteGQLModel:
-    id: uuid.UUID = strawberry.field(description="The ID of the project category")
-    lastchange: datetime.datetime = strawberry.field(description="Timestamp of last change")
 
 @strawberryA.type(description="Result of a mutation for a project category")
 class ProjectCategoryResultGQLModel:
@@ -117,8 +113,8 @@ class ProjectCategoryResultGQLModel:
 
 @strawberryA.mutation(description="Adds a new project category.", permission_classes=[OnlyForAuthentized()])
 async def project_category_insert(self, info: strawberryA.types.Info, project: ProjectCategoryInsertGQLModel) -> ProjectCategoryResultGQLModel:
-    user = getUserFromInfo(info)
-    project.createdby = uuid.UUID(user["id"])
+    # user = getUserFromInfo(info)
+    # project.createdby = uuid.UUID(user["id"])
     loader = getLoadersFromInfo(info).projectcategories
     row = await loader.insert(project)
     result = ProjectCategoryResultGQLModel()
@@ -128,8 +124,8 @@ async def project_category_insert(self, info: strawberryA.types.Info, project: P
 
 @strawberryA.mutation(description="Update the project category.", permission_classes=[OnlyForAuthentized()])
 async def project_category_update(self, info: strawberryA.types.Info, project: ProjectCategoryUpdateGQLModel) -> ProjectCategoryResultGQLModel:
-    user = getUserFromInfo(info)
-    project.createdby = uuid.UUID(user["id"])
+    # user = getUserFromInfo(info)
+    # project.createdby = uuid.UUID(user["id"])
     loader = getLoadersFromInfo(info).projectcategories
     row = await loader.update(project)
     result = ProjectCategoryResultGQLModel()
