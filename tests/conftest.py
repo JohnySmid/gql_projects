@@ -135,7 +135,7 @@ def Info(Request, Context):
 
 @pytest.fixture
 def QueriesFile():
-    file = open("queries.txt", "w+", encoding="utf-8")
+    file = open("gql_projects/queries.json", "w+", encoding="utf-8")
     def writequery(query=None, mutation=None, variables={}):
         if (query is not None) and ("mutation" in query):
             jsonData = {
@@ -165,6 +165,8 @@ def QueriesFile():
         yield writequery
     finally:
         file.close()
+
+
 
 @pytest.fixture
 def DemoTrue(monkeypatch):
