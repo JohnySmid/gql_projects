@@ -95,25 +95,25 @@ project_type_by_id = createRootResolver_by_id(ProjectTypeGQLModel, description="
 #                                                                                                                         #
 ###########################################################################################################################
 
-@strawberryA.input(description="Definition of a project used for creation")
+@strawberryA.input(description="Definition of a project type used for creation")
 class ProjectTypeInsertGQLModel:
-    category_id: uuid.UUID = strawberryA.field(description="")
-    name: str = strawberryA.field(description="")
+    category_id: uuid.UUID = strawberryA.field(description="The ID of the project category")
+    name: str = strawberryA.field(description="Name/label of the project type")
 
-    valid: Optional[bool] = True
-    name_en: str = strawberryA.field(description="", default=None)
-    id: Optional[uuid.UUID] = strawberryA.field(description="Primary key (UUID), could be client-generated", default=None)
-    createdby: strawberry.Private[uuid.UUID] = None 
-    rbacobject: strawberry.Private[uuid.UUID] = None 
+    valid: Optional[bool] = strawberryA.field(description="Indicates whether the project type data is valid or not", default=True)
+    name_en: str = strawberryA.field(description="Name/label of the finance type in English", default=None)
+    id: Optional[uuid.UUID] = strawberryA.field(description="The ID of the project type", default=None)
+    createdby: strawberry.Private[uuid.UUID] = None
+    rbacobject: strawberry.Private[uuid.UUID] = None
 
-@strawberryA.input(description="Definition of a project used for update")
+@strawberryA.input(description="Definition of a project type used for update")
 class ProjectTypeUpdateGQLModel:
-    id: uuid.UUID = strawberryA.field(description="The ID of the project")
-    lastchange: datetime.datetime = strawberry.field(description="timestamp of last change = TOKEN")
+    id: uuid.UUID = strawberryA.field(description="The ID of the project type")
+    lastchange: datetime.datetime = strawberry.field(description="Timestamp of last change")
 
-    valid: Optional[bool] = None
-    name: Optional[str] = strawberryA.field(description="The name of the project (optional)", default=None)
-    name_en: Optional[str] = strawberryA.field(description="The name of the project (optional)", default=None)
+    valid: Optional[bool] = strawberryA.field(description="Indicates whether the projcet type data is valid or not", default=None)
+    name: Optional[str] = strawberryA.field(description="Updated name/label of the project type", default=None)
+    name_en: Optional[str] = strawberryA.field(description="Updated name/label of the project in English", default=None)
     changedby: strawberry.Private[uuid.UUID] = None
 
 
@@ -123,12 +123,12 @@ class ProjectTypeUpdateGQLModel:
 #     lastchange: datetime.datetime = strawberry.field(description="timestamp of last change = TOKEN")
 
 
-@strawberryA.type(description="Result of a mutation over Project")
+@strawberryA.type(description="Result of a mutation for project type")
 class ProjectTypeResultGQLModel:
-    id: uuid.UUID = strawberryA.field(description="The ID of the project", default=None)
+    id: uuid.UUID = strawberryA.field(description="The ID of the project type", default=None)
     msg: str = strawberryA.field(description="Result of the operation (OK/Fail)", default=None)
 
-    @strawberryA.field(description="Returns the project", permission_classes=[OnlyForAuthentized()])
+    @strawberryA.field(description="Returns the project type", permission_classes=[OnlyForAuthentized()])
     async def project(self, info: strawberryA.types.Info) -> Union[ProjectTypeGQLModel, None]:
         result = await ProjectTypeGQLModel.resolve_reference(info, self.id)
         return result
@@ -139,7 +139,7 @@ class ProjectTypeResultGQLModel:
 #                                                                                                                         #
 ###########################################################################################################################
 
-@strawberryA.mutation(description="Adds a new project.", permission_classes=[OnlyForAuthentized()])
+@strawberryA.mutation(description="Adds a new project type.", permission_classes=[OnlyForAuthentized()])
 async def project_type_insert(self, info: strawberryA.types.Info, project: ProjectTypeInsertGQLModel) -> ProjectTypeResultGQLModel:
     user = getUserFromInfo(info)
     project.createdby = uuid.UUID(user["id"])
@@ -150,7 +150,7 @@ async def project_type_insert(self, info: strawberryA.types.Info, project: Proje
     result.id = row.id
     return result
 
-@strawberryA.mutation(description="Update the project.", permission_classes=[OnlyForAuthentized()])
+@strawberryA.mutation(description="Update the project type.", permission_classes=[OnlyForAuthentized()])
 async def project_type_update(self, info: strawberryA.types.Info, project: ProjectTypeUpdateGQLModel) -> ProjectTypeResultGQLModel:
     user = getUserFromInfo(info)
     project.changedby = uuid.UUID(user["id"])

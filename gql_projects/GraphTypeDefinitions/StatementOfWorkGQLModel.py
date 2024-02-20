@@ -11,8 +11,6 @@ from gql_projects.GraphPermissions import RoleBasedPermission, OnlyForAuthentize
 
 from gql_projects.GraphTypeDefinitions._GraphResolvers import (
     resolve_id,
-    resolve_name,
-    resolve_name_en,
     resolve_created,
     resolve_lastchange,
     resolve_startdate,
@@ -39,7 +37,6 @@ class StatementOfWorkGQLModel(BaseGQLModel):
     lastchange = resolve_lastchange
     startdate = resolve_startdate
     enddate = resolve_enddate
-    #name = resolve_name
 
     created = resolve_created
     createdby = resolve_createdby
@@ -48,14 +45,14 @@ class StatementOfWorkGQLModel(BaseGQLModel):
     valid = resolve_valid
     
    #project_id
-    @strawberryA.field(description="""Project of milestone""", permission_classes=[OnlyForAuthentized()])
+    @strawberryA.field(description="""Project of statement of work""", permission_classes=[OnlyForAuthentized()])
     async def project(self, info: strawberryA.types.Info) -> Optional ["ProjectGQLModel"]:
         loader = getLoadersFromInfo(info).projects
         result = await loader.load(self.project_id)
         return result
     
     #event_id
-    @strawberry.field(description="""Team, related to a project""", permission_classes=[OnlyForAuthentized()])
+    @strawberry.field(description="""Event, related to a statement of work""", permission_classes=[OnlyForAuthentized()])
     def event(self) -> Union["EventGQLModel", None]:
         from .externals import EventGQLModel
         return EventGQLModel(id=self.event_id)
@@ -72,12 +69,11 @@ from .utils import createInputs
 @createInputs
 @dataclass
 class StatementOfWorkWhereFilter:
-    #name: str
     id: uuid.UUID
     value: str
     valid: bool
 
-@strawberryA.field(description="""Returns a list of project types""", permission_classes=[OnlyForAuthentized()])
+@strawberryA.field(description="""Returns a list of statement of work""", permission_classes=[OnlyForAuthentized()])
 async def statement_of_work_page(
     self, info: strawberryA.types.Info, skip: int = 0, limit: int = 10,
     where: Optional[StatementOfWorkWhereFilter] = None
@@ -95,45 +91,43 @@ statement_of_work_by_id = createRootResolver_by_id(StatementOfWorkGQLModel, desc
 #                                                                                                                         #
 ###########################################################################################################################
 
-@strawberryA.input(description="Definition of a project used for creation")
+@strawberryA.input(description="Definition of a statement of work used for creation")
 class StatementOfWorkInsertGQLModel:
-    event_id: uuid.UUID = strawberryA.field(description="")
-    project_id: uuid.UUID = strawberryA.field(description="")
+    event_id: uuid.UUID = strawberryA.field(description="The ID of the event data")
+    project_id: uuid.UUID = strawberryA.field(description="The ID of the project data")
     
-    #name: Optional[str] = strawberryA.field(description="The name of the SOW (optional)", default=None)
-    startdate: Optional[datetime.datetime] = strawberryA.field(description="Start date of the milestone (optional)", default=datetime.datetime.now())
-    enddate: Optional[datetime.datetime] = strawberryA.field(description="End date of the milestone (optional)", default=datetime.datetime.now() + datetime.timedelta(days=30))
+    startdate: Optional[datetime.datetime] = strawberryA.field(description="Start date of the statement of work", default=datetime.datetime.now())
+    enddate: Optional[datetime.datetime] = strawberryA.field(description="End date of the statement of work", default=datetime.datetime.now() + datetime.timedelta(days=30))
     
-    valid: Optional[bool] = True
-    id: Optional[uuid.UUID] = strawberryA.field(description="Primary key (UUID), could be client-generated", default=None)
-    createdby: strawberry.Private[uuid.UUID] = None 
-    rbacobject: strawberry.Private[uuid.UUID] = None 
+    valid: Optional[bool] = strawberryA.field(description="Indicates whether the statement of work data is valid or not", default=True)
+    id: Optional[uuid.UUID] = strawberryA.field(description="The ID of the statement of work data", default=None)
+    createdby: strawberry.Private[uuid.UUID] = None
+    rbacobject: strawberry.Private[uuid.UUID] = None
 
-@strawberryA.input(description="Definition of a project used for update")
+@strawberryA.input(description="Definition of a statement of work used for update")
 class StatementOfWorkUpdateGQLModel:
-    id: uuid.UUID = strawberryA.field(description="The ID of the project")
-    lastchange: datetime.datetime = strawberry.field(description="timestamp of last change = TOKEN")
+    id: uuid.UUID = strawberryA.field(description="The ID of the statement of work")
+    lastchange: datetime.datetime = strawberry.field(description="Timestamp of last change")
 
-    valid: Optional[bool] = None
-    #name: Optional[str] = strawberryA.field(description="The name of the SOW (optional)", default=None)
-    project_id: Optional[uuid.UUID] = strawberryA.field(description="The ID of the project type (optional)",default=None)
-    startdate: Optional[datetime.datetime] = strawberryA.field(description="Start date of the milestone (optional)",default=None)
-    enddate: Optional[datetime.datetime] = strawberryA.field(description="End date of the milestone (optional)",default=None)
+    valid: Optional[bool] = strawberryA.field(description="Indicates whether the financial data is valid or not", default=None)
+    project_id: Optional[uuid.UUID] = strawberryA.field(description="The ID of the project type",default=None)
+    startdate: Optional[datetime.datetime] = strawberryA.field(description="Start date of the milestone",default=None)
+    enddate: Optional[datetime.datetime] = strawberryA.field(description="End date of the milestone",default=None)
     changedby: strawberry.Private[uuid.UUID] = None
 
 
-@strawberry.input(description="Input structure - D operation")
+@strawberry.input(description="Input structure for deleting a statement of work")
 class StatementOfWorkDeleteGQLModel:
-    id: uuid.UUID = strawberry.field(description="primary key (UUID), identifies object of operation")
-    lastchange: datetime.datetime = strawberry.field(description="timestamp of last change = TOKEN")
+    id: uuid.UUID = strawberry.field(description="Primary key (UUID) that identifies the statement of work to be deleted")
+    lastchange: datetime.datetime = strawberry.field(description="Timestamp of last changeS")
 
 
-@strawberryA.type(description="Result of a mutation over Project")
+@strawberryA.type(description="Result of a mutation for statement of work")
 class StatementOfWorkResultGQLModel:
-    id: uuid.UUID = strawberryA.field(description="The ID of the project", default=None)
+    id: uuid.UUID = strawberryA.field(description="The ID of the statement of work", default=None)
     msg: str = strawberryA.field(description="Result of the operation (OK/Fail)", default=None)
 
-    @strawberryA.field(description="Returns the project", permission_classes=[OnlyForAuthentized()])
+    @strawberryA.field(description="Returns the statement of work", permission_classes=[OnlyForAuthentized()])
     async def statementofwork(self, info: strawberryA.types.Info) -> Union[StatementOfWorkGQLModel, None]:
         result = await StatementOfWorkGQLModel.resolve_reference(info, self.id)
         return result
@@ -144,10 +138,10 @@ class StatementOfWorkResultGQLModel:
 #                                                                                                                         #
 ###########################################################################################################################
 
-@strawberryA.mutation(description="Adds a new project.", permission_classes=[OnlyForAuthentized()])
+@strawberryA.mutation(description="Adds a new statement of work.", permission_classes=[OnlyForAuthentized()])
 async def statement_of_work_insert(self, info: strawberryA.types.Info, statementofwork: StatementOfWorkInsertGQLModel) -> StatementOfWorkResultGQLModel:
-    # user = getUserFromInfo(info)
-    # statementofwork.createdby = uuid.UUID(user["id"])
+    user = getUserFromInfo(info)
+    statementofwork.createdby = uuid.UUID(user["id"])
     loader = getLoadersFromInfo(info).statementofwork
     row = await loader.insert(statementofwork)
     result = StatementOfWorkResultGQLModel()
@@ -155,10 +149,10 @@ async def statement_of_work_insert(self, info: strawberryA.types.Info, statement
     result.id = row.id
     return result
 
-@strawberryA.mutation(description="Update the project.", permission_classes=[OnlyForAuthentized()])
+@strawberryA.mutation(description="Update the statement of work.", permission_classes=[OnlyForAuthentized()])
 async def statement_of_work_update(self, info: strawberryA.types.Info, statementofwork: StatementOfWorkUpdateGQLModel) -> StatementOfWorkResultGQLModel:
-    # user = getUserFromInfo(info)
-    # statementofwork.changedby = uuid.UUID(user["id"])
+    user = getUserFromInfo(info)
+    statementofwork.changedby = uuid.UUID(user["id"])
     loader = getLoadersFromInfo(info).statementofwork
     row = await loader.update(statementofwork)
     result = StatementOfWorkResultGQLModel()

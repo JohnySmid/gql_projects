@@ -15,7 +15,7 @@ class ProjectModel(BaseModel):
      name = Column(String, comment="Name of the project")
      startdate = Column(DateTime, comment="Start date of the project")
      enddate = Column(DateTime, comment="End date of the project")
-     valid = Column(Boolean, default=True, comment="if this entity is valid or invalid")
+     valid = Column(Boolean, default=True, comment="Indicates whether this entity is valid or invalid")
 
      projecttype_id = Column(ForeignKey("projecttypes.id"), index=True, comment="Foreign key referencing the project type")
      projecttype = relationship("ProjectTypeModel", back_populates="projects")
@@ -27,5 +27,5 @@ class ProjectModel(BaseModel):
      lastchange = Column(DateTime, server_default=sqlalchemy.sql.func.now(), comment="Timestamp of the last change to the project")
      createdby = UUIDFKey(nullable=True)#Column(ForeignKey("users.id"), index=True, nullable=True)
      changedby = UUIDFKey(nullable=True)#Column(ForeignKey("users.id"), index=True, nullable=True)
-     rbacobject = UUIDFKey(nullable=True, comment="user or group id, determines access")
-     user_id = UUIDFKey(nullable=True, comment="user id")
+     rbacobject = UUIDFKey(nullable=True, comment="User or group ID that determines access to the proejct informatio")
+     user_id = UUIDFKey(nullable=True, comment="User ID associated with the project information")

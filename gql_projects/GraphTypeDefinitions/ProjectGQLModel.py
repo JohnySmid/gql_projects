@@ -70,7 +70,7 @@ class ProjectGQLModel(BaseGQLModel):
         result = await ProjectTypeGQLModel.resolve_reference(info, self.projecttype_id)
         return result
 
-    @strawberryA.field(description="""List of finances, related to finance type""", permission_classes=[OnlyForAuthentized()])
+    @strawberryA.field(description="""List of finances, related to a project""", permission_classes=[OnlyForAuthentized()])
     async def finances(
         self, info: strawberryA.types.Info
     ) -> List["FinanceGQLModel"]:
@@ -146,33 +146,33 @@ class ProjectInsertGQLModel:
     projecttype_id: uuid.UUID = strawberryA.field(description="The ID of the project type")
     name: str = strawberryA.field(description="Name/label of the project")
     
-    valid: Optional[bool] = True
-    id: Optional[uuid.UUID] = strawberryA.field(description="Primary key (UUID), could be client-generated", default=None)
-    startdate: Optional[datetime.datetime] = strawberryA.field(description="Moment when the project starts (optional)", default_factory=lambda: datetime.datetime.now())
-    enddate: Optional[datetime.datetime] = strawberryA.field(description="Moment when the project ends (optional)", default_factory=lambda: datetime.datetime.now())
-    group_id: Optional[uuid.UUID] = strawberryA.field(description="The ID of the group associated with the project (optional)", default=None)
-    content_id: Optional[uuid.UUID] = strawberryA.field(description="The ID of the content associated with the project (optional)", default=None)
+    valid: Optional[bool] = strawberryA.field(description="Indicates whether the projects data is valid or not (optional)", default=True)
+    id: Optional[uuid.UUID] = strawberryA.field(description="The ID of the project", default=None)
+    startdate: Optional[datetime.datetime] = strawberryA.field(description="Moment when the project starts", default_factory=lambda: datetime.datetime.now())
+    enddate: Optional[datetime.datetime] = strawberryA.field(description="Moment when the project ends", default_factory=lambda: datetime.datetime.now())
+    group_id: Optional[uuid.UUID] = strawberryA.field(description="The ID of the group associated with the project", default=None)
+    content_id: Optional[uuid.UUID] = strawberryA.field(description="The ID of the content associated with the project ", default=None)
     createdby: strawberry.Private[uuid.UUID] = None
-    rbacobject: strawberry.Private[uuid.UUID] = None 
+    rbacobject: strawberry.Private[uuid.UUID] = None
     
 @strawberryA.input(description="Definition of a project used for update")
 class ProjectUpdateGQLModel:
     id: uuid.UUID = strawberryA.field(description="The ID of the project")
-    lastchange: datetime.datetime = strawberry.field(description="timestamp of last change = TOKEN")
+    lastchange: datetime.datetime = strawberry.field(description="Timestamp of last change")
 
-    valid: Optional[bool] = None
-    name: Optional[str] = strawberryA.field(description="The name of the project (optional)", default=None)
-    projecttype_id: Optional[uuid.UUID] = strawberryA.field(description="The ID of the project type (optional)",default=None)
-    startdate: Optional[datetime.datetime] = strawberryA.field(description="Moment when the project starts (optional)", default_factory=lambda: datetime.datetime.now())
-    enddate: Optional[datetime.datetime] = strawberryA.field(description="Moment when the project ends (optional)", default_factory=lambda: datetime.datetime.now())
-    group_id: Optional[uuid.UUID] = strawberryA.field(description="The ID of the group associated with the project (optional)", default=None)
+    valid: Optional[bool] = strawberryA.field(description="Indicates whether the projects data is valid or not", default=None)
+    name: Optional[str] = strawberryA.field(description="Updated name/label of the project", default=None)
+    projecttype_id: Optional[uuid.UUID] = strawberryA.field(description="The ID of the project type",default=None)
+    startdate: Optional[datetime.datetime] = strawberryA.field(description="Moment when the project starts", default_factory=lambda: datetime.datetime.now())
+    enddate: Optional[datetime.datetime] = strawberryA.field(description="Moment when the project ends", default_factory=lambda: datetime.datetime.now())
+    group_id: Optional[uuid.UUID] = strawberryA.field(description="The ID of the group associated with the project", default=None)
     changedby: strawberry.Private[uuid.UUID] = None
 
 # @strawberry.input(description="Input structure - D operation")
 # class ProjectDeleteGQLModel:
 #     id: uuid.UUID = strawberry.field(description="primary key (UUID), identifies object of operation")
 
-@strawberryA.type(description="Result of a mutation over Project")
+@strawberryA.type(description="Result of a mutation for a project")
 class ProjectResultGQLModel:
     id: uuid.UUID = strawberryA.field(description="The ID of the project", default=None)
     msg: str = strawberryA.field(description="Result of the operation (OK/Fail)", default=None)
@@ -192,8 +192,8 @@ class ProjectResultGQLModel:
 @strawberryA.mutation(description="Adds a new project.",
                       permission_classes=[OnlyForAuthentized()])
 async def project_insert(self, info: strawberryA.types.Info, project: ProjectInsertGQLModel) -> ProjectResultGQLModel:
-    # user = getUserFromInfo(info)
-    # project.createdby = uuid.UUID(user["id"])
+    user = getUserFromInfo(info)
+    project.createdby = uuid.UUID(user["id"])
     loader = getLoadersFromInfo(info).projects
     row = await loader.insert(project)
     result = ProjectResultGQLModel()
@@ -204,8 +204,8 @@ async def project_insert(self, info: strawberryA.types.Info, project: ProjectIns
 @strawberryA.mutation(description="Update the project.",
                       permission_classes=[OnlyForAuthentized()])
 async def project_update(self, info: strawberryA.types.Info, project: ProjectUpdateGQLModel) -> ProjectResultGQLModel:
-    # user = getUserFromInfo(info)
-    # project.changedby = uuid.UUID(user["id"])
+    user = getUserFromInfo(info)
+    project.changedby = uuid.UUID(user["id"])
     loader = getLoadersFromInfo(info).projects
     row = await loader.update(project)
     result = ProjectResultGQLModel()

@@ -17,5 +17,5 @@ class ProjectCategoryModel(BaseModel):
     lastchange = Column(DateTime, server_default=sqlalchemy.sql.func.now(), comment="Timestamp of the last change to the project category")
     createdby = UUIDFKey(nullable=True)#Column(ForeignKey("users.id"), index=True, nullable=True)
     changedby = UUIDFKey(nullable=True)#Column(ForeignKey("users.id"), index=True, nullable=True)
-    rbacobject = UUIDFKey(nullable=True, comment="user or group id, determines access")
-    user_id = UUIDFKey(nullable=True, comment="user id")
+    rbacobject = UUIDFKey(nullable=True, comment="User or group ID that determines access to the financial information categorys")
+    user_id = UUIDFKey(nullable=True, comment="User ID associated with the project information category")

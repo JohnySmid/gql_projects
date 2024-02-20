@@ -13,10 +13,9 @@ class StatementOfWorkModel(BaseModel):
 
     id = UUIDColumn()
     lastchange = Column(DateTime, server_default=sqlalchemy.sql.func.now(), comment="Timestamp of the last change to the SOW")
-    #name = Column(String, comment="Name of the sow")
-    valid = Column(Boolean, default=True, comment="if this entity is valid or invalid")
-    startdate = Column(DateTime, comment="Start date of the milestone")
-    enddate = Column(DateTime, comment="End date of the milestone")
+    valid = Column(Boolean, default=True, comment="Indicates whether this entity is valid or invalid")
+    startdate = Column(DateTime, comment="Start date of the SOW")
+    enddate = Column(DateTime, comment="End date of the SOW")
 
     project_id = Column(ForeignKey("projects.id"), index=True, comment="Foreign key referencing the associated project")
 
@@ -27,4 +26,4 @@ class StatementOfWorkModel(BaseModel):
 
     createdby = UUIDFKey(nullable=True)
     changedby = UUIDFKey(nullable=True)
-    rbacobject = UUIDFKey(nullable=True, comment="user or group id, determines access")
+    rbacobject = UUIDFKey(nullable=True, comment="User ID associated with the SOW information type")
