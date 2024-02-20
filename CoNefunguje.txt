@@ -1,3 +1,0 @@
-1. delete, kde všude když se to referencuje.
-   Vytvořit valid? 
-   
