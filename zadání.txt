@@ -28,3 +28,4 @@ PROJECTS (2 studenti) Šmíd, Špáník
     - delete v milestone 
     - CRUD dotazy na GQL v souboru externalids_queries.json (dictionary)
     - description u GQL, comment u DB + komentáře v kódu
+    - docs -> dociql -> npm knihovna není python, takže npm init? A pak instalovat?
