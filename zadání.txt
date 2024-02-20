@@ -10,7 +10,7 @@ PROJECTS (2 studenti) Šmíd, Špáník
     
    ✓ Přístup k databázi řešte důsledně přes AioDataloder, resp. (https://github.com/hrbolek/uoishelpers/blob/main/uoishelpers/dataloaders.py).
 
-   X bezpečte kompletní CRUD operace nad entitami
+   ✓ bezpečte kompletní CRUD operace nad entitami
     
    ✓ UD operace jako návratový typ nejméně se třemi prvky id, msg a „entityresult“ (pojmenujte adekvátně podle dotčené entity), vhodné přidat možnost nadřízené entity, speciálně pro operaci D.
     
@@ -25,8 +25,6 @@ PROJECTS (2 studenti) Šmíd, Špáník
 
 
     TODO:
-    - udělat atrr valid pro nesys. (FinanceModel, ProjectModel, MilestoneModel) -> FAKE DELETE nastavi valid na false
-    - dodělat testy pro nový model (5/6 DONE) - chybí delete
-    - dodělat celkově delete testy (tj. znovu implementovat, testovat lze na vytvořených modelech s práznými foreign keys [aby to šlo smazat])
+    - delete v milestone 
     - CRUD dotazy na GQL v souboru externalids_queries.json (dictionary)
     - description u GQL, comment u DB + komentáře v kódu
