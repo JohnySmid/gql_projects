@@ -34,10 +34,13 @@ async def startEngine(connectionstring, makeDrop=False, makeUp=True):
                 await conn.run_sync(BaseModel.metadata.create_all)
                 print("BaseModel.metadata.create_all finished")
             except sqlalchemy.exc.NoReferencedTableError as e:
-                print(e)
-                print("Unable automaticaly create tables")
+                print("Caught NoReferencedTableError:", e)
+                print("Unable automatically to create tables")
                 return None
-
+    
+    if not makeUp:
+        return None  # Ensure to return None when makeUp=False
+    
     async_sessionMaker = sessionmaker(
         asyncEngine, expire_on_commit=False, class_=AsyncSession
     )
