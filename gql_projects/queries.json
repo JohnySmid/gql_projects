@@ -1,0 +1,91 @@
+{
+    "comment1": "******************************** Queries ********************************",
+    "financeById": {
+        "query": "query MyQuery($id: UUID!) { financeById(id: $id) { amount changedby { id } created createdby { id } financeType { id } id lastchange name rbacobject { id } valid } }",
+        "variables": {
+            "id": "f911230f-7e1f-4e9b-90a9-b921996ceb87"
+        }
+    },
+    "financeCategoryById": {
+        "query": "query MyQuery($id: UUID!) { financeCategoryById(id: $id) { changedby { id } created createdby { id } id lastchange name nameEn rbacobject { id } userId { id } } }",
+        "variables": {
+            "id": "5a15450e-67e6-42a8-923a-aa7ed555b008"
+        }
+    },
+    "financeCategoryPage": {
+        "query": "query MyQuery { financeCategoryPage { changedby { id } created createdby { id } id lastchange name nameEn rbacobject { id } userId { id } } }",
+        "variables": {}
+    },
+    "financePage": {
+        "query": "query MyQuery { financePage { amount created createdby { id } financeType { id } id lastchange name valid rbacobject { id } } }",
+        "variables": {}
+    },
+    "financeTypeById": {
+        "query": "query MyQuery($id: UUID!) { financeTypeById(id: $id) { changedby { id } created finances { id } createdby { id } id lastchange name nameEn rbacobject { id } valid category { id } } }",
+        "variables": {
+            "id": "9e37059c-de2c-4112-9009-559c8b0396f1"
+        }
+    },
+    "financeTypePage": {
+        "query": "query MyQuery { financeTypePage { category { id } changedby { id } created createdby { id } finances { id } id lastchange name nameEn rbacobject { id } valid } }",
+        "variables": {}
+    },
+    "milestoneById": {
+        "query": "query MyQuery($id: UUID!) { milestoneById(id: $id) { created createdby { id } enddate id lastchange name rbacobject { id } startdate valid nexts { id } previous { id } } }",
+        "variables": {
+            "id": "d7266936-17c1-4810-88d2-079ebb864d2e"
+        }
+    },
+    "milestonePage": {
+        "query": "query MyQuery { milestonePage { changedby { id } created createdby { id } enddate id lastchange name nexts { id } previous { id } project { id } rbacobject { id } startdate valid } }",
+        "variables": {}
+    },
+    "projectById": {
+        "query": "query MyQuery($id: UUID!) { projectById(id: $id) { changedby { id } created createdby { id } enddate finances { id } group { id } id lastchange milestones { id } name projectType { id } rbacobject { id } startdate team { id } valid } }",
+        "variables": {
+            "id": "43dd2ff1-5c17-42a5-ba36-8b30e2a243bb"
+        }
+    },
+    "projectCategoryById": {
+        "query": "query MyQuery($id: UUID!) { projectCategoryById(id: $id) { created createdby { id } id lastchange name nameEn rbacobject { id } } }",
+        "variables": {
+            "id": "5c8c4c5a-df3b-44a9-ab90-396bdc84542b"
+        }
+    },
+    "projectCategoryPage": {
+        "query": "query MyQuery { projectCategoryPage { changedby { id } created createdby { id } id lastchange name nameEn rbacobject { id } } }",
+        "variables": {}
+    },
+    "projectPage": {
+        "query": "query MyQuery { projectPage { changedby { id } created createdby { id } enddate finances { id } group { id } id lastchange milestones { id } name projectType { id } rbacobject { id } startdate team { id } valid } }",
+        "variables": {}
+    },
+    "projectTypeById": {
+        "query": "query MyQuery($id: UUID!) { projectTypeById(id: $id) { category { id } created createdby { id } id lastchange name nameEn projects { id } rbacobject { id } valid } }",
+        "variables": {
+            "id": "a825d8e1-2e60-4884-afdb-25642db581d8"
+        }
+    },
+    "projectTypePage": {
+        "query": "query MyQuery { projectTypePage { category { id } changedby { id } created createdby { id } id lastchange name nameEn projects { id } rbacobject { id } valid } }",
+        "variables": {}
+    },
+    "sayHelloProjects": {
+        "query": "query MyQuery($id: UUID!) { sayHelloProjects(id: $id) }",
+        "variables": {
+            "id": "43dd2ff1-5c17-42a5-ba36-8b30e2a243bb"
+        }
+    },
+    "statementOfWorkById": {
+        "query": "query MyQuery($id: UUID!) { statementOfWorkById(id: $id) { created changedby { id } createdby { id } enddate event { id } id lastchange project { id } rbacobject { id } startdate valid } }",
+        "variables": {
+            "id": "72fa0f04-0a6c-44e0-99e0-15ec08a7443c"
+        }
+    },
+    "statementOfWorkPage": {
+        "query": "query MyQuery { statementOfWorkPage { changedby { id } created createdby { id } enddate event { id } id lastchange project { id } rbacobject { id } startdate valid } }",
+        "variables": {}
+    },
+    "comment2": "******************************** Mutations ********************************"
+
+}
