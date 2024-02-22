@@ -18,14 +18,12 @@ PROJECTS (2 studenti) Šmíd, Špáník
     
    X Kompletní CRUD dotazy na GQL v souboru externalids_queries.json (dictionary), jméno klíče nechť vhodně identifikuje operaci, hodnota je dictionary s klíči query (obsahuje parametrický dotaz) nebo mutation (obsahuje parametrické mutation) a variables (obsahuje dictionary jako testovací hodnoty).
     
-   X Kompletní popisy API v kódu (description u GQLModelů) a popisy DB vrstvy (comment u DBModelů).
+   ✓ Kompletní popisy API v kódu (description u GQLModelů) a popisy DB vrstvy (comment u DBModelů).
     
    ✓ Zabezpečte více jak 90% code test coverage (standard pytest).
 
 
 
     TODO:
-    - delete v milestone 
-    - CRUD dotazy na GQL v souboru externalids_queries.json (dictionary)
-    - description u GQL, comment u DB + komentáře v kódu
-    - docs -> dociql -> npm knihovna není python, takže npm init? A pak instalovat?
+    - Pouze Mutacew GQL v souboru externalids_queries.json (dictionary)
+    - inicializace dociql ??
