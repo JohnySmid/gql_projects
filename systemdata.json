@@ -679,6 +679,12 @@
             "name": "účelová podpora",
             "name_en": "english name"
             
+        },
+        {
+            "id": "c3c94bd4-14d4-4b02-b59b-46d40e51c062",
+            "name": "účelová podpora delete",
+            "name_en": "english name delete"
+            
         }
     ],
     "projectmilestones": [

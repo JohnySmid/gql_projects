@@ -86,6 +86,76 @@
         "query": "query MyQuery { statementOfWorkPage { changedby { id } created createdby { id } enddate event { id } id lastchange project { id } rbacobject { id } startdate valid } }",
         "variables": {}
     },
-    "comment2": "******************************** Mutations ********************************"
+    "comment2": "******************************** Mutations ********************************",
+    "financeCategoryInsert": {
+        "query": "mutation MyMutation($id: UUID!, $name: String!, $name_en: String!) { financeCategoryInsert(finance: {id: $id, name: $name, nameEn: $name_en}) { id msg project { id } } }",
+        "variables": {
+            "finance": {
+                "id": "53365ad1-acce-4c29-b0b9-c51c67af4033", 
+                "name": "new financeC", 
+                "name_en": "new en FinanceC"
+            }
+        }
+    },
+    "financeCategoryUpdate": {
+        "query": "mutation MyMutation($id: UUID!, $name: String, $lastchange: DateTime!) { financeCategoryUpdate(finance: {id: $id, name: $name, lastchange: $lastchange}) { id msg project { lastchange id } } }",
+        "variables": {
+            "finance": {
+                "id": "5a15450e-67e6-42a8-923a-aa7ed555b008", 
+                "name": "new financeC",
+                "lastchange": "2024-02-22T19:31:58.816725"
+            }
+        }
+    },
+    "financeInsert": {
+        "query": "mutation MyMutation($id: UUID, $name: String!, $amount: Float, $financetype_id: UUID!, $project_id: UUID!) { financeInsert(finance: {id: $id, name: $name, amount: $amount, financetypeId: $financetype_id, projectId: $project_id, valid: true}) { id msg finance { id } } }",
+        "variables": {
+            "finance": {
+                "id": "ee40b3bf-ac51-4dbb-8f73-d5da30bf8017", 
+                "name": "new finance", 
+                "financetype_id": "9e37059c-de2c-4112-9009-559c8b0396f1", 
+                "project_id": "43dd2ff1-5c17-42a5-ba36-8b30e2a243bb"
+            }
+        }
+    },
+    "financeTypeInsert": {
+        "query": "mutation MyMutation($id: UUID!, $name: String!, $name_en: String, $category_id: UUID!) { financeTypeInsert(finance: {id: $id, name: $name, nameEn: $name_en, categoryId: $category_id}) { id msg } }",
+        "variables": {
+            "finance": {
+                "id": "ee50b3bf-ac51-4dbb-8f73-d5da30bf8017", 
+                "name": "nove finance", 
+                "name_en": "new en Finance",
+                "category_id":"5a15450e-67e6-42a8-923a-aa7ed555b008"
+            }
+        }
+    },
+    "financeTypeUpdate": {
+        "query": "mutation MyMutation($id: UUID!, $name: String, $lastchange: DateTime!) { financeTypeUpdate(finance: {id: $id, name: $name, lastchange: $lastchange}) { id msg finance { id lastchange } } }",
+        "variables": {
+            "finance": {
+                "id": "9e37059c-de2c-4112-9009-559c8b0396f1", 
+                "name": "nove finance1",
+                "lastchange": "2024-02-22T19:37:27.252698"
+            }
+        }
+    },
+    "financeUpdate": {
+        "query": "mutation MyMutation($id: UUID!, $name: String!, $amount: Float, $financetype_id: UUID, $lastchange: DateTime!) { financeUpdate(finance: {id: $id, name: $name, amount: $amount, financetypeId: $financetype_id, lastchange: $lastchange}) { id msg finance { lastchange id } } }",
+        "variables": {
+            "finance": {
+                "id": "f911230f-7e1f-4e9b-90a9-b921996ceb87", 
+                "name": "new name",
+                "financetype_id": "9e37059c-de2c-4112-9009-559c8b0396f1",
+                "amount":  1,
+                "lastchange": "2024-02-22T19:39:08.140142"
+            }
+        }
+    },
+    "financeCategoryDelete": {
+        "query": "mutation MyMutation($id: UUID!) { financeCategoryDelete(id: $id) { id msg } }",
+        "variables": {
+            "id": "c3c94bd4-14d4-4b02-b59b-46d40e51c062"
+        }
+    }
 
 }

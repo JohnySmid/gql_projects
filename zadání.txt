@@ -25,5 +25,13 @@ PROJECTS (2 studenti) Šmíd, Špáník
 
 
     TODO:
-    - Pouze Mutacew GQL v souboru externalids_queries.json (dictionary)
+    - Pouze Mutacew GQL v souboru externalids_queries.json (dictionary) -> Delete se dela trosku jinak, ceknout FinanceCategoryDelete v json file
+     -> Mutace zbyva:
+               milestoneInsert
+               milestoneUpdate
+               milestoneLinkAdd
+               projectCategory...
+               ProjectType...
+               project...
+               statementOfWork...
     - inicializace dociql ??
