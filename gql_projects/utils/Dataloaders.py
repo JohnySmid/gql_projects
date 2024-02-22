@@ -53,70 +53,70 @@ class AuthorizationLoader(DataLoader):
 
     def setTokenByInfo(self, info):
         self.authorizationToken = ""
+     
+    # async def _load(self, id):
+    #     variables = {"id": f"{id}"}
+    #     if self.authorizationToken != "":
+    #         headers = {"authorization": f"Bearer {self.authorizationToken}"}
+    #     else:
+    #         headers = {}
+    #     json = {
+    #         "query": self.query,
+    #         "variables": variables
+    #     }
+    #     roleUrlEndpoint=self.roleUrlEndpoint
+    #     async with aiohttp.ClientSession() as session:
+    #         print(f"query {roleUrlEndpoint} for json={json}")
+    #         async with session.post(url=roleUrlEndpoint, json=json, headers=headers) as resp:
+    #             print(resp.status)
+    #             if resp.status != 200:
+    #                 text = await resp.text()
+    #                 print(text)
+    #                 return []
+    #             else:
+    #                 respJson = await resp.json()
 
-    async def _load(self, id):
-        variables = {"id": f"{id}"}
-        if self.authorizationToken != "":
-            headers = {"authorization": f"Bearer {self.authorizationToken}"}
-        else:
-            headers = {}
-        json = {
-            "query": self.query,
-            "variables": variables
-        }
-        roleUrlEndpoint=self.roleUrlEndpoint
-        async with aiohttp.ClientSession() as session:
-            print(f"query {roleUrlEndpoint} for json={json}")
-            async with session.post(url=roleUrlEndpoint, json=json, headers=headers) as resp:
-                print(resp.status)
-                if resp.status != 200:
-                    text = await resp.text()
-                    print(text)
-                    return []
-                else:
-                    respJson = await resp.json()
-
-        # print(20*"respJson")
-        # print(respJson)
+    #     # print(20*"respJson")
+    #     # print(respJson)
         
-        assert respJson.get("errors", None) is None, respJson["errors"]
-        respdata = respJson.get("data", None)
-        assert respdata is not None, "missing data response"
-        result = respdata.get("result", None)
-        assert result is not None, "missing result"
-        roles = result.get("roles", None)
-        assert roles is not None, "missing roles"
+    #     assert respJson.get("errors", None) is None, respJson["errors"]
+    #     respdata = respJson.get("data", None)
+    #     assert respdata is not None, "missing data response"
+    #     result = respdata.get("result", None)
+    #     assert result is not None, "missing result"
+    #     roles = result.get("roles", None)
+    #     assert roles is not None, "missing roles"
         
-        # print(30*"=")
-        # print(roles)
-        # print(30*"=")
-        return [*roles]
+    #     # print(30*"=")
+    #     # print(roles)
+    #     # print(30*"=")
+    #     return [*roles]
 
 
-    async def batch_load_fn(self, keys):
-        #print('batch_load_fn', keys, flush=True)
-        reducedkeys = set(keys)
-        awaitables = (self._load(key) for key in reducedkeys)
-        results = await asyncio.gather(*awaitables)
-        indexedResult = {key:result for key, result in zip(reducedkeys, results)}
-        results = [indexedResult[key] for key in keys]
-        return results
+    # async def batch_load_fn(self, keys):
+    #     #print('batch_load_fn', keys, flush=True)
+    #     reducedkeys = set(keys)
+    #     awaitables = (self._load(key) for key in reducedkeys)
+    #     results = await asyncio.gather(*awaitables)
+    #     indexedResult = {key:result for key, result in zip(reducedkeys, results)}
+    #     results = [indexedResult[key] for key in keys]
+    #     return results
 
-def update(destination, source=None, extraValues={}):
-    """Updates destination's attributes with source's attributes.
-    Attributes with value None are not updated."""
-    if source is not None:
-        for name in dir(source):
-            if name.startswith("_"):
-                continue
-            value = getattr(source, name)
-            if value is not None:
-                setattr(destination, name, value)
+# def update(destination, source=None, extraValues={}):
+#     """Updates destination's attributes with source's attributes.
+#     Attributes with value None are not updated."""
+#     if source is not None:
+#         for name in dir(source):
+#             if name.startswith("_"):
+#                 continue
+#             value = getattr(source, name)
+#             if value is not None:
+#                 setattr(destination, name, value)
 
-    for name, value in extraValues.items():
-        setattr(destination, name, value)
+#     for name, value in extraValues.items():
+#         setattr(destination, name, value)
 
-    return destination
+#     return destination
 
 
 class Loaders:
