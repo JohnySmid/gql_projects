@@ -156,6 +156,122 @@
         "variables": {
             "id": "c3c94bd4-14d4-4b02-b59b-46d40e51c062"
         }
+    },
+    "milestoneInsert": {
+        "query": "mutation MyMutation($id: UUID, $name: String!, $project_id: UUID!, $start_date: DateTime, $end_date: DateTime) { milestoneInsert(milestone: {id: $id, name: $name, projectId: $project_id, startdate: $start_date, enddate: $end_date}) { id msg } }",
+        "variables": {
+            "milestone": {
+                "id": "4d8fdcb1-bde1-47da-80bb-a67917e1914a", 
+                "name": "new milestone",
+                "project_id": "43dd2ff1-5c17-42a5-ba36-8b30e2a243bb"
+            }
+        }
+    },
+    "milestoneUpdate": {
+        "query": "mutation MyMutation($id: UUID!, $name: String, $lastchange: DateTime!, $start_date: DateTime, $end_date: DateTime) { milestoneUpdate(milestone: {id: $id, name: $name, lastchange: $lastchange, startdate: $start_date, enddate: $end_date}) { id milestone { lastchange id } msg } }",
+        "variables": {
+            "milestone": {
+                "id": "d7266936-17c1-4810-88d2-079ebb864d2e", 
+                "name": "newMilestone1",
+                "lastchange": "2024-02-23T06:48:08.946530"
+            }
+        }
+    },
+    "milestonesLinkAdd": {
+        "query": "mutation MyMutation($previous_id: UUID, $next_id: UUID) { milestonesLinkAdd(link: {previousId: $previous_id, nextId: $next_id}) { id msg milestone { id name } } }",
+        "variables": {
+            "link": {
+                "previous_id": "9038aa9d-bf2f-42d5-8a4a-252ee243d261",
+                "next_id": "24bad316-d5ec-42ff-bf2e-e73ccef5d81d"
+            }
+        }
+    },
+    "projectCategoryDelete": {
+        "query": "mutation MyMutation($id: UUID!) { projectCategoryDelete(id: $id) { id msg } }",
+        "variables": {
+            "id": "29cbe1f5-c0d8-4ece-9e23-8b5c1875fd3c"
+        }
+    },
+    "projectCategoryInsert": {
+        "query": "mutation MyMutation($id: UUID!, $name: String!, $name_en: String!) { projectCategoryInsert(project: {id: $id, name: $name, nameEn: $name_en}) { id msg } }",
+        "variables": {
+            "project": {
+                "id": "ccde3a8b-81d0-4e2b-9aac-42e0eb2255b3",
+	            "name": "nova kategorie", 
+                "name_en": "new category"
+            }
+        }
+    },
+    "projectCategoryUpdate": {
+        "query": "mutation MyMutation($id: UUID!, $name: String, $lastchange: DateTime!) { projectCategoryUpdate(project: {id: $id, name: $name, lastchange: $lastchange}) { id msg project { id lastchange } } }",
+        "variables": {
+            "project": {
+                "id": "5c8c4c5a-df3b-44a9-ab90-396bdc84542b",
+                "name": "nova kategorie1",
+                "lastchange": "2024-02-23T08:07:58.051056"
+            }
+        }
+    },
+    "projectInsert": {
+        "query": "mutation MyMutation($id: UUID!, $projecttype_id: UUID!, $name: String!, $group_id: UUID) { projectInsert(project: {id: $id, projecttypeId: $projecttype_id, name: $name, groupId: $group_id}) { id msg } }",
+        "variables": {
+            "project": {
+                "id": "ccde3a8b-81d0-4e2b-9aac-42e0eb2255b3",
+                "name": "new project", 
+                "projecttype_id": "6abcd26b-4f9b-4b49-8a5d-8ec9880acf3e",
+                "group_id": "2d9dcd22-a4a2-11ed-b9df-0242ac120003"
+            }
+        }
+    },
+    "projectTypeInsert": {
+        "query": "mutation MyMutation($id: UUID!, $name: String!, $name_en: String!, $category_id: UUID!) { projectTypeInsert(project: {id: $id, name: $name, nameEn: $name_en, categoryId: $category_id}) { id msg } }",
+        "variables": {
+            "project": {
+                "id": "f6f79926-ac0e-4833-9a38-4272cae33fa6", 
+                "name": "nove jmeno",
+                "name_en": "new name", 
+                "category_id": "5c8c4c5a-df3b-44a9-ab90-396bdc84542b"
+            }
+        }
+    },
+    "projectTypeUpdate": {
+        "query": "mutation MyMutation($id: UUID!, $name: String, $lastchange: DateTime!) { projectTypeUpdate(project: {id: $id, name: $name, lastchange: $lastchange}) { id msg project { id lastchange } } }",
+        "variables": {
+            "project": {
+                "id": "a825d8e1-2e60-4884-afdb-25642db581d8", 
+                "name": "nove jmeno1",
+                "lastchange": "2024-02-23T08:12:29.106953"
+            }
+        }
+    },
+    "projectUpdate": {
+        "query": "mutation MyMutation($id: UUID!, $projecttype_id: UUID!, $name: String!, $lastchange: DateTime!) { projectUpdate(project: {id: $id, projecttypeId: $projecttype_id, name: $name, lastchange: $lastchange}) { id msg project { id lastchange } } }",
+        "variables": {
+            "project": {
+                "id": "43dd2ff1-5c17-42a5-ba36-8b30e2a243bb",
+                "name": "new project1", 
+                "projecttype_id": "6abcd26b-4f9b-4b49-8a5d-8ec9880acf3e",
+                "lastchange": "2024-02-23T08:14:02.267675"
+            }
+        }
+    },
+    "statementOfWorkInsert": {
+        "query": "mutation MyMutation($event_id: UUID!, $project_id: UUID!) { statementOfWorkInsert(statementofwork: {eventId: $event_id, projectId: $project_id}) { id msg } }",
+        "variables": {
+            "statementofwork": {
+                "event_id": "45b2df80-ae0f-11ed-9bd8-0242ac110002", 
+                "project_id": "43dd2ff1-5c17-42a5-ba36-8b30e2a243bb"
+            }
+        }
+    },
+    "statementOfWorkUpdate": {
+        "query": "mutation MyMutation($id: UUID!, $lastchange: DateTime!, $project_id: UUID) { statementOfWorkUpdate(statementofwork: {id: $id, lastchange: $lastchange, projectId: $project_id}) { id msg statementofwork { id lastchange } } }",
+        "variables": {
+            "statementofwork": {
+                "id": "72fa0f04-0a6c-44e0-99e0-15ec08a7443c", 
+                "project_id": "43dd2ff1-5c17-42a5-ba36-8b30e2a243bb",
+                "lastchange": "2024-02-23T08:14:02.267675"
+            }
+        }
     }
-
 }
