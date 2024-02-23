@@ -16,7 +16,7 @@ PROJECTS (2 studenti) Šmíd, Špáník
     
    ✓ Řešte autorizaci operací (permission classes).
     
-   X Kompletní CRUD dotazy na GQL v souboru externalids_queries.json (dictionary), jméno klíče nechť vhodně identifikuje operaci, hodnota je dictionary s klíči query (obsahuje parametrický dotaz) nebo mutation (obsahuje parametrické mutation) a variables (obsahuje dictionary jako testovací hodnoty).
+   ✓ Kompletní CRUD dotazy na GQL v souboru externalids_queries.json (dictionary), jméno klíče nechť vhodně identifikuje operaci, hodnota je dictionary s klíči query (obsahuje parametrický dotaz) nebo mutation (obsahuje parametrické mutation) a variables (obsahuje dictionary jako testovací hodnoty).
     
    ✓ Kompletní popisy API v kódu (description u GQLModelů) a popisy DB vrstvy (comment u DBModelů).
     
@@ -25,13 +25,23 @@ PROJECTS (2 studenti) Šmíd, Špáník
 
 
     TODO:
-    - Pouze Mutacew GQL v souboru externalids_queries.json (dictionary) -> Delete se dela trosku jinak, ceknout FinanceCategoryDelete v json file
-     -> Mutace zbyva:
-               milestoneInsert
-               milestoneUpdate
-               milestoneLinkAdd
-               projectCategory...
-               ProjectType...
-               project...
-               statementOfWork...
     - inicializace dociql ??
+
+
+    {
+  "data": null,
+  "errors": [
+    {
+      "message": "missing user in context or in request.scope",
+      "locations": [
+        {
+          "line": 2,
+          "column": 3
+        }
+      ],
+      "path": [
+        "statementOfWorkInsert"
+      ]
+    }
+  ]
+}
