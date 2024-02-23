@@ -92,7 +92,7 @@ async def get_context(request: Request):
     result["request"] = request
     result["user"] = request.scope.get("user", None)
     logging.info(f"context created {result}")
-    return context
+    return result
 
 app = FastAPI(lifespan=initEngine)
 
@@ -112,12 +112,22 @@ graphql_app = GraphQLRouter(
     context_getter=get_context
 )
 
+# uois github
+# @app.get("/ui/{file_path:path}")
+# async def read_file(file_path: str):
+#     print(file_path)
+#     if os.path.isfile(f"./js/{file_path}"):
+#         return FileResponse(f"./js/{file_path}")
+#     else:
+#         return FileResponse(f"./js/index.html")
+
+
 class Item(BaseModel):
     query: str
     variables: dict = {}
     operationName: str = None
 
-app.include_router(graphql_app, prefix="/gql")
+#app.include_router(graphql_app, prefix="/gql")
 
 #from doc import attachVoyager
 #attachVoyager(app, path="/gql/doc")
@@ -131,6 +141,7 @@ async def graphiql(request: Request):
 async def apollo_gql(request: Request, item: Item):
     DEMOE = os.getenv("DEMO", None)
     # logging.info(f"apollo_gql DEMO {DEMOE} {type(DEMOE)}, {DEMO}")
+    print(f"Demoe: " + DEMOE)
     logging.info(f"asking sentinel for advice (is user authenticated?)")
     sentinelResult = await sentinel(request, item)
     if DEMOE == "False":
@@ -143,6 +154,9 @@ async def apollo_gql(request: Request, item: Item):
     try:
         context = await get_context(request)
         logging.info(f"executing \n {item.query} \n with \n {item.variables}")
+        print("pes")
+        print(f"executing \n {item.query} \n with \n {item.variables}")
+        print(request.scope["user"])
         schemaresult = await schema.execute(query=item.query, variable_values=item.variables, operation_name=item.operationName, context_value=context)
         # schemaresult = await schema.execute(query=item.query, variable_values=item.variables, context_value=context)
         # assert 1 == 0, ":)"
