@@ -654,6 +654,11 @@
             "id": "5c8c4c5a-df3b-44a9-ab90-396bdc84542b",
             "name": "Národní grant",
             "name_en": "National grant"
+        },
+        {
+            "id": "29cbe1f5-c0d8-4ece-9e23-8b5c1875fd3c",
+            "name": "Project category delete",
+            "name_en": "Project category delete en"
         }
     ],
     "projectfinances": [
@@ -698,6 +703,20 @@
         {
             "id": "53633106-3a84-4c2f-8f9f-7ec359ba8584",
             "name": "Etapa 2",
+            "project_id": "43dd2ff1-5c17-42a5-ba36-8b30e2a243bb",
+            "startdate": "2024-01-01T17:27:12",
+            "enddate": "2025-12-31T17:27:12"
+        },
+        {
+            "id": "9038aa9d-bf2f-42d5-8a4a-252ee243d261",
+            "name": "Etapa 3",
+            "project_id": "43dd2ff1-5c17-42a5-ba36-8b30e2a243bb",
+            "startdate": "2024-01-01T17:27:12",
+            "enddate": "2025-12-31T17:27:12"
+        },
+        {
+            "id": "24bad316-d5ec-42ff-bf2e-e73ccef5d81d",
+            "name": "Etapa 4",
             "project_id": "43dd2ff1-5c17-42a5-ba36-8b30e2a243bb",
             "startdate": "2024-01-01T17:27:12",
             "enddate": "2025-12-31T17:27:12"
