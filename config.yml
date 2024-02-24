@@ -1,4 +1,5 @@
 # To fetch schema from
+#introspection: file://IntrospectionQuery.txt
 introspection: file://GraphQLSchema.graphql
 
 # Specify information about your server

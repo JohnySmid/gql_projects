@@ -47,13 +47,14 @@ COPY IntrospectionQuery.txt /usr/src/docs/
 COPY GraphQLSchema.graphql /usr/src/docs/
 COPY config.yml /usr/src/docs/
 # Update dociql to the latest version
-RUN npm install -g dociql@latest
+RUN npm install -g dociql
 
 # Run dociql to generate documentation inside /usr/src/docs
 #RUN dociql -a IntrospectionQuery.txt
 #RUN dociql -c config.yml
 #RUN dociql -d config.yml
-RUN dociql -c config.yml -t /usr/src/docs/
+RUN dociql -d GraphQLSchema.graphql config.yml -t /usr/src/docs/
+#RUN dociql -d config.yml -t /usr/src/docs/
 RUN echo "Generated dociql documentation"
 
 ###############################################################
