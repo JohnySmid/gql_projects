@@ -1,0 +1,88 @@
+
+
+
+
+
+
+Entity representing a finance category
+The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.
+Date with time (isoformat)
+Entity representing a finance
+The `Float` scalar type represents signed double-precision fractional values as specified by [IEEE 754](https://en.wikipedia.org/wiki/IEEE_floating_point).
+The `Boolean` scalar type represents `true` or `false`.
+Entity representing a finance type
+Entity representing a milestone
+Date (isoformat)
+Entity representing a project
+Entity representing a project category
+Entity representing a project types
+Entity representing a SOW
+
+
+The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1.
+Operators definition on FinanceCategoryWhereFilter
+Or operator definition on FinanceCategoryWhereFilter
+And operator definition on FinanceCategoryWhereFilter
+Str filter methods, only one constrain allowed
+Integer filter methods, only one constrain allowed
+Operators definition on FinanceWhereFilter
+Or operator definition on FinanceWhereFilter
+And operator definition on FinanceWhereFilter
+Integer filter methods, only one constrain allowed
+Operators definition on FinanceTypeWhereFilter
+Or operator definition on FinanceTypeWhereFilter
+And operator definition on FinanceTypeWhereFilter
+Operators definition on MilestoneWhereFilter
+Or operator definition on MilestoneWhereFilter
+And operator definition on MilestoneWhereFilter
+Operators definition on ProjectCategoryWhereFilter
+Or operator definition on ProjectCategoryWhereFilter
+And operator definition on ProjectCategoryWhereFilter
+Operators definition on ProjectWhereFilter
+Or operator definition on ProjectWhereFilter
+And operator definition on ProjectWhereFilter
+Operators definition on ProjectTypeWhereFilter
+Or operator definition on ProjectTypeWhereFilter
+And operator definition on ProjectTypeWhereFilter
+Operators definition on StatementOfWorkWhereFilter
+Or operator definition on StatementOfWorkWhereFilter
+And operator definition on StatementOfWorkWhereFilter
+Type for mutation root
+Result of a mutation for a finance category
+Definition of a finance category used for creation
+Definition of a finance category used for update
+Result of a financial data operation
+Definition of finance data used for creation
+Definition of finance data used for update
+Result of a mutation result of finance type
+Definition of a finance type used for creation
+Definition of finance type used for update
+Result of a user operation on a milestone
+Definition of a milestone used for creation
+Definition of a milestone used for update
+Definition of milestone link used for addition
+Result of a mutation for a project category
+Definition of a project category used for creation
+Definition of a project category used for update
+Result of a mutation for a project
+Definition of a project used for creation
+Definition of a project used for update
+Result of a mutation for project type
+Definition of a project type used for creation
+Definition of a project type used for update
+Result of a mutation for statement of work
+Definition of a statement of work used for creation
+Definition of a statement of work used for update
+A GraphQL Schema defines the capabilities of a GraphQL server. It exposes all available types and directives on the server, as well as the entry points for query, mutation, and subscription operations.
+The fundamental unit of any GraphQL Schema is the type. There are many kinds of types in GraphQL as represented by the `__TypeKind` enum.
+
+Depending on the kind of a type, certain fields describe information about that type. Scalar types provide no information beyond a name, description and optional `specifiedByURL`, while Enum types provide their values. Object and Interface types provide the fields they describe. Abstract types, Union and Interface, provide the Object types possible at runtime. List and NonNull types compose other types.
+An enum describing what kind of type a given `__Type` is.
+Object and Interface types are described by a list of Fields, each of which has a name, potentially a list of arguments, and a return type.
+Arguments provided to Fields or Directives and the input fields of an InputObject are represented as Input Values which describe their type and optionally a default value.
+One possible value for a given Enum. Enum values are unique values, not a placeholder for a string or numeric value. However an Enum value is returned in a JSON response as a string.
+A Directive provides a way to describe alternate runtime execution and type validation behavior in a GraphQL document.
+
+In some cases, you need to provide options to alter GraphQL's execution behavior in ways field arguments will not suffice, such as conditionally including or skipping a field. Directives provide this by describing additional information to the executor.
+A Directive can be adjacent to many parts of the GraphQL language, a __DirectiveLocation describes one such possible adjacencies.
+
