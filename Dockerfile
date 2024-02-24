@@ -43,14 +43,17 @@ FROM buildnode as generate-docs
 WORKDIR /usr/src/docs
 
 # Copy necessary files for dociql documentation generation
-COPY IntrospectionQuery.txt /usr/src/docs/
+#COPY IntrospectionQuery.txt /usr/src/docs/
+COPY GraphQLSchema.graphql /usr/src/docs/
 COPY config.yml /usr/src/docs/
 # Update dociql to the latest version
 RUN npm install -g dociql@latest
 
 # Run dociql to generate documentation inside /usr/src/docs
 #RUN dociql -a IntrospectionQuery.txt
-RUN dociql -c config.yaml
+#RUN dociql -c config.yml
+#RUN dociql -d config.yml
+RUN dociql -d config.yml -p 4400 -t /usr/src/docs/
 RUN echo "Generated dociql documentation"
 
 ###############################################################
