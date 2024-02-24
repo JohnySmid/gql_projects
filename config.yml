@@ -1,16 +1,27 @@
 # To fetch schema from
-introspection: file://IntrospectionQuery.txt
+introspection: file://GraphQLSchema.graphql
 
+# Specify information about your server
 servers:
-  - url: file://IntrospectionQuery.txt
-    description: Test Server
+  - url: http://localhost:8000/gql
+    description: Your GraphQL Server
 
+# General information about your API documentation
 info:
   description: |
-    Docs for uois
+    Documentation for your GraphQL API
   version: 1.0.0
-  title: Docs
+  title: API Documentation
 
+# Define domains and their descriptions (you can customize this based on your schema structure)
 domains:
-  - name: Fetching Pokémons
-    description: Base methods to fetch Pokemon information.
+  - name: Finance
+    description: Methods related to finance
+  - name: Project
+    description: Methods related to projects
+  - name: Milestone
+    description: Methods related to milestones
+  - name: StatementOfWork
+    description: Methods related to statements of work
+
+# Additional configuration options if needed
