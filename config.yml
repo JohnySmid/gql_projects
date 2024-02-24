@@ -1,0 +1,15 @@
+# To fetch schema from
+introspection: http://localhost:8000/gql
+
+servers:
+  - url: http://localhost:8000/gql
+    description: Test Server  
+info:
+  description: |
+   Docs for uois
+  version: 1.0.0
+  title: Docs
+
+domains:
+  - name: Fetching Pokémons
+    description: Base methods to fetch pokemon information.

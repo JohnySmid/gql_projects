@@ -27,7 +27,7 @@ PROJECTS (2 studenti) Šmíd, Špáník
 
 
 TODO:
--> udelat test, ktery udela introspection query - udelat to jako jednoduchy test (https://gist.github.com/craigbeck/b90915d49fda19d5b2b17ead14dcd6da) 
+✓ funguje -> udelat test, ktery udela introspection query - udelat to jako jednoduchy test (https://gist.github.com/craigbeck/b90915d49fda19d5b2b17ead14dcd6da) 
 -> udelat docker build (jako u uois githubu, email druhy odkaz) | https://github.com/hrbolek/_uois/blob/v2.1/frontend/Dockerfile
 -> run dociql primo v dockerfile (jako je v dociql v kodu ://file) | 17 radek: https://github.com/wayfair/dociql/blob/master/app/dociql/fetch-schema.js
 -> udelat static build (zase dockerfile uois Last phase) | zkopiruje z "virtualniho node" do python prostredi (co to ma byt nevim ^^ )
