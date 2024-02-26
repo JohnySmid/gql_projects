@@ -138,8 +138,8 @@ class FinanceResultGQLModel:
 
 @strawberryA.mutation(description="Adds a new finance.", permission_classes=[OnlyForAuthentized()])
 async def finance_insert(self, info: strawberryA.types.Info, finance: FinanceInsertGQLModel) -> FinanceResultGQLModel:
-    # user = getUserFromInfo(info)
-    # finance.changedby = uuid.UUID(user["id"])
+    user = getUserFromInfo(info)
+    finance.changedby = uuid.UUID(user["id"])
     loader = getLoadersFromInfo(info).finances
     row = await loader.insert(finance)
     result = FinanceResultGQLModel()
@@ -149,8 +149,8 @@ async def finance_insert(self, info: strawberryA.types.Info, finance: FinanceIns
 
 @strawberryA.mutation(description="Update the finance.", permission_classes=[OnlyForAuthentized()])
 async def finance_update(self, info: strawberryA.types.Info, finance: FinanceUpdateGQLModel) -> FinanceResultGQLModel:
-    # user = getUserFromInfo(info)
-    # finance.changedby = uuid.UUID(user["id"])
+    user = getUserFromInfo(info)
+    finance.changedby = uuid.UUID(user["id"])
     loader = getLoadersFromInfo(info).finances
     row = await loader.update(finance)
     result = FinanceResultGQLModel()

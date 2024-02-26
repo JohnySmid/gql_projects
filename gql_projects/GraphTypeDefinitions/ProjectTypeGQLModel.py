@@ -134,8 +134,8 @@ class ProjectTypeResultGQLModel:
 
 @strawberryA.mutation(description="Adds a new project type.", permission_classes=[OnlyForAuthentized()])
 async def project_type_insert(self, info: strawberryA.types.Info, project: ProjectTypeInsertGQLModel) -> ProjectTypeResultGQLModel:
-    # user = getUserFromInfo(info)
-    # project.createdby = uuid.UUID(user["id"])
+    user = getUserFromInfo(info)
+    project.createdby = uuid.UUID(user["id"])
     loader = getLoadersFromInfo(info).projecttypes
     row = await loader.insert(project)
     result = ProjectTypeResultGQLModel()
@@ -145,8 +145,8 @@ async def project_type_insert(self, info: strawberryA.types.Info, project: Proje
 
 @strawberryA.mutation(description="Update the project type.", permission_classes=[OnlyForAuthentized()])
 async def project_type_update(self, info: strawberryA.types.Info, project: ProjectTypeUpdateGQLModel) -> ProjectTypeResultGQLModel:
-    # user = getUserFromInfo(info)
-    # project.changedby = uuid.UUID(user["id"])
+    user = getUserFromInfo(info)
+    project.changedby = uuid.UUID(user["id"])
     loader = getLoadersFromInfo(info).projecttypes
     row = await loader.update(project)
     result = ProjectTypeResultGQLModel()

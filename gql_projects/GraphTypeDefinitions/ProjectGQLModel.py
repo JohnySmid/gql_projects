@@ -173,8 +173,8 @@ class ProjectResultGQLModel:
 @strawberryA.mutation(description="Adds a new project.",
                       permission_classes=[OnlyForAuthentized()])
 async def project_insert(self, info: strawberryA.types.Info, project: ProjectInsertGQLModel) -> ProjectResultGQLModel:
-    # user = getUserFromInfo(info)
-    # project.createdby = uuid.UUID(user["id"])
+    user = getUserFromInfo(info)
+    project.createdby = uuid.UUID(user["id"])
     loader = getLoadersFromInfo(info).projects
     row = await loader.insert(project)
     result = ProjectResultGQLModel()
@@ -185,8 +185,8 @@ async def project_insert(self, info: strawberryA.types.Info, project: ProjectIns
 @strawberryA.mutation(description="Update the project.",
                       permission_classes=[OnlyForAuthentized()])
 async def project_update(self, info: strawberryA.types.Info, project: ProjectUpdateGQLModel) -> ProjectResultGQLModel:
-    # user = getUserFromInfo(info)
-    # project.changedby = uuid.UUID(user["id"])
+    user = getUserFromInfo(info)
+    project.changedby = uuid.UUID(user["id"])
     loader = getLoadersFromInfo(info).projects
     row = await loader.update(project)
     result = ProjectResultGQLModel()

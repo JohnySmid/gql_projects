@@ -99,6 +99,7 @@ finance_type_by_id = createRootResolver_by_id(FinanceTypeGQLModel, description="
 class FinanceTypeInsertGQLModel:
     name: str = strawberryA.field(description="Name/label of the finance type")
     category_id: uuid.UUID = strawberryA.field(description="The ID of the finance category")
+    
     name_en: Optional[str] = strawberryA.field(description="Name/label of the finance type in English",default=None)
     valid: Optional[bool] = strawberryA.field(description="Indicates whether the financial data is valid or not", default=True)
     id: Optional[uuid.UUID] = strawberryA.field(description="The ID of the finance type data", default=None)
@@ -133,8 +134,8 @@ class FinanceTypeResultGQLModel:
 
 @strawberryA.mutation(description="Adds a new finance type.", permission_classes=[OnlyForAuthentized()])
 async def finance_type_insert(self, info: strawberryA.types.Info, finance: FinanceTypeInsertGQLModel) -> FinanceTypeResultGQLModel:
-    # user = getUserFromInfo(info)
-    # finance.createdby = uuid.UUID(user["id"])
+    user = getUserFromInfo(info)
+    finance.createdby = uuid.UUID(user["id"])
     loader = getLoadersFromInfo(info).financetypes
     row = await loader.insert(finance)
     result = FinanceTypeResultGQLModel()
@@ -144,8 +145,8 @@ async def finance_type_insert(self, info: strawberryA.types.Info, finance: Finan
 
 @strawberryA.mutation(description="Update the finance type.", permission_classes=[OnlyForAuthentized()])
 async def finance_type_update(self, info: strawberryA.types.Info, finance: FinanceTypeUpdateGQLModel) -> FinanceTypeResultGQLModel:
-    # user = getUserFromInfo(info)
-    # finance.createdby = uuid.UUID(user["id"])
+    user = getUserFromInfo(info)
+    finance.createdby = uuid.UUID(user["id"])
     loader = getLoadersFromInfo(info).financetypes
     row = await loader.update(finance)
     result = FinanceTypeResultGQLModel()

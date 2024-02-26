@@ -79,8 +79,8 @@ from typing import Optional
 @strawberryA.input(description="Definition of a project category used for creation")
 class ProjectCategoryInsertGQLModel:
     name: str = strawberryA.field(description="Name/label of the project category")
+    name_en: str = strawberryA.field(description="Name/label of the project category in English")
 
-    name_en: str = strawberryA.field(description="Name/label of the project category in English", default=None)
     id: Optional[uuid.UUID] = strawberryA.field(description="The ID of the project category data", default=None)
     createdby: strawberry.Private[uuid.UUID] = None
     rbacobject: strawberry.Private[uuid.UUID] = None
@@ -113,8 +113,8 @@ class ProjectCategoryResultGQLModel:
 
 @strawberryA.mutation(description="Adds a new project category.", permission_classes=[OnlyForAuthentized()])
 async def project_category_insert(self, info: strawberryA.types.Info, project: ProjectCategoryInsertGQLModel) -> ProjectCategoryResultGQLModel:
-    # user = getUserFromInfo(info)
-    # project.createdby = uuid.UUID(user["id"])
+    user = getUserFromInfo(info)
+    project.createdby = uuid.UUID(user["id"])
     loader = getLoadersFromInfo(info).projectcategories
     row = await loader.insert(project)
     result = ProjectCategoryResultGQLModel()
@@ -124,8 +124,8 @@ async def project_category_insert(self, info: strawberryA.types.Info, project: P
 
 @strawberryA.mutation(description="Update the project category.", permission_classes=[OnlyForAuthentized()])
 async def project_category_update(self, info: strawberryA.types.Info, project: ProjectCategoryUpdateGQLModel) -> ProjectCategoryResultGQLModel:
-    # user = getUserFromInfo(info)
-    # project.createdby = uuid.UUID(user["id"])
+    user = getUserFromInfo(info)
+    project.createdby = uuid.UUID(user["id"])
     loader = getLoadersFromInfo(info).projectcategories
     row = await loader.update(project)
     result = ProjectCategoryResultGQLModel()

@@ -153,8 +153,8 @@ class MilestoneLinkAddGQLModel:
 
 @strawberryA.mutation(description="Adds a new milestones link.", permission_classes=[OnlyForAuthentized()])
 async def milestones_link_add(self, info: strawberryA.types.Info, link: MilestoneLinkAddGQLModel) -> MilestoneResultGQLModel:
-    # user = getUserFromInfo(info)
-    # link.createdby = uuid.UUID(user["id"])
+    user = getUserFromInfo(info)
+    link.createdby = uuid.UUID(user["id"])
     loader = getLoadersFromInfo(info).milestonelinks
     rows = await loader.filter_by(previous_id=link.previous_id, next_id=link.next_id)
     row = next(rows, None)
@@ -169,8 +169,8 @@ async def milestones_link_add(self, info: strawberryA.types.Info, link: Mileston
 
 @strawberryA.mutation(description="Adds a new milestone.", permission_classes=[OnlyForAuthentized()])
 async def milestone_insert(self, info: strawberryA.types.Info, milestone: MilestoneInsertGQLModel) -> MilestoneResultGQLModel:
-    # user = getUserFromInfo(info)
-    # milestone.createdby = uuid.UUID(user["id"])
+    user = getUserFromInfo(info)
+    milestone.createdby = uuid.UUID(user["id"])
     loader = getLoadersFromInfo(info).milestones
     row = await loader.insert(milestone)
     result = MilestoneResultGQLModel()
@@ -180,8 +180,8 @@ async def milestone_insert(self, info: strawberryA.types.Info, milestone: Milest
 
 @strawberryA.mutation(description="Update the milestone.", permission_classes=[OnlyForAuthentized()])
 async def milestone_update(self, info: strawberryA.types.Info, milestone: MilestoneUpdateGQLModel) -> MilestoneResultGQLModel:
-    # user = getUserFromInfo(info)
-    # milestone.createdby = uuid.UUID(user["id"])
+    user = getUserFromInfo(info)
+    milestone.createdby = uuid.UUID(user["id"])
     loader = getLoadersFromInfo(info).milestones
     row = await loader.update(milestone)
     result = MilestoneResultGQLModel()

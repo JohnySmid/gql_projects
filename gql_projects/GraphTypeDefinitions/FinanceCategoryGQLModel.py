@@ -78,7 +78,8 @@ from typing import Optional
 @strawberryA.input(description="Definition of a finance category used for creation")
 class FinanceCategoryInsertGQLModel:
     name: str = strawberryA.field(description="Name/label of the finance category")
-    name_en: str = strawberryA.field(description="Name/label of the finance category in English", default=None)
+    name_en: str = strawberryA.field(description="Name/label of the finance category in English")
+
     id: Optional[uuid.UUID] = strawberryA.field(description="The ID of the finance category data", default=None)
     createdby: strawberry.Private[uuid.UUID] = None
     rbacobject: strawberry.Private[uuid.UUID] = None
@@ -110,8 +111,8 @@ class FinanceCategoryResultGQLModel:
 
 @strawberryA.mutation(description="Adds a new finance category.", permission_classes=[OnlyForAuthentized()])
 async def finance_category_insert(self, info: strawberryA.types.Info, finance: FinanceCategoryInsertGQLModel) -> FinanceCategoryResultGQLModel:
-    # user = getUserFromInfo(info)
-    # finance.createdby = uuid.UUID(user["id"])
+    user = getUserFromInfo(info)
+    finance.createdby = uuid.UUID(user["id"])
     loader = getLoadersFromInfo(info).financecategory
     row = await loader.insert(finance)
     result = FinanceCategoryResultGQLModel()
@@ -121,8 +122,8 @@ async def finance_category_insert(self, info: strawberryA.types.Info, finance: F
 
 @strawberryA.mutation(description="Update the finance category.", permission_classes=[OnlyForAuthentized()])
 async def finance_category_update(self, info: strawberryA.types.Info, finance: FinanceCategoryUpdateGQLModel) -> FinanceCategoryResultGQLModel:
-    # user = getUserFromInfo(info)
-    # finance.changedby = uuid.UUID(user["id"])
+    user = getUserFromInfo(info)
+    finance.changedby = uuid.UUID(user["id"])
     loader = getLoadersFromInfo(info).financecategory
     row = await loader.update(finance)
     result = FinanceCategoryResultGQLModel()
