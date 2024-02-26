@@ -15,6 +15,7 @@ services:
       - DEMO=True
       # pokud nepojede, pridaval jsem radek nize !!!
       - GQLUG_ENDPOINT_URL=http://localhost:8000/gql
+      - DOCS_ENDPOINT_URL=http://localhost:4400/
     healthcheck:
       # definice, umoznujici provest test, zda je kontejner v poradku
       test: "curl -f -H 'Content-Type: application/json' -X POST -d '{\"query\":\"query{__schema{types{name}}}\"}' http://localhost:8000/gql/ || exit 1"

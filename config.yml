@@ -1,28 +1,39 @@
 # To fetch schema from
 #introspection: file://IntrospectionQuery.txt
-introspection: file://GraphQLSchema.graphql
+#introspection: file://GraphQLSchema.graphql
+introspection: http://localhost:8000/gql
 
 # Specify information about your server
 servers:
   - url: http://localhost:8000/gql
-    description: Your GraphQL Server
+    description: Strawberry GraphiQL
 
 # General information about your API documentation
 info:
   description: |
-    Documentation for your GraphQL API
+    Documentation for GQL_Projects
   version: 1.0.0
-  title: API Documentation
+  title: Docs
 
 # Define domains and their descriptions (you can customize this based on your schema structure)
 domains:
   - name: Finance
     description: Methods related to finance
+    usecases:
+      - name: financePage
+        description: Retrieve financial data
+        query: query.financePage
+        select: id
+
+      # - name: Record Transaction
+      #   description: Record a financial transaction
+      #   query: mutation.recordTransaction
+      #   # Additional parameters for the mutation
+
   - name: Project
     description: Methods related to projects
-  - name: Milestone
-    description: Methods related to milestones
-  - name: StatementOfWork
-    description: Methods related to statements of work
-
-# Additional configuration options if needed
+    usecases:
+      - name: projectPage
+        description: Retrieve project data
+        query: query.projectPage
+        select: id

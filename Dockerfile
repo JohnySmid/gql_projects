@@ -14,48 +14,56 @@ RUN apt update && apt install curl -y && rm -rf /var/cache/apk/*
 COPY requirements.txt .
 RUN python -m pip install -r requirements.txt
 
-###############################################################
-#
-# First phase
-#
-###############################################################
+RUN echo "Installation of pip requirements"
 
-FROM node:16 as buildnode
+# Install npm and dociql inside /app
+RUN apt update && apt install -y npm
+RUN npm install -g dociql@latest
 
-# Create app directory
-WORKDIR /usr/src
+RUN echo "Installation of npm & dociql inside /app"
 
-# Create a minimal package.json for Docker build
-RUN echo '{}' > package.json
+# ###############################################################
+# #
+# # First phase
+# #
+# ###############################################################
 
-# Copy your project's package*.json files
-COPY package*.json ./
-RUN npm install
+# FROM node:16 as buildnode
 
-###############################################################
-#
-# Second phase
-#
-###############################################################
-FROM buildnode as generate-docs
+# # Create app directory
+# WORKDIR /usr/src
 
-# Create a directory for storing the documentation
-WORKDIR /usr/src/docs
+# # Create a minimal package.json for Docker build
+# RUN echo '{}' > package.json
 
-# Copy necessary files for dociql documentation generation
-COPY IntrospectionQuery.txt /usr/src/docs/
-COPY GraphQLSchema.graphql /usr/src/docs/
-COPY config.yml /usr/src/docs/
-# Update dociql to the latest version
-RUN npm install -g dociql
+# # Copy your project's package*.json files
+# COPY package*.json ./
+# RUN npm install
 
-# Run dociql to generate documentation inside /usr/src/docs
-#RUN dociql -a IntrospectionQuery.txt
-#RUN dociql -c config.yml
-#RUN dociql -d config.yml
-RUN dociql -d GraphQLSchema.graphql config.yml -t /usr/src/docs/
-#RUN dociql -d config.yml -t /usr/src/docs/
-RUN echo "Generated dociql documentation"
+# ###############################################################
+# #
+# # Second phase
+# #
+# ###############################################################
+# FROM buildnode as generate-docs
+
+# # Create a directory for storing the documentation
+# WORKDIR /usr/src/docs
+
+# # Copy necessary files for dociql documentation generation
+# COPY IntrospectionQuery.txt /usr/src/docs/
+# COPY GraphQLSchema.graphql /usr/src/docs/
+# COPY config.yml /usr/src/docs/
+# # Update dociql to the latest version
+# RUN npm install -g dociql
+
+# # Run dociql to generate documentation inside /usr/src/docs
+# #RUN dociql -a IntrospectionQuery.txt
+# #RUN dociql -c config.yml
+# #RUN dociql -d config.yml
+# RUN dociql -d GraphQLSchema.graphql config.yml -t /usr/src/docs/
+# #RUN dociql -d config.yml -t /usr/src/docs/
+# RUN echo "Generated dociql documentation"
 
 ###############################################################
 #
@@ -74,24 +82,26 @@ ENV PYTHONUNBUFFERED=1
 
 # npm copy
 WORKDIR /app/dociql
-COPY --from=generate-docs /usr/src/docs /app/dociql/
+
 # python copy
 WORKDIR /app
 COPY . /app
+
 
 FROM prepare as tester
 RUN python -m pip install -r requirements-dev.txt
 RUN python -m pip install coverage pytest pytest-cov
 RUN python -m pytest --cov-report term-missing --cov=DBDefinitions --cov=GraphTypeDefinitions --cov=utils --log-cli-level=INFO
-COPY --from=generate-docs /usr/src/docs /app/dociql/
+
 
 FROM prepare as runner
 # Creates a non-root user and adds permission to access the /app folder
 # For more info, please refer to https://aka.ms/vscode-docker-python-configure-containers
 RUN useradd appuser && chown -R appuser /app
 USER appuser
-COPY --from=generate-docs /usr/src/docs /app/dociql/
+#COPY --from=generate-docs /usr/src/docs /app/dociql/
 
 # During debugging, this entry point will be overridden.
-# For more information, please refer to https://aka.ms/vscode-docker-python-debug
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "-t", "60", "-k", "uvicorn.workers.UvicornWorker", "main:app"]
+# For more information, please refer to https://aka.ms/vscode-docker-python-debug 
+#CMD ["bash", "-c", "gunicorn --bind 0.0.0.0:8000 -t 60 -k uvicorn.workers.UvicornWorker main:app"]
+CMD ["bash", "-c", "gunicorn --bind 0.0.0.0:8000 -t 60 -k uvicorn.workers.UvicornWorker main:app & dociql -p 4400 -d config.yml"]
