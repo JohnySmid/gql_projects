@@ -81,7 +81,7 @@ ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
 # npm copy
-WORKDIR /app/dociql
+# WORKDIR /app/dociql
 
 # python copy
 WORKDIR /app
@@ -99,7 +99,6 @@ FROM prepare as runner
 # For more info, please refer to https://aka.ms/vscode-docker-python-configure-containers
 RUN useradd appuser && chown -R appuser /app
 USER appuser
-#COPY --from=generate-docs /usr/src/docs /app/dociql/
 
 # During debugging, this entry point will be overridden.
 # For more information, please refer to https://aka.ms/vscode-docker-python-debug 
