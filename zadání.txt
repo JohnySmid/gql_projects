@@ -27,7 +27,7 @@ Docs:
  - install npm into docker image (must be inside /app)
  - same with dociql 
       = both are being downloaded inside Dockerfile
- - edit enviroments and add Docs end point
+ - edit enviroments.txt and add Docs end point (http://localhost:4400/, I still don't know, if its necessary)
  - next you have to enable port 4400, inside Dockerfile and docker-compose file
  - add config.yml file and edit it
  - last step, maually write command: dociql -p 4400 -d config.yml 
