@@ -13,27 +13,193 @@ info:
   description: |
     Documentation for GQL_Projects
   version: 1.0.0
-  title: Docs
+  title: Docs gql_project
 
 # Define domains and their descriptions (you can customize this based on your schema structure)
+
+###############################################################
+#
+# Finance, FinanceType, FinanceCategory
+#
+###############################################################
 domains:
   - name: Finance
-    description: Methods related to finance
+    description: Queries and mutations for Finance GQL model
     usecases:
       - name: financePage
-        description: Retrieve financial data
+        description: retrieves Finance page
         query: query.financePage
-        select: id
 
-      # - name: Record Transaction
-      #   description: Record a financial transaction
-      #   query: mutation.recordTransaction
-      #   # Additional parameters for the mutation
+      - name: financeById
+        description: retrieves Finance by ID
+        query: query.financeById
+
+      - name: financeInsert
+        description:  Insert new Finance
+        query: mutation.financeInsert
+
+      - name: financeUpdate
+        description: Update existing Finance
+        query: mutation.financeUpdate
+
+
+  - name: Finance type
+    description: Queries and mutations for Finance type GQL model
+    usecases:
+      - name: financeTypePage
+        description: retrieves Finance type page
+        query: query.financeTypePage
+
+      - name: financeTypeById
+        description: retrieves Finance type by ID
+        query: query.financeTypeById
+
+      - name: financeTypeInsert
+        description: Insert new Finance type
+        query: mutation.financeTypeInsert
+
+      - name: financeTypeUpdate
+        description: Update existing Finance type
+        query: mutation.financeTypeUpdate
+
+
+  - name: Finance Category
+    description: Queries and mutations for Finance category GQL model
+    usecases:
+      - name: financeCategoryPage
+        description: retrieves finFinanceance category page
+        query: query.financeCategoryPage
+
+      - name: financeCategoryById
+        description: retrieves Finance category by ID
+        query: query.financeCategoryById
+
+      - name: financeCategoryInsert
+        description: Insert new Finance category
+        query: mutation.financeCategoryInsert
+
+      - name: financeCategoryUpdate
+        description: Update existing Finance category
+        query: mutation.financeCategoryUpdate
+
+      - name: financeCategoryDelete
+        description: Delete existing Finance category (only for fake data)
+        query: mutation.financeCategoryDelete
+
+###############################################################
+#
+# Milestones
+#
+###############################################################
+  - name: Milestones
+    description: Queries and mutations for Milestones GQL model
+    usecases:
+      - name: milestonePage
+        description: retrieves Milestone page
+        query: query.milestonePage
+
+      - name: milestoneById
+        description: retrieves Milestone by ID
+        query: query.milestoneById
+
+      - name: milestoneInsert
+        description: Insert new Milestone
+        query: mutation.milestoneInsert
+
+      - name: milestoneUpdate
+        description: Update existing Milestone
+        query: mutation.milestoneUpdate
+
+###############################################################
+#
+# Project, ProjectType, ProjectCategory
+#
+###############################################################
 
   - name: Project
-    description: Methods related to projects
+    description: Queries and mutations for Project GQL Model
     usecases:
       - name: projectPage
-        description: Retrieve project data
+        description: retrieves Project page
         query: query.projectPage
-        select: id
+
+      - name: projectById
+        description: retrieves Project by ID
+        query: query.projectById
+
+      - name: projectInsert
+        description: Insert new Project
+        query: mutation.projectInsert
+
+      - name: projectUpdate
+        description: Update existing Project
+        query: mutation.projectUpdate
+
+
+  - name: Project type
+    description: Queries and mutations for Project type GQL Model
+    usecases:
+      - name: projectTypePage
+        description: retrieves Project type page
+        query: query.projectTypePage
+
+      - name: projectTypeById
+        description: retrieves Project type by ID
+        query: query.projectTypeById
+
+      - name: projectTypeInsert
+        description: Insert new Project type
+        query: mutation.projectTypeInsert
+
+      - name: projectTypeUpdate
+        description: Update existing Project type
+        query: mutation.projectTypeUpdate
+
+
+  - name: Project category
+    description: Queries and mutations for Project category GQL model
+    usecases:
+      - name: projectCategoryPage
+        description: retrieves Project category page
+        query: query.projectCategoryPage
+
+      - name: projectCategoryById
+        description: retrieves Project category by ID
+        query: query.projectCategoryById
+
+      - name: projectCategoryInsert
+        description: Insert new Project category
+        query: mutation.projectCategoryInsert
+
+      - name: projectCategoryUpdate
+        description: Update existing Project category
+        query: mutation.projectCategoryUpdate
+        
+      - name: projectCategoryDelete
+        description: Delete existing Project category (only for fake data)
+        query: mutation.projectCategoryDelete
+
+###############################################################
+#
+# Statement of Work
+#
+###############################################################
+
+  - name: Statement of Work
+    description: Queries and mutations for Statement of Work GQL Model
+    usecases:
+      - name: statementOfWorkPage
+        description: retrieves SOW page
+        query: query.statementOfWorkPage
+
+      - name: statementOfWorkById
+        description: retrieves SOW by ID
+        query: query.statementOfWorkById
+
+      - name: statementOfWorkInsert
+        description: Insert new SOW
+        query: mutation.statementOfWorkInsert
+
+      - name: statementOfWorkUpdate
+        description: Update existing SOW
+        query: mutation.statementOfWorkUpdate
