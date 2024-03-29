@@ -43,7 +43,7 @@ domains:
         query: mutation.financeUpdate
 
 
-  - name: Finance type
+  - name: Finance Type
     description: Queries and mutations for Finance type GQL model
     usecases:
       - name: financeTypePage
@@ -136,7 +136,7 @@ domains:
         query: mutation.projectUpdate
 
 
-  - name: Project type
+  - name: Project Type
     description: Queries and mutations for Project type GQL Model
     usecases:
       - name: projectTypePage
@@ -156,7 +156,7 @@ domains:
         query: mutation.projectTypeUpdate
 
 
-  - name: Project category
+  - name: Project Category
     description: Queries and mutations for Project category GQL model
     usecases:
       - name: projectCategoryPage
