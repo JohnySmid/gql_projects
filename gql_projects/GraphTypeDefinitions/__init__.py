@@ -17,7 +17,7 @@ from .StatementOfWorkGQLModel import StatementOfWorkGQLModel
 
 from gql_projects.GraphPermissions import RoleBasedPermission
 
-from .externals import UserGQLModel
+from .externals import UserGQLModel, RoleTypeGQLModel, GroupGQLModel, EventGQLModel, RBACObjectGQLModel
 from gql_projects.utils.Dataloaders import getUserFromInfo
 
 @strawberry.type(description="""Type for query root""")
@@ -226,7 +226,8 @@ class Mutation:
 #     query=Query,
 #     mutation=Mutation
 # )
-schema = strawberry.federation.Schema(Query, types=(UserGQLModel, FinanceCategoryGQLModel, FinanceGQLModel, FinanceTypeGQLModel, 
+schema = strawberry.federation.Schema(Query, types=(UserGQLModel, RoleTypeGQLModel, GroupGQLModel, EventGQLModel, RBACObjectGQLModel,  
+                                                    FinanceCategoryGQLModel, FinanceGQLModel, FinanceTypeGQLModel, 
                                                     MilestoneGQLModel, 
                                                     ProjectGQLModel, ProjectCategoryGQLModel, ProjectTypeGQLModel, StatementOfWorkGQLModel),
                                       mutation=Mutation)

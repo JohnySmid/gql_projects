@@ -22,21 +22,25 @@ PROJECTS (2 studenti) Šmíd, Špáník
     
    ✓ Zabezpečte více jak 90% code test coverage (standard pytest).
 
+Hodnocení:
+Absolvování jednoho projektového dne (součástí je commit na github ne starší než 1 týden) 5 b (x3, tj. 15 b), pod omluvě lze nahradit individuálně
+Příběh (na githubu) 5 b (součástí příběhu je časová posloupnost commitů, definice problémů k vyřešení)
+Řádné komentáře v kódu (včetně description u GQLModelů, strawberry fieldsa a comment u DBModelů) 5 b
+Vygenerovaná dokumentace 5 b
+Prokázaná funkčnost jako samostatný kontejner 5 b
+Prokázaná funkčnost jako prvek docker-compose (s odkazem na samostatný kontejner z docker hubu) 5 b
+Vytvoření docker containeru, publikace na Docker hub 5 b
+Kompletní CRUD 5 b
+_json 5 b
+Obhajoba 60 b, každý student předvede „dopracovaný“ SQL a GQL model (bez ohledu na týmovou práci)
+Lze získat až 120 bodů. Předmětem projdete, pokud budete mít více než 50 bodů, hodnocení „A“ získáte za 90 bodů a více
 
-
-
-
-TODO:
--> udelat test, ktery udela introspection query - udelat to jako jednoduchy test (https://gist.github.com/craigbeck/b90915d49fda19d5b2b17ead14dcd6da) 
--> udelat docker build (jako u uois githubu, email druhy odkaz) | https://github.com/hrbolek/_uois/blob/v2.1/frontend/Dockerfile
--> run dociql primo v dockerfile (jako je v dociql v kodu ://file) | 17 radek: https://github.com/wayfair/dociql/blob/master/app/dociql/fetch-schema.js
--> udelat static build (zase dockerfile uois Last phase) | zkopiruje z "virtualniho node" do python prostredi (co to ma byt nevim ^^ )
--> v mainu tahle fce (https://github.com/hrbolek/_uois/blob/v2.1/frontend/pyserver/app.py):
-                      # uois github
-                      # @app.get("/ui/{file_path:path}")
-                      # async def read_file(file_path: str):
-                      #     print(file_path)
-                      #     if os.path.isfile(f"./js/{file_path}"):
-                      #         return FileResponse(f"./js/{file_path}")
-                      #     else:
-                      #         return FileResponse(f"./js/index.html")
+Docs:
+ - install npm into docker image (must be inside /app)
+ - same with dociql 
+      = both are being downloaded inside Dockerfile
+ - edit enviroments.txt and add Docs end point (http://localhost:4400/, I still don't know, if its necessary)
+ - next you have to enable port 4400, inside Dockerfile and docker-compose file
+ - add config.yml file and edit it
+ - last step, maually write command: dociql -p 4400 -d config.yml 
+      = or you can add it into CMD[] parameter inside Dockerfile
